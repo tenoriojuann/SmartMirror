@@ -17,29 +17,52 @@ public class Weather {
 
     private String lat,lng;
 
-    private URL url = new URL("http://api.openweathermap.org/data/2.5/forecast?q=Roswell&units=imperial&appid="+key);
+
 
     private URL ipURL = new URL("http://ip-api.com/json");
     JsonObject data;
+    JsonObject location;
 
     public Weather() throws IOException {
         Request();
+        setLocation();
     }
 
 
     public void Request() throws IOException {
 
-        HttpURLConnection request = (HttpURLConnection) url.openConnection();
+
         HttpURLConnection requestLocation = (HttpURLConnection) ipURL.openConnection();
         requestLocation.connect();
-        request.connect();
 
         JsonParser IP = new JsonParser();
+
+        JsonElement root2 = IP.parse(new InputStreamReader((InputStream) requestLocation.getContent()));
+
+        location = root2.getAsJsonObject();
+
+        setLocation();
+
+        URL url = new URL("http://api.openweathermap.org/data/2.5/forecast?lat="+lat+"&lon="+lng+"&units=imperial&appid="+key);
+
+        HttpURLConnection request = (HttpURLConnection) url.openConnection();
+        request.connect();
+
         JsonParser jp = new JsonParser(); //from gson
         JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
         data = root.getAsJsonObject(); //May be an array, may be an object.
 
-        JsonElement root2 = jp.parse(new InputStreamReader((InputStream) request.getContent()));
+    }
+
+
+    public void setLocation(){
+        lat = location.get("lat").toString();
+        lng = location.get("lon").toString();
+    }
+
+    public String getLocation(){
+
+        return "Lat: " + lat + ", " + "lon: " + lng;
     }
 
     public String getTemp(){
