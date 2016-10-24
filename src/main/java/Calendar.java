@@ -19,7 +19,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
-public class MAIN   {
+public class Calendar   {
     /** Application name. */
     private static final String APPLICATION_NAME =
             "Google Calendar API Java Quickstart";
@@ -64,7 +64,7 @@ public class MAIN   {
     public static Credential authorize() throws IOException {
         // Load client secrets.
         InputStream in =
-                MAIN.class.getResourceAsStream("/client_id.json");
+                Calendar.class.getResourceAsStream("/client_id.json");
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
