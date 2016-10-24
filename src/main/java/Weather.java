@@ -19,6 +19,7 @@ public class Weather {
 
     private URL url = new URL("http://api.openweathermap.org/data/2.5/forecast?q=Roswell&units=imperial&appid="+key);
 
+    private URL ipURL = new URL("http://ip-api.com/json");
     JsonObject data;
 
     public Weather() throws IOException {
@@ -26,18 +27,19 @@ public class Weather {
     }
 
 
-    public JsonObject Request() throws IOException {
+    public void Request() throws IOException {
 
         HttpURLConnection request = (HttpURLConnection) url.openConnection();
-
+        HttpURLConnection requestLocation = (HttpURLConnection) ipURL.openConnection();
+        requestLocation.connect();
         request.connect();
 
+        JsonParser IP = new JsonParser();
         JsonParser jp = new JsonParser(); //from gson
         JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
         data = root.getAsJsonObject(); //May be an array, may be an object.
 
-        return data;
-
+        JsonElement root2 = jp.parse(new InputStreamReader((InputStream) request.getContent()));
     }
 
     public String getTemp(){
