@@ -95,4 +95,25 @@ public class Calendar   {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
+
+
+    public List<Event> getEvents() throws IOException {
+        // Build a new authorized API client service.
+        // Note: Do not confuse this class with the
+        //   com.google.api.services.calendar.model.Calendar class.
+        com.google.api.services.calendar.Calendar service =
+                Calendar.getCalendarService();
+        // List the next 10 events from the primary calendar.
+        DateTime now = new DateTime(System.currentTimeMillis());
+        Events events = service.events().list("primary")
+                .setMaxResults(10)
+                .setTimeMin(now)
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute();
+        List<Event> items = events.getItems();
+
+        return items;
+
+    }
 }
