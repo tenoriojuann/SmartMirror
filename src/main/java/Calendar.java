@@ -16,6 +16,7 @@ import com.google.api.services.calendar.model.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 
@@ -94,6 +95,32 @@ public class Calendar   {
                 HTTP_TRANSPORT, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
+    }
+
+    public String getFirstDay() throws IOException {
+
+        YearMonth ym = YearMonth.now();
+
+        String firstDay = ym.atDay(1).getDayOfWeek().name();
+
+        return firstDay;
+    }
+
+    public String getLastDay(){
+        YearMonth ym = YearMonth.now();
+
+        String lastDay = ym.atEndOfMonth().getDayOfWeek().name();
+
+        return lastDay;
+    }
+
+    public int getNumberOfDays(){
+
+        YearMonth yearMonthObject = YearMonth.now();
+        int daysInMonth = yearMonthObject.lengthOfMonth();
+
+        return daysInMonth;
+
     }
 
 
