@@ -133,7 +133,7 @@ public class Calendar   {
         // List the next 10 events from the primary calendar.
         DateTime now = new DateTime(System.currentTimeMillis());
         Events events = service.events().list("primary")
-                .setMaxResults(10)
+                .setMaxResults(15)
                 .setTimeMin(now)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
