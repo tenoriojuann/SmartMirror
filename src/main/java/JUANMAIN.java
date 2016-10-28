@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class MAIN extends Application{
+public class JUANMAIN extends Application{
 
 
 
@@ -44,7 +44,7 @@ public class MAIN extends Application{
             }
         }
 
-        Application.launch(MAIN.class, (java.lang.String[])null);
+        Application.launch(JUANMAIN.class, (java.lang.String[])null);
 
     }
 
@@ -52,13 +52,13 @@ public class MAIN extends Application{
     @Override
     public void start(Stage primaryStage) {
         try {
-            GridPane page =  (GridPane) FXMLLoader.load(MAIN.class.getResource("Calendar.fxml"));
+            GridPane page =  (GridPane) FXMLLoader.load(JUANMAIN.class.getResource("Calendar.fxml"));
             Scene scene = new Scene(page);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Calendar");
             primaryStage.show();
         } catch (Exception ex) {
-            Logger.getLogger(MAIN.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JUANMAIN.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
