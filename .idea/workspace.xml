@@ -6,9 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f0171122-7c2b-4d9a-9dfa-914334833d74" name="Default" comment="test.&#10;">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="f0171122-7c2b-4d9a-9dfa-914334833d74" name="Default" comment="test.&#10;" />
     <ignored path="MagicMirror.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
