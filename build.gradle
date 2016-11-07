@@ -1,13 +1,26 @@
-group 'Magic'
+
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
 apply plugin: 'application'
 
-mainClassName = 'Calendar'
+mainClassName = 'JUANMAIN'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
+
+//create single Jar with all dependencies
+task fatJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': 'Mirror',
+        	'Implementation-Version': version,
+        	'Main-Class': mainClassName
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 
 repositories {
     mavenCentral()
@@ -17,6 +30,7 @@ dependencies {
     compile 'com.google.api-client:google-api-client:1.22.0'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
     compile 'com.google.apis:google-api-services-calendar:v3-rev218-1.22.0'
+    compile 'com.google.code.gson:gson:2.7'
 
 
 }
