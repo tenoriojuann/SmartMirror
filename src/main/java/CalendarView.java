@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -5,8 +6,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,6 +30,7 @@ public class CalendarView {
     private final BorderPane view ;
     private final GridPane calendar ;
 
+
     public CalendarView(YearMonth month) {
         view = new BorderPane();
         view.getStyleClass().add("calendar");
@@ -35,11 +41,21 @@ public class CalendarView {
         header.setMaxWidth(Double.MAX_VALUE);
         header.getStyleClass().add("calendar-header");
 
-        this.month.addListener((obs, oldMonth, newMonth) ->
-                rebuildCalendar());
+        this.month.addListener((obs, oldMonth, newMonth) -> {
+            try {
+                rebuildCalendar();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
-        this.locale.addListener((obs, oldLocale, newLocale) ->
-                rebuildCalendar());
+        this.locale.addListener((obs, oldLocale, newLocale) -> {
+            try {
+                rebuildCalendar();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         view.setTop(header);
         view.setCenter(calendar);
@@ -65,7 +81,7 @@ public class CalendarView {
         month.set(month.get().minusMonths(1));
     }
 
-    private void rebuildCalendar() {
+    private void rebuildCalendar() throws IOException {
 
         calendar.getChildren().clear();
 
@@ -83,6 +99,10 @@ public class CalendarView {
             label.getStyleClass().add("calendar-day-header");
             GridPane.setHalignment(label, HPos.CENTER);
             calendar.add(label, dayOfWeek - 1, 0);
+
+
+
+
         }
 
         LocalDate firstDisplayedDate = first.minusDays(dayOfWeekOfFirst - 1);

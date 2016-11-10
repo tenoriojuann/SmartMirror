@@ -1,6 +1,10 @@
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -49,7 +53,24 @@ public class CalendarViewTest extends Application {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        Calendar googleCalendar = new Calendar();
+
+        List<Event> items = googleCalendar.getEvents();
+
+        if (items.size() == 0) {
+            System.out.println("No upcoming events found.");
+        } else {
+            System.out.println("Upcoming events");
+            for (Event event : items) {
+                DateTime start = event.getStart().getDateTime();
+                if (start == null) {
+                    start = event.getStart().getDate();
+                }
+                System.out.printf("%s (%s)\n", event.getSummary(), start);
+            }
+        }
         launch(args);
     }
 }

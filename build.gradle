@@ -5,7 +5,7 @@ apply plugin: 'java'
 
 apply plugin: 'application'
 
-mainClassName = 'JUANMAIN'
+mainClassName = 'CalendarViewTest'
 
 //create single Jar with all dependencies
 task fatJar(type: Jar) {

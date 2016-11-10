@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Implementation-Title: Mirror
 Implementation-Version: 1.0-SNAPSHOT
-Main-Class: JUANMAIN
+Main-Class: CalendarViewTest
 
