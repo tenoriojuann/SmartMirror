@@ -6,21 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f0171122-7c2b-4d9a-9dfa-914334833d74" name="Default" comment="test.&#10;">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/CalendarView.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/CalendarViewTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/calendar.css" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/classes/main/JUANMAIN.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/JUANMAIN.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/main/Calendar.class" afterPath="$PROJECT_DIR$/build/classes/main/Calendar.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/classes/main/Weather.class" afterPath="$PROJECT_DIR$/build/classes/main/Weather.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Mirror/Mirror.jar" afterPath="$PROJECT_DIR$/out/artifacts/Mirror/Mirror.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/resources/main/Calendar.fxml" afterPath="$PROJECT_DIR$/build/resources/main/Calendar.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/Mirror/Mirror.jnlp" afterPath="$PROJECT_DIR$/out/artifacts/Mirror/Mirror.jnlp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Weather.java" afterPath="$PROJECT_DIR$/src/main/java/Weather.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/Calendar.fxml" afterPath="$PROJECT_DIR$/src/main/resources/Calendar.fxml" />
-    </list>
+    <list default="true" id="f0171122-7c2b-4d9a-9dfa-914334833d74" name="Default" comment="test.&#10;" />
     <ignored path="MagicMirror.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
