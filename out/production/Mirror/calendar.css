@@ -2,25 +2,30 @@
 	-fx-hgap: 4 ;
 	-fx-vgap: 4 ;
 	-fx-padding: 4 ;
+	-fx-background-color: black;
 }
 
 .calendar-header {
 	-fx-alignment: center ;
 	-fx-font-size: 18pt ;
 	-fx-font-weight: bold ;
+	-fx-background-color: black;
 }
 
 .calendar-cell {
 	-fx-padding: 4 ;
 	-fx-alignment: center ;
+	-fx-background-color: black;
 }
 
 .calendar-cell:before-display-month, .calendar-cell:after-display-month {
 	-fx-opacity: 0.4 ;
+	-fx-background-color: black;
 }
 
 .calendar-header-cell {
 	-fx-padding: 4 ;
 	-fx-alignment: center ;
 	-fx-font-weight: bold ;
+	-fx-background-color: black;
 }

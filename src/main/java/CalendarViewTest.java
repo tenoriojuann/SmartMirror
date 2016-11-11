@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,44 +19,19 @@ import javafx.stage.Stage;
 public class CalendarViewTest extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         CalendarView calendarView = new CalendarView() ;
 
-        Button next = new Button(">");
-        next.setOnAction(e -> calendarView.nextMonth());
-
-        Button previous = new Button("<");
-        previous.setOnAction(e -> calendarView.previousMonth());
-
-        ComboBox<Locale> localeCombo = new ComboBox<>();
-        localeCombo.getItems().addAll(Locale.getAvailableLocales());
-        localeCombo.setValue(Locale.getDefault());
-
-        localeCombo.setCellFactory(lv -> new LocaleCell());
-        localeCombo.setButtonCell(new LocaleCell());
-
-        calendarView.localeProperty().bind(localeCombo.valueProperty());
-
-        BorderPane.setAlignment(localeCombo, Pos.CENTER);
-        BorderPane.setMargin(localeCombo, new Insets(10));
-
-        BorderPane root = new BorderPane(calendarView.getView(), localeCombo, next, null, previous);
+        BorderPane root = new BorderPane(calendarView.getView());
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
 
-    public static class LocaleCell extends ListCell<Locale> {
-        @Override
-        public void updateItem(Locale locale, boolean empty) {
-            super.updateItem(locale, empty);
-            setText(locale == null ? null : locale.getDisplayName(locale));
-        }
     }
 
     public static void main(String[] args) throws IOException {
 
-        Calendar googleCalendar = new Calendar();
+/*        Calendar googleCalendar = new Calendar();
 
         List<Event> items = googleCalendar.getEvents();
 
@@ -64,13 +40,13 @@ public class CalendarViewTest extends Application {
         } else {
             System.out.println("Upcoming events");
             for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
+                DateTime start = event.getStart().getDate();
                 if (start == null) {
-                    start = event.getStart().getDate();
+                    start = event.getStart().getDateTime();
                 }
-                System.out.printf("%s (%s)\n", event.getSummary(), start);
+                System.out.printf("%s (%s)\n", event.getSummary(), start.toStringRfc3339().charAt(5)+""+start.toStringRfc3339().charAt(6));
             }
-        }
+        }*/
         launch(args);
     }
 }
