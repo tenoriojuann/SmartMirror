@@ -11,7 +11,7 @@
   </resources>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="Mirror.jar" size="9964" download="eager" />
+    <jar href="Mirror.jar" size="10480" download="eager" />
     <jar href="commons-codec-1.6.jar" size="232771" download="eager" />
     <jar href="commons-logging-1.1.1.jar" size="60686" download="eager" />
     <jar href="google-api-client-1.21.0.jar" size="195118" download="eager" />
