@@ -1,2 +1,6 @@
 /src/main/resources/key.json
 /src/main/resources/client_id.json
+build
+out
+target
+.gradle
