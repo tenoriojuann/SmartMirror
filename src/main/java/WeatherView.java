@@ -7,8 +7,7 @@ import java.io.IOException;
  * Created by La molybdenstar on 11/14/2016.
  */
 public class WeatherView extends Application{
-
-    Weather W = new Weather();
+    
 
     public WeatherView() throws IOException {
     }
