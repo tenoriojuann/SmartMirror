@@ -2,13 +2,16 @@
 <jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="Mirror.jnlp">
   <information>
     <title>TEST</title>
-    <vendor>Unknown</vendor>
-    <description>Mirror</description>
+    <vendor>Unknown vendor</vendor>
+    <description>Sample JavaFX 2.0 application.</description>
     <offline-allowed/>
   </information>
   <resources>
+    <jfx:javafx-runtime version="2.2+" href="http://javadl.sun.com/webapps/download/GetFile/javafx-latest/windows-i586/javafx2.jnlp"/>
+  </resources>
+  <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="Mirror.jar" size="9978" download="eager" />
+    <jar href="Mirror.jar" size="9964" download="eager" />
     <jar href="commons-codec-1.6.jar" size="232771" download="eager" />
     <jar href="commons-logging-1.1.1.jar" size="60686" download="eager" />
     <jar href="google-api-client-1.21.0.jar" size="195118" download="eager" />
@@ -22,6 +25,9 @@
     <jar href="jackson-core-2.1.3.jar" size="206797" download="eager" />
     <jar href="jsr305-1.3.9.jar" size="33015" download="eager" />
   </resources>
+  <applet-desc  width="600" height="400" main-class="com.javafx.main.NoJavaFXFallback"  name="Mirror" >
+    <param name="requiredFXVersion" value="2.2+"/>
+  </applet-desc>
   <jfx:javafx-desc  width="600" height="400" main-class="JUANMAIN"  name="Mirror" />
   <update check="background"/>
 </jnlp>
