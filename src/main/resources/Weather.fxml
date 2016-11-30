@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="370.0" fitWidth="838.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Weather%20Icons/Cloud.png" />
+         </image>
+      </ImageView>
+      <TextField alignment="CENTER" layoutX="314.0" layoutY="53.0" prefHeight="51.0" prefWidth="272.0" promptText="Weather">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+      <TextField alignment="CENTER" layoutX="314.0" layoutY="158.0" prefHeight="82.0" prefWidth="272.0" promptText="Degrees">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+      <TextField alignment="CENTER" layoutX="314.0" layoutY="294.0" prefHeight="51.0" prefWidth="272.0" promptText="Location">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+   </children>
+</Pane>
