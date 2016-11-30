@@ -32,9 +32,13 @@ import java.io.IOException;
  To pull the weather information we simply rewrote the Python script that we had for one of the assignments into Java and JavaFX.
  */
 public class WeatherView extends Application{
+<<<<<<< HEAD
 
 
 
+=======
+    
+>>>>>>> origin/master
 
     public WeatherView() throws IOException {
 
