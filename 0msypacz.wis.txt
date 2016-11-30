@@ -1,0 +1,43 @@
+﻿Merge remote-tracking branch 'origin/master'
+
+# Conflicts:
+#	.idea/workspace.xml
+#	out/artifacts/Mirror/Mirror.jar
+#	out/artifacts/Mirror/Mirror.jnlp
+#	src/main/java/WeatherView.java
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 8 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   .idea/workspace.xml
+#	new file:   build/classes/main/WeatherView.class
+#	modified:   out/artifacts/Mirror/Mirror.jnlp
+#	modified:   src/main/java/WeatherView.java
+#	new file:   src/main/resources/Icons/Cloud.png
+#	new file:   src/main/resources/Icons/CloudSun.png
+#	new file:   src/main/resources/Icons/Clouds.png
+#	new file:   src/main/resources/Icons/HeavyRainCloud.png
+#	new file:   src/main/resources/Icons/HeavySnow.png
+#	new file:   src/main/resources/Icons/Rain.png
+#	new file:   src/main/resources/Icons/RainCloud.png
+#	new file:   src/main/resources/Icons/RainCloudSun.png
+#	new file:   src/main/resources/Icons/Snow.png
+#	new file:   src/main/resources/Icons/Sun.png
+#	new file:   src/main/resources/Weather.fxml
+#	deleted:    src/main/resources/client_id.json
+#	deleted:    src/main/resources/key.json
+#
+
