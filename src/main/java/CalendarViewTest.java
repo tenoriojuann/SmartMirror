@@ -31,22 +31,6 @@ public class CalendarViewTest extends Application {
 
     public static void main(String[] args) throws IOException {
 
-/*        Calendar googleCalendar = new Calendar();
-
-        List<Event> items = googleCalendar.getEvents();
-
-        if (items.size() == 0) {
-            System.out.println("No upcoming events found.");
-        } else {
-            System.out.println("Upcoming events");
-            for (Event event : items) {
-                DateTime start = event.getStart().getDate();
-                if (start == null) {
-                    start = event.getStart().getDateTime();
-                }
-                System.out.printf("%s (%s)\n", event.getSummary(), start.toStringRfc3339().charAt(5)+""+start.toStringRfc3339().charAt(6));
-            }
-        }*/
         launch(args);
     }
 }

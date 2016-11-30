@@ -1,13 +1,20 @@
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -18,6 +25,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 public class CalendarView {
     private final ObjectProperty<YearMonth> month = new SimpleObjectProperty<>();
@@ -45,6 +57,8 @@ public class CalendarView {
                 rebuildCalendar();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (DatatypeConfigurationException e) {
+                e.printStackTrace();
             }
         });
 
@@ -65,7 +79,7 @@ public class CalendarView {
     }
 
 
-    private void rebuildCalendar() throws IOException {
+    private void rebuildCalendar() throws IOException, DatatypeConfigurationException {
 
         calendar.getChildren().clear();
 
@@ -80,8 +94,8 @@ public class CalendarView {
             LocalDate date = first.minusDays(dayOfWeekOfFirst - dayOfWeek);
             DayOfWeek day = date.getDayOfWeek();
             Label label = new Label(day.getDisplayName(TextStyle.SHORT_STANDALONE, locale.get()));
-            label.getStyleClass().add("calendar-day-header");
             GridPane.setHalignment(label, HPos.CENTER);
+            label.setTextFill(Color.YELLOW);
             calendar.add(label, dayOfWeek - 1, 0);
 
 
@@ -92,17 +106,12 @@ public class CalendarView {
         int dayOfWeekOfLast = last.get(weekFields.dayOfWeek());
         LocalDate lastDisplayedDate = last.plusDays(7 - dayOfWeekOfLast);
 
-        PseudoClass beforeMonth = PseudoClass.getPseudoClass("before-display-month");
-        PseudoClass afterMonth = PseudoClass.getPseudoClass("after-display-month");
-
 
         List<Event> items = googleCal.getEvents();
 
         for (LocalDate date = firstDisplayedDate; !date.isAfter(lastDisplayedDate); date = date.plusDays(1)) {
             Label label = new Label(String.valueOf(date.getDayOfMonth()));
             label.getStyleClass().add("calendar-cell");
-            label.pseudoClassStateChanged(beforeMonth, date.isBefore(first));
-            label.pseudoClassStateChanged(afterMonth, date.isAfter(last));
 
             GridPane.setHalignment(label, HPos.CENTER);
 
@@ -110,18 +119,27 @@ public class CalendarView {
             int daysSinceFirstDisplayed = (int) firstDisplayedDate.until(date, ChronoUnit.DAYS);
             int weeksSinceFirstDisplayed = daysSinceFirstDisplayed / 7;
 
-            calendar.add(label, dayOfWeek - 1, weeksSinceFirstDisplayed + 1);
-
+            LocalDate l = LocalDate.now();
+            if (date.getDayOfMonth() == l.getDayOfMonth() && date.getMonthValue() == l.getMonthValue()){
+                label.setTextFill(Color.YELLOW);
+                calendar.add(label, dayOfWeek - 1, weeksSinceFirstDisplayed + 1);
+            }
+            else {
+                label.setTextFill(Color.WHITE);
+                calendar.add(label, dayOfWeek - 1, weeksSinceFirstDisplayed + 1);
+            }
 
             for(Event item : items){
                 String start = item.getStart().getDateTime().toStringRfc3339();
-                if (start == null) {
-                    start = (item.getStart().getDate().toStringRfc3339());
-                }
-                start = (start.charAt(8)+""+start.charAt(9));
+                String months = String.valueOf(start.charAt(5) +""+ start.charAt(6));
+                start = String.valueOf(start.charAt(8) +""+ start.charAt(9));
 
-                if ( Integer.parseInt(start) == date.getDayOfMonth()){
-                    calendar.add(new Label("\n"+item.getSummary() ),dayOfWeek-1,weeksSinceFirstDisplayed+1);
+                if ( Integer.parseInt(start) == date.getDayOfMonth() && date.getMonthValue() == Integer.parseInt(months)){
+                    String tmp = item.getStart().getDateTime().toStringRfc3339();
+                    tmp = String.valueOf(tmp.charAt(11)+""+tmp.charAt(12)+""+tmp.charAt(13)+""+tmp.charAt(14)+""+tmp.charAt(15));
+                    Label schedule =new Label(item.getSummary()+"\n\n" +  tmp);
+                    schedule.setTextFill(Color.CYAN);
+                    calendar.add(schedule,dayOfWeek-1,weeksSinceFirstDisplayed+1);
                 }
             }
 

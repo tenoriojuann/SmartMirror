@@ -16,8 +16,7 @@
 
 .calendar-cell {
 	-fx-padding: 20 ;
-	-fx-font-size: 12pt ;
-	-fx-text-fill: white;
+	-fx-font-size: 20pt ;
 	-fx-alignment: center ;
 	-fx-background-color: black;
 }
@@ -31,10 +30,4 @@
 	-fx-padding: 4 ;
 	-fx-alignment: center ;
 	-fx-font-weight: bold ;
-	-fx-background-color: blue;
-	-fx-font-color: white;
-}
-
-.calendar-day-header{
-    -fx-background-color: black;
 }

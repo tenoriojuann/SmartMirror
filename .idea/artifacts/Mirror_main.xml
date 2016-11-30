@@ -1,0 +1,20 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Mirror_main">
+    <output-path>$PROJECT_DIR$/out/artifacts/Mirror_main</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="WeatherView" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="title" value="weather" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="Mirror_main.jar">
+        <element id="module-output" name="Mirror_main" />
+      </element>
+    </root>
+  </artifact>
+</component>

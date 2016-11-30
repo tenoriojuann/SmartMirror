@@ -1,16 +1,16 @@
 
-version '1.0-SNAPSHOT'
+version ''
 
 apply plugin: 'java'
 
 apply plugin: 'application'
 
-mainClassName = 'CalendarViewTest'
+mainClassName = 'Map'
 
 //create single Jar with all dependencies
 task fatJar(type: Jar) {
 	manifest {
-        attributes 'Implementation-Title': 'Mirror',
+        attributes 'Implementation-Title': "",
         	'Implementation-Version': version,
         	'Main-Class': mainClassName
     }
@@ -29,6 +29,6 @@ dependencies {
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
     compile 'com.google.apis:google-api-services-calendar:v3-rev218-1.22.0'
     compile 'com.google.code.gson:gson:2.7'
-
+    compile ''
 
 }

@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Mirror</output-path>
     <properties id="javafx-properties">
       <options>
-        <option name="appClass" value="JUANMAIN" />
+        <option name="appClass" value="CalendarViewTest" />
         <option name="description" value="" />
         <option name="htmlPlaceholderId" value="" />
         <option name="title" value="TEST" />
