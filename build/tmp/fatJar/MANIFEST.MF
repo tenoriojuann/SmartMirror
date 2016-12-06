@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Implementation-Title: 
 Implementation-Version: 
-Main-Class: Map
+Main-Class: WeatherView
 

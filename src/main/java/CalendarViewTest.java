@@ -15,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class CalendarViewTest extends Application {
 
@@ -25,6 +26,10 @@ public class CalendarViewTest extends Application {
         BorderPane root = new BorderPane(calendarView.getView());
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        scene.setFill(null);
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
+        primaryStage.setX(0);
+        primaryStage.setY(550);
         primaryStage.show();
 
     }

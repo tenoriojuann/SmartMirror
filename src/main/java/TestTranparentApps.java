@@ -28,7 +28,7 @@ public class TestTranparentApps extends Application {
         webPage.setBackgroundColor(0);
 
         mainstage.setScene(scene);
-        mainstage.initStyle(StageStyle.TRANSPARENT);
+        //mainstage.initStyle(StageStyle.TRANSPARENT);
         mainstage.setWidth(550);
         mainstage.setHeight(750);
         mainstage.setX(600);

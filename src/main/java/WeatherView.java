@@ -1,23 +1,13 @@
-import com.sun.javafx.css.Style;
 import javafx.application.Application;
-import javafx.event.Event;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.EventListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,26 +31,23 @@ public class WeatherView extends Application{
 
     Timer timer = new Timer ();
 
-    public WeatherView() throws IOException {
-
-    }
 
     public Image chooseIcon(String text){
 
         if(text.toLowerCase().contains("Cloud".toLowerCase())){
-            return new Image(this.getClass().getResource("/Icons/Clouds.png").toExternalForm());
+            return new Image(this.getClass().getResource("Clouds.png").toExternalForm());
         }
         else if(text.toLowerCase().contains("rain".toLowerCase())){
-            return new Image(this.getClass().getResource("/Icons/rain.png").toExternalForm());
+            return new Image(this.getClass().getResource("Rain.png").toExternalForm());
         }
         else if(text.toLowerCase().contains("snow".toLowerCase())){
-            return new Image(this.getClass().getResource("/Icons/Snow.png").toExternalForm());
+            return new Image(this.getClass().getResource("Snow.png").toExternalForm());
         }
         else if(text.toLowerCase().contains("Sun".toLowerCase()) || text.toLowerCase().contains("clear".toLowerCase())){
-            return new Image(this.getClass().getResource("/Icons/Sun.png").toExternalForm());
+            return new Image(this.getClass().getResource("Sun.png").toExternalForm());
         }
         else if(text.toLowerCase().contains("heavy rain".toLowerCase())){
-            return new Image(this.getClass().getResource("/Icons/HeavyRain.png").toExternalForm());
+            return new Image(this.getClass().getResource("HeavyRainCloud.png").toExternalForm());
         }
 
         return null;
@@ -80,7 +67,7 @@ public class WeatherView extends Application{
 
         Text text ;
 
-
+        Text clock =  new Text();
         text = new Text(W.getForecast());
 
         text.setFill(Color.CYAN);

@@ -95,10 +95,8 @@ public class CalendarView {
             DayOfWeek day = date.getDayOfWeek();
             Label label = new Label(day.getDisplayName(TextStyle.SHORT_STANDALONE, locale.get()));
             GridPane.setHalignment(label, HPos.CENTER);
-            label.setTextFill(Color.YELLOW);
+            label.setTextFill(Color.HOTPINK);
             calendar.add(label, dayOfWeek - 1, 0);
-
-
         }
 
         LocalDate firstDisplayedDate = first.minusDays(dayOfWeekOfFirst - 1);
@@ -121,7 +119,7 @@ public class CalendarView {
 
             LocalDate l = LocalDate.now();
             if (date.getDayOfMonth() == l.getDayOfMonth() && date.getMonthValue() == l.getMonthValue()){
-                label.setTextFill(Color.YELLOW);
+                label.setTextFill(Color.HOTPINK);
                 calendar.add(label, dayOfWeek - 1, weeksSinceFirstDisplayed + 1);
             }
             else {
@@ -138,7 +136,7 @@ public class CalendarView {
                     String tmp = item.getStart().getDateTime().toStringRfc3339();
                     tmp = String.valueOf(tmp.charAt(11)+""+tmp.charAt(12)+""+tmp.charAt(13)+""+tmp.charAt(14)+""+tmp.charAt(15));
                     Label schedule =new Label(item.getSummary()+"\n\n" +  tmp);
-                    schedule.setTextFill(Color.CYAN);
+                    schedule.setTextFill(Color.HOTPINK);
                     calendar.add(schedule,dayOfWeek-1,weeksSinceFirstDisplayed+1);
                 }
             }
