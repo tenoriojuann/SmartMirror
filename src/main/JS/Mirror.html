@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+
+<body bgcolor="black" style="color: cyan" >
+
+<span id='ct' ></span>
+<script>
+	function display_c(){
+		var refresh=1000; // Refresh rate in milli seconds
+		mytime=setTimeout('display_ct()',refresh)
+		weather=setTimeout('gettingJSON()',refresh)
+	}
+
+	function display_ct() {
+		var strcount
+		var x = new Date()
+		var x1=x.getMonth()+1 + "/" + x.getDate() + "/" + x.getFullYear(); 
+		x1 = x1 + " - " + x.getHours( )+ ":" + x.getMinutes() + ":" + x.getSeconds();
+		document.getElementById('ct').innerHTML = x1;
+		document.getElementById('ct').style.fontSize='50px';
+		tt=display_c();
+	}
+</script>
+
+
+
+<div id="frame">
+
+<iframe src="http://localhost:8000/Desktop/quickstart.html" style="color:pink" width="300%" height="250" frameborder="0">
+
+</iframe>
+<style type="text/css" media="screen">
+    #frame {
+        position: fixed;
+        bottom: 0;
+    }
+</style>
+
+</div>
+
+
+
+<div id="weather">
+
+<iframe src="http://localhost:8000/Desktop/weather.html" style="color:pink" width="300%" height="350" frameborder="0">
+
+</iframe>
+<style type="text/css" media="screen">
+    #weather {
+        position: fixed;
+        top: 0;
+		right:0;
+    }
+</style>
+
+
+<div id="news">
+
+<iframe src="http://localhost:8000/Desktop/news.html" height="400">
+</iframe>
+<style type="text/css" media="screen">
+	#news{
+		position: fixed;
+		bottom:0;
+		right: 0;
+	}
+</style>
+</div>
+
+ 
+ <script>
+	window.onload = function(){
+		display_ct();
+	}
+</script>
+
+
+</body>
+</html>
