@@ -1,0 +1,46 @@
+
+version ''
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'CalendarViewTest'
+
+//create single Jar with all dependencies
+task fatJar(type: Jar) {
+	manifest {
+        attributes 'Implementation-Title': "",
+        	'Implementation-Version': version,
+        	'Main-Class': mainClassName
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.javafxports:jfxmobile-plugin:1.1.0'
+    }
+}
+
+apply plugin: 'org.javafxports.jfxmobile'
+
+repositories {
+    jcenter()
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
+    compile 'com.google.apis:google-api-services-calendar:v3-rev218-1.22.0'
+    compile 'com.google.code.gson:gson:2.7'
+
+}
