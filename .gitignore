@@ -1,6 +1,10 @@
 /src/main/resources/key.json
 /src/main/resources/client_id.json
 build
+.idea
+lib
 out
 target
-.gradle
+settings.gradle
+build.gradle
+pom.xml
