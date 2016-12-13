@@ -14,7 +14,7 @@ There are 4 HTML files that can be used to load some widgets inside a browser wi
 
 You will need an API Key from Google, with the Calendar API enabled and the domain set to localhost:8000
 
-Put your API Key inside the quickstart.html file, where <API_KEY> is.
+Put your API Key inside the quickstart.html file, where CLIENT_ID is.
 
 Now run a local server by typing this into the terminal. "python3 http.server 8000"
 
