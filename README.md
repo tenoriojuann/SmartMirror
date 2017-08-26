@@ -1,23 +1,17 @@
-# MagicMirror
+#Smart Mirror
 
-This is a JAVA project built with GRADLE and at the end it creates an executable JAR file.
+Set up:
 
-There are four widgets in this JAVAFX application, one displays the weather and the other displays a calendar 
-with all the information pulled from your Google account, another is a twitter feed, and lastly there is a clock widget.
+    Install:
 
-Update the project so that GRADLE can grab all of the dependancies.
-
-
-
-
-There are 4 HTML files that can be used to load some widgets inside a browser withtout the need of Java, just pure JS and HTML.
-
-You will need an API Key from Google, with the Calendar API enabled and the domain set to localhost:8000
-
-Put your API Key inside the quickstart.html file, where CLIENT_ID is.
-
-Now run a local server by typing this into the terminal. "python3 http.server 8000"
-
-Got to your browser and go to "localhost:8000/Desktop/Mirror.html
-
-The current setup needs the html files on your desktop.
+        Python3
+            Flask
+            sqlite3
+        GIT
+        Any IDE (Webstorm is good for Front-End stuff, Pycharm for python)
+        Any UI software for GIT (SourceTree, GitHub Client, etc.)
+            or you can just use the command line
+    
+    Fork the repository
+    Clone repository to your local machine
+    
