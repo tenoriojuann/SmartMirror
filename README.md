@@ -1,6 +1,6 @@
-#Smart Mirror
+**Smart Mirror**
 
-Set up:
+**Set up:**
 
     Install:
 
@@ -13,5 +13,14 @@ Set up:
             or you can just use the command line
     
     Fork the repository
+ 
     Clone repository to your local machine
+    
+    API Keys:
+        
+        Google
+        
+        Spotify
+        
+        Twitter
     
