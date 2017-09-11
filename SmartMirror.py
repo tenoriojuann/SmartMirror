@@ -1,22 +1,26 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, render_template
 import db
-app = Flask(__name__)
-database = db.DB()
+from werkzeug.exceptions import HTTPException, BadRequest
+app = Flask(__name__, static_folder="static", static_url_path="/static",
+            template_folder="templates")
+database = db.DB(app.root_path)
 
 
 @app.route('/', methods=['GET'])
 def index():
-    return 'Hello World!'
+    return render_template('index.html')
 
 
-@app.route('/register', methods=['POST', 'GET'])
+@app.route('/register', methods=['POST'])
 def getPreferences():
     if request.method == 'POST':
         content = request.get_json(force=True)
         print(content)
-
-        database.addProfile(content['name'], content['email'], content['token'], content['preferences'])
-        return "hi"
+        try:
+            database.addProfile(content)
+        except BadRequest as e:
+            return e
+        return render_template('register.html')
     else:
         return """<html><body>
         A record with that email has already been set up.

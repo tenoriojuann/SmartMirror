@@ -1,14 +1,16 @@
+from collections import defaultdict
+
+
 class User:
 
     def __init__(self, name, email, googletoken, pin):
         self.name = name
         self.email = email
         self.googletoken = googletoken
-        self.spotifytoken = ""
-        self.facepath = ""
+        self.spotifytoken = None
+        self.facepath = None
         self.pin = pin
-        self.twittertoken = ""
-
+        self.twittertoken = None
 
     def setName(self, name):
         self.name = name
