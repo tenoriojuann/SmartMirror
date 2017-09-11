@@ -2,6 +2,7 @@
 /src/main/resources/client_id.json
 build
 .idea
+conf.json
 lib
 out
 target

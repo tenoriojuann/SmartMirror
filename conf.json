@@ -1,0 +1,14 @@
+{
+  "google":{
+    "CLIENT_ID": "910617740457-56g7qqsturmt893oqd7ppornflq2lhs3.apps.googleusercontent.com",
+    "CLIENT_SECRET": "mWLVEm4sjYa4BgyL-O5_fVXp"
+  },
+  "openweather": {
+    "API_KEY": "mWLVEm4sjYa4BgyL-O5_fVXp"
+  },
+  "spotify":{
+   "CLIENT_ID":"50b7190d750d4b16b42365c3c9a75785",
+    "CLIENT_SECRET": "147567ae1736486aa6c0b3507572bb0f"
+  }
+
+}
