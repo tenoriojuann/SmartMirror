@@ -4,6 +4,7 @@ from static import User
 from werkzeug.exceptions import BadRequest
 # Database class which will be used to connect or execute commands in the DB
 
+
 class DB:
 
 # Initializing the class with some class variables
@@ -22,6 +23,7 @@ class DB:
     def displayVersion(self):
         print("DB version: ", self.version)
 
+
     def insertUserData(self, user):
         add = "insert into USERS (name, email, googletoken, pin, facepath, spotifytoken, twittertoken) VALUES (?,?,?,?,?,?,?)"
         self.executeSQL(add, [(user.name, user.email, user.googletoken, user.pin,
@@ -29,7 +31,6 @@ class DB:
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
-    # It should make sure to convert 'preferences' to a string and store it or make new columns in DB
     def addProfile(self, content):
         try:
             user = self.createUser(content)
@@ -37,7 +38,7 @@ class DB:
             print(e.description)
             raise BadRequest
         userEmail = 'select * from USERS where EMAIL= ?'
-        if len(self.executeSQL(userEmail, user.email).fetchall()) == 0:
+        if self.executeSQL(userEmail, user.email).rowcount == 0:
             print("No record found with that email")
             self.insertUserData(user)
             print("A new record was be added")
@@ -45,6 +46,7 @@ class DB:
             # We need to return something to the API end point here so it can display a
             # message in the UI
             print("A record with that email has already been registered")
+            raise sqlite3.DataError
 
     def createUser(self, content):
         try:
