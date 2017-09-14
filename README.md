@@ -13,13 +13,14 @@
         
   2. GIT 
   
-  this is the git shell, NOT the GitHub Client
+      this is the git shell, NOT the GitHub Client
   
   3. IDE
   
          Any IDE (Webstorm is good for Front-End stuff, Pycharm for python)
          Any UI software for GIT (SourceTree, GitHub Client, etc.)
          or you can just use the command line
+    
     
  ### Fork the repository
  
