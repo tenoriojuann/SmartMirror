@@ -13,7 +13,7 @@
         
   2. GIT 
   
-      this is the git shell, NOT the GitHub Client
+         this is the git shell, NOT the GitHub Client
   
   3. IDE
   
