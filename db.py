@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import sqlite3
 from static import User
 from werkzeug.exceptions import BadRequest
 # Database class which will be used to connect or execute commands in the DB
@@ -15,17 +16,13 @@ class DB:
         print("DB has been opened")
         self.cursor = self.conn.cursor()
 
-    # Method that can be called to execute a command
-    def executeSQL(self, command, values):
-        return self.cursor.executemany(command, values)
-
     def displayVersion(self):
         print("DB version: ", self.version)
 
 
     def insertUserData(self, user):
         add = "insert into USERS (name, email, googletoken, pin, facepath, spotifytoken, twittertoken) VALUES (?,?,?,?,?,?,?)"
-        self.executeSQL(add, [(user.name, user.email, user.googletoken, user.pin,
+        self.conn.executemany(add, [(user.name, user.email, user.googletoken, user.pin,
                               user.facepath, user.spotifytoken,user.twittertoken)])
         self.conn.commit()
 
@@ -36,8 +33,9 @@ class DB:
         except BadRequest as e:
             print(e.description)
             raise BadRequest
-        userEmail = 'select * from USERS where EMAIL= ?'
-        if self.executeSQL(userEmail, user.email).rowcount == 0:
+        userByEmail = 'SELECT COUNT(*) from USERS where EMAIL= ?'
+        count = self.conn.execute(userByEmail, [user.email]).fetchone()[0]
+        if count == 0:
             print("No record found with that email")
             self.insertUserData(user)
             print("A new record was be added")
