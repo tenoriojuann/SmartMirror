@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import sqlite3
 from static import User
 from werkzeug.exceptions import BadRequest
 # Database class which will be used to connect or execute commands in the DB
