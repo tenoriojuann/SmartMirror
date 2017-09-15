@@ -10,6 +10,9 @@ database = db.DB(app.root_path)
 def index():
     return render_template('index.html')
 
+@app.route('/register', methods=['GET'])
+def enterRegistration():
+    return render_template('Register.html')
 
 @app.route('/register', methods=['POST'])
 def getPreferences():
