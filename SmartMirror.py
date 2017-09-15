@@ -14,7 +14,6 @@ def index():
 @app.route('/register', methods=['POST'])
 def getPreferences():
     content = request.get_json(force=True)
-    print(content)
     try:
         database.addProfile(content)
     except BadRequest as e:

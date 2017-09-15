@@ -11,6 +11,8 @@ class User:
         self.facepath = None
         self.pin = pin
         self.twittertoken = None
+        self.maps = False
+        self.calendar = False
 
     def setName(self, name):
         self.name = name
@@ -26,7 +28,10 @@ class User:
 
     def setFacePath(self, path):
         self.facepath = path
-
+    def setMaps(self, wantsMaps):
+        self.maps = wantsMaps
+    def setCalendar(self, wantsCalendar):
+        self.calendar = wantsCalendar
     def setPin(self, pin):
         self.pin = self.encode(pin)
 

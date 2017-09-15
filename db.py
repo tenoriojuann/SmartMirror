@@ -20,10 +20,11 @@ class DB:
     def displayVersion(self):
         print("DB version: ", self.version)
 
+    # Sets the information given by the user to the DB
     def insertUserData(self, user):
-        add = "INSERT INTO USERS (name, email, googletoken, pin, facepath, spotifytoken, twittertoken) VALUES (?,?,?,?,?,?,?)"
+        add = "INSERT INTO USERS (name, email, googletoken, pin, facepath, spotifytoken, twittertoken, maps, calendar) VALUES (?,?,?,?,?,?,?,?,?)"
         self.conn.executemany(add, [(user.name, user.email, user.googletoken, user.pin,
-                                     user.facepath, user.spotifytoken, user.twittertoken)])
+                                     user.facepath, user.spotifytoken, user.twittertoken, user.maps,user.calendar)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
@@ -38,8 +39,6 @@ class DB:
             self.insertUserData(user)
             print("A new record was be added")
         else:
-            # We need to return something to the API end point here so it can display a
-            # message in the UI
             raise BadRequest("A record with that email has already been registered")
 
     def isUserRegistered(self, user):
@@ -51,8 +50,8 @@ class DB:
         else:
             return False
 
-    @staticmethod
-    def createUser(content):
+
+    def createUser(self, content):
         try:
             user = User.User(content["name"], content["email"], content["googletoken"], content["pin"])
         except KeyError as e:
@@ -63,6 +62,14 @@ class DB:
             print("I/O error: {0} was not included".format(e))
         try:
             user.setTwitterToken(content["twittertoken"])
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.setMaps(content["maps"])
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.setCalendar(content["calendar"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
 
