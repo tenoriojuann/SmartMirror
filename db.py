@@ -74,3 +74,10 @@ class DB:
             print("I/O error: {0} was not included".format(e))
 
         return user
+
+    #Hash the pin and compare it with the one on the DB
+    # If it is the same go ahead and delete it
+    # If it is not the same throw some error
+    def deleteUser(self, email, pin):
+        return 0
+
