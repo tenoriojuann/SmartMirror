@@ -16,7 +16,11 @@ def deleteUser():
     email = request.args.get('email')
     pin = request.args.get('pin')
     if database.isUserRegistered(email):
-        database.deleteUser(email, pin)
+        try:
+            database.deleteUser(email, pin)
+        except BadRequest:
+            return Response("Wrong pin", status=403)
+
         return Response("User deleted", status=202)
     else:
         return Response("User is not in the database", status=404)
@@ -33,7 +37,7 @@ def getPreferences():
         database.addProfile(content)
     except BadRequest as e:
         return Response("Error: "+e.description, status=400)
-    return Response("Added: "+ content['name']+ "to the DB", status=202)
+    return Response("Added: "+ content['name']+ " to the DB", status=202)
 
 if __name__ == '__main__':
     app.run()

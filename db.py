@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sqlite3
+import hashlib
 from static import User
 from werkzeug.exceptions import BadRequest
 
@@ -35,16 +36,16 @@ class DB:
             print(e.description)
             raise e
 
-        if not self.isUserRegistered(user):
+        if not self.isUserRegistered(user.email):
             self.insertUserData(user)
             print("A new record was be added")
         else:
             raise BadRequest("A record with that email has already been registered")
 
-    def isUserRegistered(self, user):
+    def isUserRegistered(self, email):
 
         userByEmail = 'SELECT COUNT(*) FROM USERS WHERE EMAIL= ?'
-        count = self.conn.execute(userByEmail, [user.email]).fetchone()[0]
+        count = self.conn.execute(userByEmail, [email]).fetchone()[0]
         if count > 0:
             return True
         else:
@@ -53,7 +54,7 @@ class DB:
 
     def createUser(self, content):
         try:
-            user = User.User(content["name"], content["email"], content["googletoken"], content["pin"])
+            user = User.User(content["name"], content["email"], content["googletoken"], self.encrypt(content["pin"]))
         except KeyError as e:
             raise BadRequest("I/O error: {0} was not included".format(e))
         try:
@@ -79,5 +80,25 @@ class DB:
     # If it is the same go ahead and delete it
     # If it is not the same throw some error
     def deleteUser(self, email, pin):
-        return 0
+        if self.getHashedPin(email) == self.encrypt(pin):
+            query = "DELETE FROM USERS WHERE email = ?"
+            self.conn.execute(query, [email])
+        else:
+            raise BadRequest
 
+
+    def getHashedPin(self, email):
+        query = "SELECT * FROM USERS WHERE email = ?"
+        pin = self.conn.execute(query, [email]).fetchone()[2]
+        return pin
+
+    def encrypt(self, pin):
+        m = hashlib.new('sha512')
+        m.update(pin.encode('utf8'))
+        return m.hexdigest()
+
+    def isHashSame(self, hashedPin, originalPin):
+        m = self.encrypt(originalPin)
+        if(hashedPin == m):
+            return True
+        return False
