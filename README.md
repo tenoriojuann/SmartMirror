@@ -25,6 +25,8 @@
  ### Fork the repository
  
  ### Clone repository to your local machine
+ 
+    Checkout the 'develop' branch
     
 ### API Keys:
         
