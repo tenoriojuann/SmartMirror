@@ -30,7 +30,7 @@ google = oauth.remote_app(
 
 @app.route('/')
 def index():
-    if 'google_token' in session:
+    if isLoggedIn():
         me = google.get('userinfo')
         return jsonify({"data": me.data})
     return redirect(url_for('login'))
@@ -44,9 +44,11 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('google_token', None)
-    return Response("User logged out", status=200)
-
+    if isLoggedIn():
+        session.pop('google_token', None)
+        return Response("User logged out", status=200)
+    else:
+        return Response("User is not logged in", status=403)
 
 @app.route('/login/authorized')
 def authorized():
@@ -63,12 +65,13 @@ def authorized():
 
 @google.tokengetter
 def get_google_oauth_token():
-    return session.get('google_token')
+    if isLoggedIn():
+        return session.get('google_token')
 
 
 @app.route('/delete', methods=['GET'])
 def deleteUser():
-    if 'google_token' in session:
+    if isLoggedIn():
         email = request.args.get('email')
         pin = request.args.get('pin')
         if database.isUserRegistered(email):
@@ -85,7 +88,11 @@ def deleteUser():
 
 @app.route('/register', methods=['GET'])
 def enterRegistration():
-    return render_template('Register.html')
+    if isLoggedIn():
+        return render_template('Register.html')
+    else:
+        return Response("User is not logged in", status=403)
+
 
 @app.route('/register', methods=['POST'])
 def getPreferences():
@@ -95,6 +102,11 @@ def getPreferences():
     except BadRequest as e:
         return Response("Error: "+e.description, status=400)
     return Response("Added: "+ content['name']+ " to the DB", status=202)
+
+def isLoggedIn():
+    if 'google_token' in session:
+        return True
+    return False
 
 if __name__ == '__main__':
     app.run()
