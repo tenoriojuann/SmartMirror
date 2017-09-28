@@ -1,4 +1,5 @@
 # **Smart Mirror**
+[![Build Status](https://travis-ci.org/tenoriojuann/SmartMirror.svg?branch=master)](https://travis-ci.org/tenoriojuann/SmartMirror)
 
 ## **Set up:**
 
@@ -9,7 +10,6 @@
      Install these modules using **pip install 'MODULE'**
     
         Flask
-        sqlite3
         
   2. GIT 
   
