@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, render_template, url_for, jsonify
 from db import DB
 from flask_oauthlib.client import  OAuth, session, redirect
@@ -7,16 +9,14 @@ app = Flask(__name__, static_folder="static", static_url_path="/static",
             template_folder="templates")
 database = DB(app.root_path)
 
-app.config['GOOGLE_ID'] = "910617740457-56g7qqsturmt893oqd7ppornflq2lhs3.apps.googleusercontent.com"
-app.config['GOOGLE_SECRET'] = "mWLVEm4sjYa4BgyL-O5_fVXp"
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
 
 google = oauth.remote_app(
     'google',
-    consumer_key=app.config.get('GOOGLE_ID'),
-    consumer_secret=app.config.get('GOOGLE_SECRET'),
+    consumer_key=os.environ.get('GOOGLE_ID'),
+    consumer_secret=os.environ.get('GOOGLE_SECRET'),
     request_token_params={
         'scope': 'email'
     },
