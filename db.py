@@ -54,7 +54,7 @@ class DB:
 
     def createUser(self, content):
         try:
-            user = User.User(content["name"], content["email"], content["googletoken"], self.encrypt(content["pin"]))
+            user = User.User(content["name"], content["email"], self.encrypt(content["pin"]))
         except KeyError as e:
             raise BadRequest("I/O error: {0} was not included".format(e))
         try:

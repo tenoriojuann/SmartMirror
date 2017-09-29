@@ -30,7 +30,7 @@ google = oauth.remote_app(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
 
-currentUser = User("", "", "", "")
+currentUser = User("", "", "")
 
 
 @app.route('/')
@@ -63,10 +63,11 @@ def authorized():
             request.args['error_reason'],
             request.args['error_description']
         )
+    session['google_token'] = (resp['access_token'], '')
     _sess = session['google_token']
     # TRANSFER FROM PHONE TO MIRROR WILL HAVE TO HAPPEN HERE
-    redirect(url_for('transfersession', sess=_sess))
-    # HOPE THIS ^ WORKS
+    # redirect(url_for('transfersession', sess=_sess))
+    # HOPE THIS ^ WORKS WILL TEST AT HOME
     _me = google.get("https://www.googleapis.com/plus/v1/people/me").data
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
@@ -76,7 +77,7 @@ def authorized():
 @app.route('/session/string:<sess>', methods=['POST','GET'])
 def transfersession(sess):
     session['google_token'] = sess
-    redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 
 @google.tokengetter
