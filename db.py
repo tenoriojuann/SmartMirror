@@ -13,7 +13,7 @@ class DB:
     def __init__(self, root):
         self.root = root
         self.version = sqlite3.version
-        self.conn = sqlite3.connect(root + "\DATA.db")
+        self.conn = sqlite3.connect(root + "\DATA.db", check_same_thread=False)
         print(root + "\DATA.db")
         print("DB has been opened")
         self.cursor = self.conn.cursor()
