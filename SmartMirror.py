@@ -1,5 +1,5 @@
 import os
-
+from static.User import User
 import datetime
 import pytz
 from flask import Flask, request, render_template, url_for, jsonify
@@ -20,7 +20,7 @@ google = oauth.remote_app(
     consumer_key=os.environ.get('GOOGLE_ID'),
     consumer_secret=os.environ.get('GOOGLE_SECRET'),
     request_token_params={
-        'scope': 'https://www.googleapis.com/auth/calendar.readonly profile https://www.googleapis.com/auth/gmail.readonly'
+        'scope': 'https://www.googleapis.com/auth/calendar.readonly email profile https://www.googleapis.com/auth/gmail.readonly'
     },
     base_url='https://www.googleapis.com/oauth2/v1/',
     request_token_url=None,
@@ -29,10 +29,12 @@ google = oauth.remote_app(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
 
+currentUser = User("","","","")
 
 @app.route('/')
 def index():
     if isLoggedIn():
+        print(currentUser.email)
         return render_template('index.html')
     return redirect(url_for('login'))
 
@@ -60,9 +62,10 @@ def authorized():
             request.args['error_description']
         )
     session['google_token'] = (resp['access_token'], '')
-    me = google.get('userinfo')
-    #return jsonify({"data": me.data})
-    return render_template('index.html')
+    _me = google.get("https://www.googleapis.com/plus/v1/people/me").data
+    currentUser.name = _me["displayName"]
+    currentUser.email = _me["emails"][0]["value"]
+    return redirect(url_for("index"))
 
 @google.tokengetter
 def get_google_oauth_token():
