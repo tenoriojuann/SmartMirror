@@ -1,0 +1,5 @@
+Flask==0.11.1
+Flask_OAuthlib==0.9.4
+Werkzeug==0.12.2
+pytz==2016.6.1
+flask_testing==0.6.2
