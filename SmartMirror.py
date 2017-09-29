@@ -1,5 +1,7 @@
 import os
 
+import datetime
+import pytz
 from flask import Flask, request, render_template, url_for, jsonify
 from db import DB
 from flask_oauthlib.client import  OAuth, session, redirect
@@ -31,8 +33,7 @@ google = oauth.remote_app(
 @app.route('/')
 def index():
     if isLoggedIn():
-        me = google.get('userinfo')
-        return jsonify({"data": me.data})
+        return render_template('index.html')
     return redirect(url_for('login'))
 
 
@@ -60,8 +61,8 @@ def authorized():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
-    return jsonify({"data": me.data})
-
+    #return jsonify({"data": me.data})
+    return render_template('index.html')
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -89,9 +90,26 @@ def deleteUser():
 @app.route('/register', methods=['GET'])
 def enterRegistration():
     if isLoggedIn():
+        print()
         return render_template('Register.html')
     else:
         return Response("User is not logged in", status=403)
+
+@app.route('/events', methods=['GET'])
+def getEvents():
+    if isLoggedIn():
+        # get events from calendar for the next 3 days
+        cest = pytz.timezone('America/New_York')
+        now = datetime.datetime.now(tz=cest)  # timezone?
+        timeMin = datetime.datetime(year=now.year, month=now.month, day=now.day, tzinfo=cest) + datetime.timedelta(
+            days=1)
+        timeMin = timeMin.isoformat()
+        timeMax = datetime.datetime(year=now.year, month=now.month, day=now.day, tzinfo=cest) + datetime.timedelta(
+            days=1000)
+        timeMax = timeMax.isoformat()
+        events = google.get('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+timeMin+'&timeMax='+timeMax).data
+        return jsonify({"list": events["items"]})
+    return Response(status=403)
 
 
 @app.route('/register', methods=['POST'])
