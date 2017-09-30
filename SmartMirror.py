@@ -1,5 +1,6 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template,jsonify
 from db import DB
+import json
 from werkzeug.exceptions import BadRequest, NotFound
 from werkzeug.wrappers import BaseResponse as Response
 app = Flask(__name__, static_folder="static", static_url_path="/static",
@@ -38,6 +39,20 @@ def getPreferences():
     except BadRequest as e:
         return Response("Error: "+e.description, status=400)
     return Response("Added: "+ content['name']+ " to the DB", status=202)
+
+@app.route('/profile', methods=['GET'])
+def getProfile():
+    email = request.args.get('email')
+    if(database.isUserRegistered(email)):
+        try:
+            profileData = database.getUser(email)
+            #profileData = jsonify(profileData)
+        except BadRequest:
+            return Response("Not an email", status=403)
+        return(jsonify(profileData))
+    else:
+        return Response("Profile not found", status=404)
+
 
 if __name__ == '__main__':
     app.run()
