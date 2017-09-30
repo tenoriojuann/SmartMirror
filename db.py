@@ -86,6 +86,14 @@ class DB:
         else:
             raise BadRequest
 
+    def getUser(self, email):
+        if self.isUserRegistered(email):
+            query = "SELECT * FROM USERS WHERE email = ?"
+            userData = list(self.conn.execute(query, [email]).fetchall())
+            return userData
+        else:
+            raise BadRequest
+
 
     def getHashedPin(self, email):
         query = "SELECT * FROM USERS WHERE email = ?"
