@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template,jsonify
 from db import DB
-import json
 from werkzeug.exceptions import BadRequest, NotFound
 from werkzeug.wrappers import BaseResponse as Response
 app = Flask(__name__, static_folder="static", static_url_path="/static",

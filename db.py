@@ -13,7 +13,7 @@ class DB:
     def __init__(self, root):
         self.root = root
         self.version = sqlite3.version
-        self.conn = sqlite3.connect(root + "\DATA.db")
+        self.conn = sqlite3.connect(root + "\DATA.db", check_same_thread=False)
         print(root + "\DATA.db")
         print("DB has been opened")
         self.cursor = self.conn.cursor()
@@ -54,7 +54,7 @@ class DB:
 
     def createUser(self, content):
         try:
-            user = User.User(content["name"], content["email"], content["googletoken"], self.encrypt(content["pin"]))
+            user = User.User(content["name"], content["email"], self.encrypt(content["pin"]))
         except KeyError as e:
             raise BadRequest("I/O error: {0} was not included".format(e))
         try:
