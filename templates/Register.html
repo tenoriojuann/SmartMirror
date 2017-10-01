@@ -1,5 +1,45 @@
+<!Doctype html>
 <html>
-<body style="background-color: black">
-<p style="color:white">REGISTER NIGGA!!</p>
+<head>
+    <title>Home Page</title>
+    <!--having issues with css atm-->
+    <link rel="stylesheet" type="text/css" href="Register.css">
+</head>
+<body>
+
+<form>
+	<p>Time
+        <!--Check boxes can be made into sliders and did checked because I wanted time set to default-->
+        <input name="time" id= "time" type="checkbox" checked>
+    </p>
+    <p>Twitter
+        <input name="twittertoken" id="twitter" type="checkbox">
+    </p>
+     <p>Calendar
+     <input name="calendar" id="calendar" type="checkbox">
+    </p>
+    <p>Map
+        <input name="maps" id="eta" type="checkbox">
+    </p>
+    <p>Spotify
+        <input name="spotifytoken" id="spotify" type="checkbox">
+    </p>
+
+    <Label for="pin">4 character pin: </Label>
+    <input name="pin" type="text" Placeholder="****" required pattern=".{4,4}" maxlength="4" minlength="4">
+    <br>
+    <p>Picture of face:</p>
+    <input name="facepath" type="file" accept="image/*" capture="camera" required>
+
+    <hr/>
+
+<input type="submit">
+</form>
+<!--Need to make it logout when the sumbit is clicked as well,
+Need to check how post works before I setup-->
+
+<form action="{{url_for('logout')}}">
+   <input type="Submit" value="Cancel" />
+</form>
 </body>
 </html>
