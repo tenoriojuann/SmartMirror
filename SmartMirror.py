@@ -35,7 +35,9 @@ currentUser = User("", "", "")
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if not isLoggedIn():
+        return render_template('index.html')
+    return redirect(url_for("enterRegistration"))
 
 
 
