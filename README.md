@@ -5,11 +5,9 @@
 
 ### Install:
 
- 1. Python3
- 
-     Install these modules using **pip install 'MODULE'**
-    
-        Flask
+ 1. Python3 & Dependencies
+  
+         "pip install -r requirements.txt"
         
   2. GIT 
   
@@ -25,7 +23,11 @@
  ### Fork the repository
  
  ### Clone repository to your local machine
-    
+
+ ### Set up Environment Variables
+ 
+        Make sure to set up the CLIENT_ID and CLIENT_SECRET environmnet variables
+
 ### API Keys:
         
         Ask for these keys, they will be in Slack but ask if you cannot 
