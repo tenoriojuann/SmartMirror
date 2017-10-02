@@ -2,6 +2,7 @@ import os
 from static.User import User
 import datetime
 import pytz
+import webbrowser
 from flask import Flask, request, render_template, url_for, jsonify
 from db import DB
 from flask_oauthlib.client import OAuth, session, redirect
@@ -35,10 +36,7 @@ currentUser = User("", "", "")
 
 @app.route('/')
 def index():
-    if not isLoggedIn():
-        return render_template('index.html')
-    return redirect(url_for("enterRegistration"))
-
+    return render_template('index.html')
 
 
 @app.route('/login')
@@ -65,17 +63,15 @@ def authorized():
             request.args['error_description']
         )
     session['google_token'] = (resp['access_token'], '')
-    _sess = session['google_token']
-    # TRANSFER FROM PHONE TO MIRROR WILL HAVE TO HAPPEN HERE
-    # redirect(url_for('transfersession', sess=_sess))
-    # HOPE THIS ^ WORKS WILL TEST AT HOME
     _me = google.get("https://www.googleapis.com/plus/v1/people/me").data
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
-    return redirect(url_for("index"))
+    # Uncomment the line below for local testing
+    # return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
+    return redirect(url_for('enterRegistration'))
 
 
-@app.route('/session/string:<sess>', methods=['POST','GET'])
+@app.route('/session/<sess>', methods=['POST', 'GET'])
 def transfersession(sess):
     session['google_token'] = sess
     return redirect(url_for('index'))
@@ -92,15 +88,12 @@ def deleteUser():
     if isLoggedIn():
         email = currentUser.email
         pin = request.args.get('pin')
-        if database.isUserRegistered(email):
-            try:
-                database.deleteUser(email, pin)
-            except BadRequest:
-                return Response("Wrong pin", status=403)
+        try:
+            database.deleteUser(email, pin)
+        except BadRequest:
+            return Response("Wrong pin", status=403)
 
-            return Response("User deleted", status=202)
-        else:
-            return Response("User is not in the database", status=404)
+        return Response("User deleted", status=202)
     else:
         return Response("NOT LOGGED IN", status=403)
 
@@ -108,11 +101,9 @@ def deleteUser():
 @app.route('/register', methods=['GET'])
 def enterRegistration():
     if isLoggedIn():
-        print()
         return render_template('Register.html')
     else:
         return render_template('index.html')
-
 
 
 @app.route('/events', methods=['GET'])
@@ -142,18 +133,20 @@ def getPreferences():
         return Response("Error: " + e.description, status=400)
     return Response("Added: " + content['name'] + " to the DB", status=202)
 
+
 @app.route('/profile', methods=['GET'])
 def getProfile():
     email = request.args.get('email')
-    if(database.isUserRegistered(email)):
+    if (database.isUserRegistered(email)):
         try:
             profileData = database.getUser(email)
-            #profileData = jsonify(profileData)
+            # profileData = jsonify(profileData)
         except BadRequest:
             return Response("Not an email", status=403)
-        return(jsonify(profileData))
+        return (jsonify(profileData))
     else:
         return Response("Profile not found", status=404)
+
 
 def isLoggedIn():
     if 'google_token' in session:
