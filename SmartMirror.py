@@ -112,7 +112,7 @@ def enterRegistration():
         return render_template('Register.html')
     else:
         return render_template('index.html')
-        #return Response("User is not logged in", status=403)
+
 
 
 @app.route('/events', methods=['GET'])
