@@ -12,6 +12,7 @@ class User:
         self.twittertoken = None
         self.maps = False
         self.calendar = False
+        self.time=False
 
     def setName(self, name):
         self.name = name
@@ -33,3 +34,6 @@ class User:
 
     def setTwitterToken(self, token):
         self.twittertoken = token
+
+    def setTime(self,wantsTime):
+        self.time=wantsTime
