@@ -1,4 +1,8 @@
+import json
 import os
+
+import requests
+
 from static.User import User
 import datetime
 import pytz
@@ -67,8 +71,8 @@ def authorized():
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
     # Uncomment the line below for local testing
-    # return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
-    return redirect(url_for('enterRegistration'))
+    return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
+    # return redirect(url_for('enterRegistration'))
 
 
 @app.route('/session/<sess>', methods=['POST', 'GET'])
@@ -116,7 +120,7 @@ def getEvents():
             days=1)
         timeMin = timeMin.isoformat()
         timeMax = datetime.datetime(year=now.year, month=now.month, day=now.day, tzinfo=cest) + datetime.timedelta(
-            days=3)
+            days=300)
         timeMax = timeMax.isoformat()
         events = google.get(
             'https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=' + timeMin + '&timeMax=' + timeMax).data
@@ -147,6 +151,17 @@ def getProfile():
     else:
         return Response("Profile not found", status=404)
 
+@app.route('/weather', methods=['GET'])
+def weather():
+    send_url = 'http://freegeoip.net/json'
+    LocationRequest = requests.get(send_url)
+    LocationResponse = json.loads(LocationRequest.text)
+    lat = LocationResponse['latitude']
+    lon = LocationResponse['longitude']
+    weather__key = os.environ.get('WEATHER_KEY')
+    url = 'http://api.openweathermap.org/data/2.5/weather?lat='+str(lat)+'&lon='+str(lon)+'&units=imperial'+'&APPID='+str(weather__key)
+    openWeatherRequest = requests.get(url)
+    return jsonify(openWeatherRequest.json())
 
 def isLoggedIn():
     if 'google_token' in session:
