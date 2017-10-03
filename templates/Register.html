@@ -2,8 +2,6 @@
 <html>
 <head>
     <title>Home Page</title>
-    <!--having issues with css atm-->
-    <link rel="stylesheet" type="text/css" href="Register.css">
 </head>
 <body>
 
@@ -29,17 +27,18 @@
     <input name="pin" type="text" Placeholder="****" required pattern=".{4,4}" maxlength="4" minlength="4">
     <br>
     <p>Picture of face:</p>
-    <input name="facepath" type="file" accept="image/*" capture="camera" required>
+    <input name="facepath"  type="file" accept="image/*" capture="camera" required>
 
     <hr/>
 
-<input type="submit">
+    <input class="btn btn-lg btn-success" type="submit">
+    <input class ="btn btn-lg btn-danger" type="button" onclick="window.location.href='{{url_for('index')}}'" value="Cancel" />
 </form>
-<!--Need to make it logout when the sumbit is clicked as well,
-Need to check how post works before I setup-->
 
 <form action="{{url_for('logout')}}">
-   <input type="Submit" value="Cancel" />
+
 </form>
 </body>
+
+<link rel="stylesheet" href="{{ url_for('static', filename ="styles/bootstrap/bootstrap.css") }}">
 </html>
