@@ -1,6 +1,8 @@
 import json
 import os
+
 import requests
+
 from static.User import User
 import datetime
 import pytz
@@ -14,6 +16,7 @@ from werkzeug.wrappers import BaseResponse as Response
 app = Flask(__name__, static_folder="static", static_url_path="/static",
             template_folder="templates")
 database = DB(app.root_path)
+
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
@@ -68,7 +71,7 @@ def authorized():
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
     # Uncomment the line below for local testing
-    #webbrowser.open_new(url_for('getProfile',email= currentUser.email))
+    #return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
     return redirect(url_for('enterRegistration'))
 
 
@@ -138,7 +141,7 @@ def getPreferences():
 @app.route('/profile', methods=['GET'])
 def getProfile():
     email = request.args.get('email')
-    if database.isUserRegistered(email):
+    if (database.isUserRegistered(email)):
         try:
             profileData = database.getUser(email)
             # profileData = jsonify(profileData)
