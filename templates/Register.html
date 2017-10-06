@@ -2,7 +2,7 @@
 <html>
 <!--ToggleData Documentation: http://www.bootstraptoggle.com/ -->
 <head>
-    <link href="RegisterPage.css" rel="stylesheet">
+    <link href="Register.css" rel="stylesheet">
     <!-- Bootstrap core CSS -->
     <!--<link href="bootstrap-3.0.0/dist/css/bootstrap.css" rel="stylesheet">-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -68,7 +68,7 @@
         <div class="col-md-8">
             <div class="col-md-12" style="text-align: center">
                 <!-----------Twitter--------->
-                <img src="imageIcon/TwitterIcon.jpg">
+                <img src="{{ url_for('static', filename='ImageIcon/TwitterIcon.jpg') }}">
                 <input name="twittertoken" id="twitter" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
             <!-----------Spotify (if we decide to include it) -------->
