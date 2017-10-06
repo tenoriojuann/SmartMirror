@@ -2,42 +2,41 @@
 <html>
 <!--ToggleData Documentation: http://www.bootstraptoggle.com/ -->
 <head>
-    <link href="Register.css" rel="stylesheet">
-    <!-- Bootstrap core CSS -->
-    <!--<link href="bootstrap-3.0.0/dist/css/bootstrap.css" rel="stylesheet">-->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/Register.css') }}">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
     <title>Setup Page</title>
 </head>
 <body style="background: black">
-<!--Xanthan Mirror Setup Top Row -->
-    <div class="rowHeader">
+<!--Xanthan Mirror Setup Top Row-->
+    <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="col-md-12">
+        <div class="col-md-8" style="text-align: center">
                 <h1 style="color: white">Xanthan Mirror Setup</h1>
                 <hr/>
-            </div>
         </div>
         <div class="col-md-2"></div>
     </div>
 
-<form>
+<form action="{{ url_for('getPreferences') }}">
     <!-----------Time & Weather Widget Row------->
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8">
+        <div class="col-md-8"style="text-align: center">
             <!-----------Time------->
             <div class="col-md-6" style="text-align: center">
-                <img src="imageIcon/ClockIcon.jpg">
+                <img src="{{ url_for('static', filename='ImageIcon/ClockIcon.jpg') }}">
                 <input name="time" id= "time" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" >
             </div>
             <!-----------Weather--------->
             <div class="col-md-6" style="text-align: center">
-                <img src="imageIcon/WeatherIcon.jpg"  >
+               <img src="{{ url_for('static', filename='ImageIcon/WeatherIcon.jpg') }}">
                 <input name="weather" id="weather" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
         </div>
@@ -47,15 +46,15 @@
     <!-----------Google Maps & Calendar Widget Row-------->
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8">
+        <div class="col-md-8" style="text-align: center">
             <!-----------Google Maps------->
             <div class="col-md-6" style="text-align: center">
-                <img src="imageIcon/GoogleMapsIcon.jpg" >
+                <img src="{{ url_for('static', filename='ImageIcon/GoogleMapsIcon.jpg') }}">
                 <input name="maps" id="eta" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
             <!-----------Google Calendar--------->
             <div class="col-md-6" style="text-align: center">
-                <img src="imageIcon/GoogleCalendarIcon.jpg"  >
+                <img src="{{ url_for('static', filename='ImageIcon/GoogleCalendarIcon.jpg') }}">
                 <input name="calendar" id="calendar" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
         </div>
@@ -65,52 +64,41 @@
     <!------------Twitter & Spotify Widget Row ------->
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="col-md-12" style="text-align: center">
+        <div class="col-md-8" style="text-align: center">
                 <!-----------Twitter--------->
-                <img src="{{ url_for('static', filename='ImageIcon/TwitterIcon.jpg') }}">
+                <img src="{{ url_for('static', filename='ImageIcon/TwitterIcon.jpg') }}" style="padding-right: 2.5%">
                 <input name="twittertoken" id="twitter" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
-            </div>
             <!-----------Spotify (if we decide to include it) -------->
             <!--<div class="col-md-6" style="text-align: center">
-                <img src="imageIcon/SpotifyIcon.jpg">
+                <img src="{{ url_for('static', filename='ImageIcon/SpotifyIcon.jpg') }}">
                 <input style="padding-top: 10em" name="spotifytoken" id="spotify" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>-->
         </div>
         <div class="col-md-2"></div>
     </div>
 
-    <!------- 4 Char Pin && Upload Image Text Row  ----------->
+    <!------- 4 Char Pin Row ----------->
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8" style="text-align: center">
-                <div class="col-md-6">
-                    <Label for="pin" style="color: white"><h3>Enter 4 Character Pin</h3></Label>
-                </div>
-            <div class="col-md-6">
-                    <h3 style="color:white">Upload an Image of Your Face</h3>
-            </div>
+            <Label for="pin" style="color: white"><h3>Create 4 Character Pin</h3></Label>
+
         </div>
         <div class="col-md-2"></div>
     </div>
 
-    <!-- 4 Char Pin Input Field && Choose File Input Field Row ---->
+    <!-- 4 Char Pin Input Field Row ---->
     <div class="row" style="padding-top: 0%">
         <div class="col-md-2"></div>
         <div class="col-md-8"style="text-align: center">
-            <div class="col-md-6">
-                <input name="pin" id="pin" type="text" Placeholder="****" required pattern=".{4,4}" maxlength="4" minlength="4" style="width: 20%">
-            </div>
-            <div class="col-md-6">
-                <input  style="color: white" name="facepath" type="file" accept="image/*" capture="camera" required class="btn btn-group-justified btn-danger" >
-            </div>
+        <input name="pin" id="pin" type="text" Placeholder="****" required pattern=".{4,4}" maxlength="4" minlength="4" style="width: 10%">
+            <hr/>
         </div>
         <div class="col-md-2"></div>
     </div>
 
-    <hr/>
     <!---- Cancel & Submit Button ----->
-    <div class="row">
+    <div class="row" style="padding-top: 0%">
         <div class="col-md-2"></div>
         <div class="col-md-8" style="text-align: center">
             <input  class ="btn btn-lg btn-danger" type="button" value="Cancel" />
@@ -119,7 +107,6 @@
         <div class="col-md-2"></div>
     </div>
 </form>
-
 <form action="{{url_for('logout')}}"></form>
 </body>
 </html>

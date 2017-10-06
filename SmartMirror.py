@@ -101,8 +101,9 @@ def deleteUser():
     else:
         return Response("NOT LOGGED IN", status=403)
 
-
-@app.route('/register', methods=['GET'])
+#('/register/<user>',
+# def enterRegistration(user)
+@app.route('/register/', methods=['GET'])
 def enterRegistration():
     if isLoggedIn():
         return render_template('Register.html')
