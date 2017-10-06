@@ -43,7 +43,7 @@ class DB:
 
     def isUserRegistered(self, email):
 
-        userByEmail = 'SELECT COUNT(*) FROM USERS WHERE EMAIL= ?'
+        userByEmail = 'SELECT COUNT(*) FROM Users WHERE email= ?'
         count = self.conn.execute(userByEmail, [email]).fetchone()[0]
         if count > 0:
             return True
@@ -84,14 +84,14 @@ class DB:
     # If it is not the same throw some error
     def deleteUser(self, email, pin):
         if self.isHashSame(self.getHashedPin(email), pin):
-            query = "DELETE FROM USERS WHERE email = ?"
+            query = "DELETE FROM Users WHERE email = ?"
             self.conn.execute(query, [email])
         else:
             raise BadRequest
 
     def getUser(self, email):
         if self.isUserRegistered(email):
-            query = "SELECT * FROM USERS WHERE email = ?"
+            query = "SELECT * FROM Users WHERE email = ?"
             userData = list(self.conn.execute(query, [email]).fetchall())
             return userData
         else:
@@ -99,7 +99,7 @@ class DB:
 
 
     def getHashedPin(self, email):
-        query = "SELECT * FROM USERS WHERE email = ?"
+        query = "SELECT * FROM Users WHERE email = ?"
         pin = self.conn.execute(query, [email]).fetchone()[2]
         return pin
 
