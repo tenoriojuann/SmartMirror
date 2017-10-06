@@ -71,8 +71,8 @@ def authorized():
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
     # Uncomment the line below for local testing
-    return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
-    # return redirect(url_for('enterRegistration'))
+    #return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
+    return redirect(url_for('enterRegistration'))
 
 
 @app.route('/session/<sess>', methods=['POST', 'GET'])
