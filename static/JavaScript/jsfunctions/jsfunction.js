@@ -1,10 +1,9 @@
 var userChoices={
         name:"name" ,
         email:"rando@gmail.com",
-        googletoken:"temp",
         pin:"temp",
-        spotifytoken: false,
-        twittertoken: false,
+        //spotifytoken: false,
+        twitter: false,
         maps: false,
         calendar:false,
         weather:true,
@@ -25,79 +24,79 @@ function calendar(){
         userChoices.calendar=false;
 }
 }
-function spotifytoken(){
-    if(document.getElementById('spotifytoken').checked) {
-        userChoices.spotifytoken=true;
-    } else {
-        userChoices.spotifytoken=false;
-}
-}
+//function spotifytoken(){
+   // if(document.getElementById('spotifytoken').checked) {
+     //   userChoices.spotifytoken=true;
+    //} else {
+    //    userChoices.spotifytoken=false;
+//}
+//}
 function maps(){
-    if(document.getElementById('maps').checked) {
+    if(document.getElementById('eta').checked) {
+        userChoices.maps=true;
+    } else {
+        userChoices.maps=false;
+}
+}
+function twitter(){
+    if(document.getElementById('twitter').checked) {
+        userChoices.twitter=true;
+    } else {
+        userChoices.twitter=false;
+}
+}
+function weather(){
+    if (document.getElementById("weather").checked) {
         userChoices.weather=true;
     } else {
         userChoices.weather=false;
 }
 }
-function twittertoken(){
-    if(document.getElementById('twittertoken').checked) {
-        userChoices.twittertoken=true;
-    } else {
-        userChoices.twittertoken=false;
-}
-}
-function weather() {
-    if (document.getElementById('weather').checked) {
-        userChoices.time = true;
-    } else {
-        userChoices.time = false;
-    }
-}
-//Doesn't work
-function googletoken() {
-    userchoices.googletoken= url_for('');
 
-}
 function pin(){
     userChoices.pin=document.getElementById('pin').value;
 }
 function name(){
-    userChoices.name="fromGoogleToken"
+    userChoices.name="fromEndPoint"
 
 }
 function email(){
-    userChoices.email="fromGoogleToken"
+    userChoices.email="fromEbdPoint"
 }
-function facePath(){
-    document.getElementById('facepath').files;
-}
+
 //from stack overflow need to modify and test.
-function postIt(){
-  // construct an HTTP request
-  var xhr = new XMLHttpRequest();
-  xhr.open(form.method, form.action, true);
-  xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+//From https://stackoverflow.com/questions/1255948/post-data-in-json-format
+function postIt() {
+    var form;
 
-  // send the collected data as JSON
-  xhr.send(JSON.stringify(userChoices));
+    form.onsubmit = function (e) {
+        // stop the regular form submission
+        e.preventDefault();
 
-  xhr.onloadend = function () {
-    // done
-  };
-    //different method
-    //$('#userChoices').val(JSON.stringify(userChoices));
-   // $('form').submit();
+        // collect the form data while iterating over the inputs
+        var data = userChoices;
+        // construct an HTTP request
+        var xhr = new XMLHttpRequest();
+//Not sure about equal post or the address.
+        xhr.open(form.method="post", form.action="http://127.0.0.1:5000/Register", true);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+        // send the collected data as JSON
+        xhr.send(JSON.stringify(data));
+
+        xhr.onloadend = function () {
+            // done
+        };
+    };
 }
 function createUser(){
     email();
     name();
     time();
-    googletoken();
     pin();
     weather();
-    twittertoken();
+    twitter();
     maps();
-    spotifytoken();
     calendar();
 
 }
