@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sqlite3
 import hashlib
-from static import User
+from static.User import User
 from werkzeug.exceptions import BadRequest
 
 
@@ -13,8 +13,7 @@ class DB:
     def __init__(self, root):
         self.root = root
         self.version = sqlite3.version
-        self.conn = sqlite3.connect(root + "\DATA.db")
-        print(root + "\DATA.db")
+        self.conn = sqlite3.connect(root + "\DATA.db", check_same_thread=False)
         print("DB has been opened")
         self.cursor = self.conn.cursor()
 
@@ -23,9 +22,9 @@ class DB:
 
     # Sets the information given by the user to the DB
     def insertUserData(self, user):
-        add = "INSERT INTO USERS (name, email, googletoken, pin, facepath, spotifytoken, twittertoken, maps, calendar) VALUES (?,?,?,?,?,?,?,?,?)"
-        self.conn.executemany(add, [(user.name, user.email, user.googletoken, user.pin,
-                                     user.facepath, user.spotifytoken, user.twittertoken, user.maps,user.calendar)])
+        add = "INSERT INTO USERS (name, email, pin, facepath, calendarWidget, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget) VALUES (?,?,?,?,?,?,?,?,?)"
+        self.conn.executemany(add, [(user.name, user.email, user.pin, user.facepath,
+                                     user.calendarwidget, user.twittertoken, user.mapswidget, user.calendarwidget,user.clockwidget)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
@@ -44,7 +43,7 @@ class DB:
 
     def isUserRegistered(self, email):
 
-        userByEmail = 'SELECT COUNT(*) FROM USERS WHERE EMAIL= ?'
+        userByEmail = 'SELECT COUNT(*) FROM Users WHERE email= ?'
         count = self.conn.execute(userByEmail, [email]).fetchone()[0]
         if count > 0:
             return True
@@ -54,51 +53,65 @@ class DB:
 
     def createUser(self, content):
         try:
-            user = User.User(content["name"], content["email"], content["googletoken"], self.encrypt(content["pin"]))
+            user = User(content["name"], content["email"], DB.encrypt(content["pin"]))
         except KeyError as e:
             raise BadRequest("I/O error: {0} was not included".format(e))
         try:
-            user.setSpotifyToken(content["spotifytoken"])
+            user.clockwidget(content["clockwidget"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.setTwitterToken(content["twittertoken"])
+            user.twitterwidget(content["twittertoken"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.setMaps(content["maps"])
+            user.calendarwidget(content["calendarwidget"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.setCalendar(content["calendar"])
+            user.mapswidget(content["mapswidget"])
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.weatherwidget(content["weatherwidget"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
 
         return user
 
-    #Hash the pin and compare it with the one on the DB
+    # Hash the pin and compare it with the one on the DB
     # If it is the same go ahead and delete it
     # If it is not the same throw some error
     def deleteUser(self, email, pin):
-        if self.getHashedPin(email) == self.encrypt(pin):
-            query = "DELETE FROM USERS WHERE email = ?"
+        if self.isHashSame(self.getHashedPin(email), pin):
+            query = "DELETE FROM Users WHERE email = ?"
             self.conn.execute(query, [email])
+        else:
+            raise BadRequest
+
+    def getUser(self, email):
+        if self.isUserRegistered(email):
+            query = "SELECT * FROM Users WHERE email = ?"
+            userData = list(self.conn.execute(query, [email]).fetchall())
+            return userData
         else:
             raise BadRequest
 
 
     def getHashedPin(self, email):
-        query = "SELECT * FROM USERS WHERE email = ?"
+        query = "SELECT * FROM Users WHERE email = ?"
         pin = self.conn.execute(query, [email]).fetchone()[2]
         return pin
 
-    def encrypt(self, pin):
+    @staticmethod
+    def encrypt(pin):
         m = hashlib.new('sha512')
         m.update(pin.encode('utf8'))
         return m.hexdigest()
 
-    def isHashSame(self, hashedPin, originalPin):
-        m = self.encrypt(originalPin)
-        if(hashedPin == m):
+    @staticmethod
+    def isHashSame(hashed_pin, original_pin):
+        m = DB.encrypt(original_pin)
+        if hashed_pin == m:
             return True
         return False

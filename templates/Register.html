@@ -1,5 +1,139 @@
+<!Doctype html>
 <html>
-<body style="background-color: black">
-<p style="color:white">REGISTER NIGGA!!</p>
+<head>
+    <title>Home Page</title>
+</head>
+<body>
+<!--I can change true false based on the check marks, not sure about token and image being directed to var in object-->
+<form>
+	<p>Time
+        <!--Check boxes can be made into sliders and did checked because I wanted time set to default-->
+        <input name="time" id= "time" type="checkbox" checked>
+    </p>
+    <p>Weather
+        <input name="weather" id="weather" type="checkbox">
+    </p>
+    <p>Twitter
+        <input name="twittertoken" id="twitter" type="checkbox">
+    </p>
+     <p>Calendar
+     <input name="calendar" id="calendar" type="checkbox">
+    </p>
+    <p>Map
+        <input name="maps" id="eta" type="checkbox">
+    </p>
+    <p>Spotify
+        <input name="spotifytoken" id="spotify" type="checkbox">
+    </p>
+
+
+    <Label for="pin">4 character pin: </Label>
+    <input name="pin" type="text" Placeholder="****" required pattern=".{4,4}" maxlength="4" minlength="4">
+    <br>
+    <p>Picture of face:</p>
+    <input name="facepath" id="facepath"  type="file" accept="image/*" capture="camera" required>
+
+    <hr/>
+    <!--can't get to post the way I want currently
+    "time();calendar(); spotifytoken(); googletoken(); maps(); pin(); weather();twittertoken(); name();email(); facepath(); postIt(); printC()"-->
+    <input onclick= "test()" class="btn btn-lg btn-success" type="submit">
+    <input class ="btn btn-lg btn-danger" type="button" onclick="window.location.href='{{url_for('index')}}'" value="Cancel" />
+</form>
+
+<form action="{{url_for('logout')}}">
+
+</form>
 </body>
+<!--not sure how to call token-->
+<script>
+    var userChoices={
+        name:"name" ,
+        email:"rando@gmail.com",
+        googletoken:"temp",
+        pin:"temp",
+        spotifytoken: false,
+        twittertoken: false,
+        maps: false,
+        calendar:false,
+        weather:true,
+        time:true
+    }
+    //tested time() and printed userchoices.time
+function test(){
+        if (document.getElementById('time').checked)
+            alert("shit hit the fan");
+        else {
+            facePath();
+            alert(userChoices.facepath);
+        }
+}
+function time(){
+    if(document.getElementById('time').checked) {
+        userChoices.time=true;
+    } else {
+        userChoices.time=false;
+}
+}
+function calendar(){
+    if(document.getElementById('calendar').checked) {
+        userChoices.calendar=true;
+    } else {
+        userChoices.calendar=false;
+}
+}
+function spotifytoken(){
+    if(document.getElementById('spotifytoken').checked) {
+        userChoices.spotifytoken=true;
+    } else {
+        userChoices.spotifytoken=false;
+}
+}
+function maps(){
+    if(document.getElementById('maps').checked) {
+        userChoices.weather=true;
+    } else {
+        userChoices.weather=false;
+}
+}
+function twittertoken(){
+    if(document.getElementById('twittertoken').checked) {
+        userChoices.twittertoken=true;
+    } else {
+        userChoices.twittertoken=false;
+}
+}
+function weather() {
+    if (document.getElementById('weather').checked) {
+        userChoices.time = true;
+    } else {
+        userChoices.time = false;
+    }
+}
+function googletoken() {
+    userchoices.googletoken="someString";
+}
+function pin(){
+    userChoices.pin=document.getElementById('pin').value;
+}
+function name(){
+    userChoices.name="fromGoogleToken"
+
+}
+function email(){
+    userChoices.email="fromGoogleToken"
+}
+function facePath(){
+    document.getElementById('facepath').files;
+}
+function postIt(){
+    $('#userChoices').val(JSON.stringify(userChoices));
+    $('form').submit();
+}
+function printC(){
+    console.log(userChoices);
+}
+</script>
+<link rel="stylesheet" href="{{ url_for('static', filename ="styles/bootstrap/bootstrap.css") }}">
+<script href="{{ url_for('static', filename ="JavaScript/jquery/jquery.js") }}"></script>
+
 </html>
