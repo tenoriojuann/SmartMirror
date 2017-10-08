@@ -12,6 +12,7 @@ from db import DB
 from flask_oauthlib.client import OAuth, session, redirect
 from werkzeug.exceptions import BadRequest
 from werkzeug.wrappers import BaseResponse as Response
+from facialAuth import caputeImage, facialAuthenticate
 
 app = Flask(__name__, static_folder="static", static_url_path="/static",
             template_folder="templates")
@@ -166,6 +167,12 @@ def weather():
     url = 'http://api.openweathermap.org/data/2.5/weather?lat='+str(lat)+'&lon='+str(lon)+'&units=imperial'+'&APPID='+str(weather__key)
     openWeatherRequest = requests.get(url)
     return jsonify(openWeatherRequest.json())
+
+@app.route('/captureFace')
+def captureFace():
+    email = request.args.get('email')
+    caputeImage(email)
+    return Response("Face Captured", status=202)
 
 def isLoggedIn():
     if 'google_token' in session:

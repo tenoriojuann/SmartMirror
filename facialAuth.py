@@ -80,16 +80,15 @@ def caputeImage(userName):
     video_capture = cv2.VideoCapture(0)
     name = userName
     captureImg = True
+    count = 0;
     while captureImg:
-        count = 0;
         ret, img = video_capture.read()
         if count is 3:
             print("Image Captured")
-            cv2.imwrite("faces/"+name+".jpg", img)
+            cv2.imwrite("faces/" + name + ".jpg", img)
             captureImg= False
         if count is not 3:
-            count+=1
+            count += 1
             print(count)
-            break
     video_capture.release()
     cv2.destroyAllWindows()
