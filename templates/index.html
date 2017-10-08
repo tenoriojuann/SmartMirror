@@ -1,16 +1,48 @@
 <html>
 <head>
+   <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <title>Home Page</title>
+
 </head>
-<body>
+<body style="background: black">
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">
+         <img src="{{ url_for('static', filename='logo/Logo.png') }}  " width= "35" height="35" >
+      </a>
+    </div>
+      <button type="button" class="btn btn-default navbar-btn">Sign in</button>
+  </div>
+</nav>
+
+
+
 <h1>Team Xanthan:</h1>
 <h2>Magic Mirror</h2>
 <h4> Team Members: Josh Sexton, Juan Tenorio, Craig Denny, Danial Park, Andrew Shatz, and Dedric Sundry</h4>
-<p>Click the Google Logon to sign-in</p>
-<form action="{{url_for('login')}}">
-   <input type="submit" value="Go to Google" />
-</form>
 
+&nbsp;
+<div class="logo">
+    <a href="{{url_for('login')}}">
+    <img src="{{ url_for('static', filename='logo/Logo.png') }}"  >
+    </a>
+</div>
+&nbsp;
+
+
+<p style="text-align: center" >Click the Picture or Button below to sign-in</p>
+<div class="form">
+    <form action="{{url_for('login')}}">
+        <input type="submit" value="Sign in" />
+    </form>
+</div>
 </body>
+
+
 
 </html>
