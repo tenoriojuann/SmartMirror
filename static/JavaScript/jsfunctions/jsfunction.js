@@ -3,25 +3,25 @@ var userChoices={
         email:"rando@gmail.com",
         pin:"temp",
         //spotifytoken: false,
-        twitterWidget: false,
-        mapWidget: false,
-        calendarWidget:false,
-        weatherWidget:true,
-        clockWidget:true
+        twitterwidget: false,
+        mapwidget: false,
+        calendarwidget:false,
+        weatherwidget:true,
+        clockwidget:true
     };
 
 function time(){
     if(document.getElementById('time').checked) {
-        userChoices.clockWidget=true;
+        userChoices.clockwidget=true;
     } else {
-        userChoices.clockWidget=false;
+        userChoices.clockwidget=false;
 }
 }
 function calendar(){
     if(document.getElementById('calendar').checked) {
-        userChoices.calendarWidget=true;
+        userChoices.calendarwidget=true;
     } else {
-        userChoices.calendarWidget=false;
+        userChoices.calendarwidget=false;
 }
 }
 //function spotifytoken(){
@@ -33,23 +33,23 @@ function calendar(){
 //}
 function maps(){
     if(document.getElementById('eta').checked) {
-        userChoices.mapWidget=true;
+        userChoices.mapwidget=true;
     } else {
-        userChoices.mapWidget=false;
+        userChoices.mapwidget=false;
 }
 }
 function twitter(){
     if(document.getElementById('twitter').checked) {
-        userChoices.twitterWidget=true;
+        userChoices.twitterwidget=true;
     } else {
-        userChoices.twitterWidget=false;
+        userChoices.twitterwidget=false;
 }
 }
 function weather(){
     if (document.getElementById("weather").checked) {
-        userChoices.weatherWidget=true;
+        userChoices.weatherwidget=true;
     } else {
-        userChoices.weatherWidget=false;
+        userChoices.weatherwidget=false;
 }
 }
 
