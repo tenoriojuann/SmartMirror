@@ -78,6 +78,12 @@ function name() {
             data: JSON.stringify(userChoices),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
+            async:false,
+            statusCode:{
+                202: function(response){
+                    alert("Submission was successful");
+                }
+            },
             success: function (data) {
                 alert(data);
             },
