@@ -155,6 +155,11 @@ def getProfile():
     else:
         return Response("Profile not found", status=404)
 
+#TODO this is skeletal, will be filled out later
+@app.route('/authenticate', methods=['POST'])
+def authenticateFace():
+    return Response("Authenticated", status=202)
+
 @app.route('/weather', methods=['GET'])
 def weather():
     send_url = 'http://freegeoip.net/json'
