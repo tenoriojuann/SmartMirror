@@ -1,10 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename ="styles/bootstrap/bootstrap.css") }}">
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+    body {background: blueviolet;}
+    .container {background: skyblue;}
+    html{background: indianred;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .row {-webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        border-style: solid;
+        border: crimson ;
+
+    }
+</style>
 <body>
+<div class="container">
+    <div class="row">
+        <div class="col">
+        1 of 3
+        </div>
+        <div class="col">
+        2 of 3
+        </div>
+        <div class="col">
+        3 of 3
+        </div>
+    </div>
+</div>
+
+<p> this is just a test</p>
+
+
 
 </body>
 </html>
