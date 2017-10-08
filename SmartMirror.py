@@ -143,11 +143,12 @@ def getPreferences():
 
 @app.route('/profile', methods=['GET'])
 def getProfile():
-    email = request.args.get('email')
+    email = request.args.get('email') or currentUser.email
     if (database.isUserRegistered(email)):
         try:
             profileData = database.getUser(email)
-            # profileData = jsonify(profileData)
+            profileData = jsonify(profileData)
+            return profileData
         except BadRequest:
             return Response("Not an email", status=403)
         return (jsonify(profileData))
@@ -171,6 +172,9 @@ def isLoggedIn():
         return True
     return False
 
+@app.route('/change',methods=['GET'])
+def changepreferences():
+    render_template('change.html')
 
 if __name__ == '__main__':
     app.run()
