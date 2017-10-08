@@ -175,6 +175,8 @@ def isLoggedIn():
 @app.route('/change',methods=['GET'])
 def changepreferences():
     return render_template('change.html')
-
+@app.route('/mirror',methods=['GET'])
+def mirror():
+    return render_template('mirror.html')
 if __name__ == '__main__':
     app.run()
