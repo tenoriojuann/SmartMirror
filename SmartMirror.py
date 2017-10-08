@@ -80,6 +80,9 @@ def transfersession(sess):
     session['google_token'] = sess
     return redirect(url_for('index'))
 
+@app.route('/currentUser', methods=['GET'])
+def getcurrentUser():
+    return jsonify({"name":currentUser.name, "email":currentUser.email})
 
 @google.tokengetter
 def get_google_oauth_token():
