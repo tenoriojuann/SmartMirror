@@ -84,7 +84,9 @@ class DB:
     # If it is the same go ahead and delete it
     # If it is not the same throw some error
     def deleteUser(self, email, pin):
-        if self.isHashSame(self.getHashedPin(email), pin):
+        hasheddpin = self.getHashedPin(email)
+        isSame = self.isHashSame(hasheddpin, pin)
+        if isSame:
             query = "DELETE FROM USERS WHERE email = ?"
             self.conn.execute(query, [email])
         else:
@@ -101,7 +103,11 @@ class DB:
 
     def getHashedPin(self, email):
         query = "SELECT * FROM USERS WHERE email = ?"
-        pin = self.conn.execute(query, [email]).fetchone()[2]
+        pin = ''
+        try:
+            pin = self.conn.execute(query, [email]).fetchone()[3]
+        except Exception as e:
+            raise BadRequest("")
         return pin
 
     @staticmethod
