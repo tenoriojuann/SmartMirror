@@ -22,9 +22,9 @@ class DB:
 
     # Sets the information given by the user to the DB
     def insertUserData(self, user):
-        add = "INSERT INTO USERS (name, email, googletoken, pin, facepath, spotifytoken, twittertoken, maps, calendar) VALUES (?,?,?,?,?,?,?,?,?)"
-        self.conn.executemany(add, [(user.name, user.email, user.googletoken, user.pin,
-                                     user.facepath, user.spotifytoken, user.twittertoken, user.maps,user.calendar)])
+        add = "INSERT INTO USERS (name, email, pin, facepath, calendarWidget, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget) VALUES (?,?,?,?,?,?,?,?,?)"
+        self.conn.executemany(add, [(user.name, user.email, user.pin, user.facepath,
+                                     user.calendarwidget, user.twittertoken, user.mapswidget, user.calendarwidget,user.clockwidget)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
@@ -53,23 +53,27 @@ class DB:
 
     def createUser(self, content):
         try:
-            user = User(content["name"], content["email"], self.encrypt(content["pin"]))
+            user = User(content["name"], content["email"], DB.encrypt(content["pin"]))
         except KeyError as e:
             raise BadRequest("I/O error: {0} was not included".format(e))
         try:
-            user.setSpotifyToken(content["spotifytoken"])
+            user.clockwidget(content["clockwidget"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.setTwitterToken(content["twittertoken"])
+            user.twitterwidget(content["twittertoken"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.setMaps(content["maps"])
+            user.calendarwidget(content["calendarwidget"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.setCalendar(content["calendar"])
+            user.mapswidget(content["mapswidget"])
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.weatherwidget(content["weatherwidget"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
 
