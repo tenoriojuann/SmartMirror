@@ -22,9 +22,9 @@ class DB:
 
     # Sets the information given by the user to the DB
     def insertUserData(self, user):
-        add = "INSERT INTO USERS (name, email, pin, facepath, calendarWidget, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget) VALUES (?,?,?,?,?,?,?,?,?)"
-        self.conn.executemany(add, [(user.name, user.email, user.pin, user.facepath,
-                                     user.calendarwidget, user.twittertoken, user.mapswidget, user.calendarwidget,user.clockwidget)])
+        add = "INSERT INTO USERS (name, email, pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget) VALUES (?,?,?,?,?,?,?,?)"
+        self.conn.executemany(add, [(user.name, user.email, user.pin,
+                                     user.calendaridget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
@@ -61,7 +61,7 @@ class DB:
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.twitterwidget(content["twittertoken"])
+            user.twitterwidget(content["twitterwidget"])
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
