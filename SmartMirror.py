@@ -71,8 +71,8 @@ def authorized():
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
     # Uncomment the line below for local testing
-    return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
-    # return redirect(url_for('enterRegistration'))
+    #return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
+    return redirect(url_for('enterRegistration'))
 
 
 @app.route('/session/<sess>', methods=['POST', 'GET'])
@@ -80,6 +80,9 @@ def transfersession(sess):
     session['google_token'] = sess
     return redirect(url_for('index'))
 
+@app.route('/currentUser', methods=['GET'])
+def getcurrentUser():
+    return jsonify({"name":currentUser.name, "email":currentUser.email})
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -101,8 +104,9 @@ def deleteUser():
     else:
         return Response("NOT LOGGED IN", status=403)
 
-
-@app.route('/register', methods=['GET'])
+#('/register/<user>',
+# def enterRegistration(user)
+@app.route('/register/', methods=['GET'])
 def enterRegistration():
     if isLoggedIn():
         return render_template('Register.html')
