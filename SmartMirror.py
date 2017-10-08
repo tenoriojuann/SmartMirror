@@ -174,7 +174,7 @@ def isLoggedIn():
 
 @app.route('/change',methods=['GET'])
 def changepreferences():
-    render_template('change.html')
+    return render_template('change.html')
 
 if __name__ == '__main__':
     app.run()
