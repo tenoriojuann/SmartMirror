@@ -1,5 +1,8 @@
+opencv-python
+numpy
+Flask_Testing==0.6.2
 Flask==0.11.1
-Flask_OAuthlib==0.9.4
-Werkzeug==0.12.2
 pytz==2016.6.1
-flask_testing==0.6.2
+Flask_OAuthlib==0.9.4
+requests==2.11.1
+Werkzeug==0.12.2
