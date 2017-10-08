@@ -1,5 +1,6 @@
 import face_recognition
 import cv2
+import os
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -85,10 +86,14 @@ def caputeImage(userName):
         ret, img = video_capture.read()
         if count is 3:
             print("Image Captured")
-            cv2.imwrite("faces/" + name + ".jpg", img)
+            os.mkdir(name)
+            cv2.imwrite(name + "/" + name + ".jpg", img)
             captureImg= False
         if count is not 3:
             count += 1
             print(count)
     video_capture.release()
     cv2.destroyAllWindows()
+
+
+caputeImage("josh.b.sexton@gmail.com")
