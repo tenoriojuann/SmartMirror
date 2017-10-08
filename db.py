@@ -22,9 +22,9 @@ class DB:
 
     # Sets the information given by the user to the DB
     def insertUserData(self, user):
-        add = "INSERT INTO USERS (name, email, pin, facepath, calendarWidget, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget) VALUES (?,?,?,?,?,?,?,?,?)"
-        self.conn.executemany(add, [(user.name, user.email, user.pin, user.facepath,
-                                     user.calendarwidget, user.twittertoken, user.mapswidget, user.calendarwidget,user.clockwidget)])
+        add = "INSERT INTO USERS (name, email, facePath,pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget) VALUES (?,?,?,?,?,?,?,?,?)"
+        self.conn.executemany(add, [(user.name, user.email,"-" ,user.pin,
+                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
@@ -52,28 +52,29 @@ class DB:
 
 
     def createUser(self, content):
+        print(content)
         try:
             user = User(content["name"], content["email"], DB.encrypt(content["pin"]))
         except KeyError as e:
             raise BadRequest("I/O error: {0} was not included".format(e))
         try:
-            user.clockwidget(content["clockwidget"])
+            user.clockwidget = content["clockwidget"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.twitterwidget(content["twittertoken"])
+            user.twitterwidget= content["twitterwidget"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.calendarwidget(content["calendarwidget"])
+            user.calendarwidget=content["calendarwidget"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.mapswidget(content["mapswidget"])
+            user.mapswidget=content["mapswidget"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.weatherwidget(content["weatherwidget"])
+            user.weatherwidget=content["weatherwidget"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
 
@@ -83,7 +84,9 @@ class DB:
     # If it is the same go ahead and delete it
     # If it is not the same throw some error
     def deleteUser(self, email, pin):
-        if self.isHashSame(self.getHashedPin(email), pin):
+        hasheddpin = self.getHashedPin(email)
+        isSame = self.isHashSame(hasheddpin, pin)
+        if isSame:
             query = "DELETE FROM USERS WHERE email = ?"
             self.conn.execute(query, [email])
         else:
@@ -100,7 +103,11 @@ class DB:
 
     def getHashedPin(self, email):
         query = "SELECT * FROM USERS WHERE email = ?"
-        pin = self.conn.execute(query, [email]).fetchone()[2]
+        pin = ''
+        try:
+            pin = self.conn.execute(query, [email]).fetchone()[3]
+        except Exception as e:
+            raise BadRequest("")
         return pin
 
     @staticmethod

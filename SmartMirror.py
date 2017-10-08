@@ -1,12 +1,9 @@
 import json
 import os
-
 import requests
-
 from static.User import User
 import datetime
 import pytz
-import webbrowser
 from flask import Flask, request, render_template, url_for, jsonify
 from db import DB
 from flask_oauthlib.client import OAuth, session, redirect
@@ -71,7 +68,7 @@ def authorized():
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
     # Uncomment the line below for local testing
-    #return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
+    # return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
     return redirect(url_for('enterRegistration'))
 
 
@@ -80,6 +77,9 @@ def transfersession(sess):
     session['google_token'] = sess
     return redirect(url_for('index'))
 
+@app.route('/currentUser', methods=['GET'])
+def getcurrentUser():
+    return jsonify({"name":currentUser.name, "email":currentUser.email})
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -95,7 +95,9 @@ def deleteUser():
         try:
             database.deleteUser(email, pin)
         except BadRequest:
-            return Response("Wrong pin", status=403)
+            return jsonify({"error":"Either the user"
+                                             " was not found or"
+                                             " the pin was incorrect"})
 
         return Response("User deleted", status=202)
     else:

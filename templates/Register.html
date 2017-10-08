@@ -25,7 +25,7 @@
         <div class="col-md-2"></div>
     </div>
 
-<form action="{{ url_for('getPreferences') }}">
+<form>
     <!-----------Time & Weather Widget Row------->
     <div class="row">
         <div class="col-md-2"></div>
@@ -104,7 +104,7 @@
         <div class="col-md-2"></div>
         <div class="col-md-8" style="text-align: center">
             <input  class ="btn btn-lg btn-danger" type="button" value="Cancel" />
-            <input onsubmit="createUser(); postIt()" class="btn btn-lg btn-success" type="submit">
+            <input onclick="createUser(); postIt()" class="btn btn-lg btn-success" value="Submit Choices">
         </div>
         <div class="col-md-2"></div>
     </div>
