@@ -175,10 +175,18 @@ def isLoggedIn():
 
 @app.route('/maps', methods=['GET','POST'])
 def maps():
-    if request.method == 'GET':
-        email = request.args.get('email')
-        addresses = database.getAddresses()
-    return Response("",status=202)
+    if isLoggedIn():
+        if request.method == 'GET':
+            email = request.args.get('email')
+            addresses = database.getAddresses(email)
+            return addresses
+        elif request.method == 'POST':
+            content = request.get_json(force=True)
+            database.setAddresses(content)
+            return Response("",status=202)
+        return Response("Method not supported", status=400)
+    return Response("You are not logged in",status=403)
+
 
 @app.route('/change',methods=['GET'])
 def changepreferences():
