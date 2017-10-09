@@ -103,3 +103,10 @@ function name() {
         calendar();
 
     }
+    function getUserData(){
+        var userData
+    }
+    function combo(){
+        createUser();
+        postIt();
+    }
