@@ -179,7 +179,7 @@ def maps():
         if request.method == 'GET':
             email = request.args.get('email')
             addresses = database.getAddresses(email)
-            return addresses
+            return mapsHelper(addresses)
         elif request.method == 'POST':
             content = request.get_json(force=True)
             database.setAddresses(content)
@@ -188,6 +188,10 @@ def maps():
     return Response("You are not logged in",status=403)
 
 
+def mapsHelper(addresses):
+    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+addresses['home']+'+ON&destinations='+addresses['work']+'+ON&key=AIzaSyAnTVK0Lh7fPUHI6tpFgmxebMHFQyFDvt8'
+    results = requests.get(url)
+    return jsonify(results.json())
 @app.route('/change',methods=['GET'])
 def changepreferences():
     return render_template('change.html')
