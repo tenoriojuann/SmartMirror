@@ -9,15 +9,12 @@ form
     margin-left: auto;
     margin-right: auto;
     text-align: left;
+
 }
 
 h1, h2, h3, h4, p
 {
     color: white;
-}
-
-div.logo
-{
-    display: block;
     text-align: center;
 }
+
