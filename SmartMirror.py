@@ -144,7 +144,7 @@ def getPreferences():
 @app.route('/profile', methods=['GET'])
 def getProfile():
     email = request.args.get('email') or currentUser.email
-    if (database.isUserRegistered(email)):
+    if database.isUserRegistered(email):
         try:
             profileData = database.getUser(email)
             profileData = jsonify(profileData)
@@ -171,6 +171,14 @@ def isLoggedIn():
     if 'google_token' in session:
         return True
     return False
+
+
+@app.route('/maps', methods=['GET','POST'])
+def maps():
+    if request.method == 'GET':
+        email = request.args.get('email')
+        addresses = database.getAddresses()
+    return Response("",status=202)
 
 @app.route('/change',methods=['GET'])
 def changepreferences():

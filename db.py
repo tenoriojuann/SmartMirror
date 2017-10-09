@@ -122,3 +122,6 @@ class DB:
         if hashed_pin == m:
             return True
         return False
+
+    def getAddresses(self, email):
+        s
