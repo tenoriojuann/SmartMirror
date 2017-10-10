@@ -40,7 +40,7 @@ class DB:
 
         if not self.isUserRegistered(user.email):
             self.insertUserData(user)
-            print("A new record was be added")
+            print("A new profile has been added")
         else:
             raise BadRequest("A record with that email has already been registered")
 
