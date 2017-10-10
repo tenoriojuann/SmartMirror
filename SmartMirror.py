@@ -143,11 +143,12 @@ def getPreferences():
 
 @app.route('/profile', methods=['GET'])
 def getProfile():
-    email = request.args.get('email')
-    if (database.isUserRegistered(email)):
+    email = request.args.get('email') or currentUser.email
+    if database.isUserRegistered(email):
         try:
             profileData = database.getUser(email)
-            # profileData = jsonify(profileData)
+            profileData = jsonify(profileData)
+            return profileData
         except BadRequest:
             return Response("Not an email", status=403)
         return (jsonify(profileData))
@@ -172,5 +173,30 @@ def isLoggedIn():
     return False
 
 
+@app.route('/maps', methods=['GET','POST'])
+def maps():
+    if isLoggedIn():
+        if request.method == 'GET':
+            email = request.args.get('email')
+            addresses = database.getAddresses(email)
+            return mapsHelper(addresses)
+        elif request.method == 'POST':
+            content = request.get_json(force=True)
+            database.setAddresses(content)
+            return Response("",status=202)
+        return Response("Method not supported", status=400)
+    return Response("You are not logged in",status=403)
+
+
+def mapsHelper(addresses):
+    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+addresses['home']+'+ON&destinations='+addresses['work']+'+ON&key=AIzaSyAnTVK0Lh7fPUHI6tpFgmxebMHFQyFDvt8'
+    results = requests.get(url)
+    return jsonify(results.json())
+@app.route('/change',methods=['GET'])
+def changepreferences():
+    return render_template('change.html')
+@app.route('/mirror',methods=['GET'])
+def mirror():
+    return render_template('mirror.html')
 if __name__ == '__main__':
     app.run()
