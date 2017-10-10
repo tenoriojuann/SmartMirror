@@ -12,7 +12,6 @@ from db import DB
 from flask_oauthlib.client import OAuth, session, redirect
 from werkzeug.exceptions import BadRequest
 from werkzeug.wrappers import BaseResponse as Response
-from facialAuth import caputeImage, facialAuthenticate
 
 app = Flask(__name__, static_folder="static", static_url_path="/static",
             template_folder="templates")
@@ -170,9 +169,12 @@ def weather():
 
 @app.route('/captureFace')
 def captureFace():
+    #TODO should signal on mirror that image is being captured
     email = request.args.get('email')
     caputeImage(email)
     return Response("Face Captured", status=202)
+
+@app.route('/authenticate')
 
 def isLoggedIn():
     if 'google_token' in session:

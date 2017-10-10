@@ -1,6 +1,8 @@
 import face_recognition
 import cv2
 import os
+from db import DB
+import _sqlite3
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -14,59 +16,83 @@ import os
 # Get a reference to webcam #0 (the default one)
 
 #provide name of image
-def facialAuthenticate(image_name):
+
+database = DB("/Users/jsexton/Senior")
+
+def cycleThroughEmails():
+    video_capture = cv2.VideoCapture(0)
+    emails = database.getEmail(database)
+    for email in emails:
+        facialAuthenticate(email[0], video_capture)
+
+
+
+def facialAuthenticate():
+    #video_capture = cv2.VideoCapture(0)
     video_capture = cv2.VideoCapture(0)
     # Load a sample picture and learn how to recognize it.
-    user_image = face_recognition.load_image_file("faces/"+image_name)
-    user_face_encoding = face_recognition.face_encodings(user_image)[0]
-    face_locations = []
-    face_encodings = []
-    face_names = []
-    process_this_frame = True
-    while True:
-        # Grab a single frame of video
-        ret, frame = video_capture.read()
+    emails = database.getEmail(database)
+    for email in emails:
+        user_image = face_recognition.load_image_file(email[0] + "/"+ email[0] + ".jpg")
+        user_face_encoding = face_recognition.face_encodings(user_image)[0]
+        face_locations = []
+        face_encodings = []
+        face_names = []
+        process_this_frame = True
+        new_email = False
+        while True:
+            # Grab a single frame of video
+            ret, frame = video_capture.read()
 
-        # Resize frame of video to 1/4 size for faster face recognition processing
-        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+            # Resize frame of video to 1/4 size for faster face recognition processing
+            small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
-        # Only process every other frame of video to save time
-        if process_this_frame:
-            # Find all the faces and face encodings in the current frame of video
-            face_locations = face_recognition.face_locations(small_frame)
-            face_encodings = face_recognition.face_encodings(small_frame, face_locations)
+            if new_email is True:
+                break;
+            # Only process every other frame of video to save time
+            if process_this_frame:
+                # Find all the faces and face encodings in the current frame of video
+                face_locations = face_recognition.face_locations(small_frame)
+                face_encodings = face_recognition.face_encodings(small_frame, face_locations)
 
-            face_names = []
-            for face_encoding in face_encodings:
-                # See if the face is a match for the known face(s)
-                match = face_recognition.compare_faces([user_face_encoding], face_encoding)
-                name = "Unknown"
+                face_names = []
+                for face_encoding in face_encodings:
+                    # See if the face is a match for the known face(s)
+                    match = face_recognition.compare_faces([user_face_encoding], face_encoding)
+                    name = "Unknown"
 
-                if match[0]:
-                    name = "Success"
+                    if match[0]:
+                        name = "Success"
+                        print(email[0])
+                        new_email = False
+                        break;
+                    else:
+                        print(name)
+                        new_email = True
+                        break;
 
-                face_names.append(name)
+                    face_names.append(name)
 
-        process_this_frame = not process_this_frame
+            process_this_frame = not process_this_frame
 
-        # Display the results
-        for (top, right, bottom, left), name in zip(face_locations, face_names):
-            # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-            top *= 4
-            right *= 4
-            bottom *= 4
-            left *= 4
-
-            # Draw a box around the face
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-
-            # Draw a label with a name below the face
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-            font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-
-        # Display the resulting image
-        cv2.imshow('Video', frame)
+        # # Display the results
+        # for (top, right, bottom, left), name in zip(face_locations, face_names):
+        #     # Scale back up face locations since the frame we detected in was scaled to 1/4 size
+        #     top *= 4
+        #     right *= 4
+        #     bottom *= 4
+        #     left *= 4
+        #
+        #     # Draw a box around the face
+        #     cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        #
+        #     # Draw a label with a name below the face
+        #     cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+        #     font = cv2.FONT_HERSHEY_DUPLEX
+        #     cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+        #
+        # # Display the resulting image
+        # cv2.imshow('Video', frame)
 
         # Hit 'q' on the keyboard to quit!
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -77,7 +103,10 @@ def facialAuthenticate(image_name):
     cv2.destroyAllWindows()
 
 
-def caputeImage(userName):
+def captureImage(userName):
+    if os.path.isdir(userName):
+        os.remove(userName + "/" + userName +".jpg")
+        os.rmdir(userName)
     video_capture = cv2.VideoCapture(0)
     name = userName
     captureImg = True
@@ -96,4 +125,5 @@ def caputeImage(userName):
     cv2.destroyAllWindows()
 
 
-caputeImage("josh.b.sexton@gmail.com")
+#captureImage("josh.b.sexton@gmail.com")
+facialAuthenticate()
