@@ -192,6 +192,7 @@ def mapsHelper(addresses):
     url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+addresses['home']+'+ON&destinations='+addresses['work']+'+ON&key=AIzaSyAnTVK0Lh7fPUHI6tpFgmxebMHFQyFDvt8'
     results = requests.get(url)
     return jsonify(results.json())
+
 @app.route('/change',methods=['GET'])
 def changepreferences():
     return render_template('change.html')
@@ -199,4 +200,4 @@ def changepreferences():
 def mirror():
     return render_template('mirror.html')
 if __name__ == '__main__':
-    app.run()
+    app.run("172.20.10.3", port=5000)
