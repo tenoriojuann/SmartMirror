@@ -110,3 +110,9 @@ function name() {
         createUser();
         postIt();
     }
+    function promptAddress() {
+        if (document.getElementById('eta').checked == true) {
+            var startAdd = prompt("Enter starting address: ", "Street City State");
+            var endAdd = prompt("Enter desired address: ", "Street City State");
+        }
+    }
