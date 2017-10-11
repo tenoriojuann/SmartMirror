@@ -1,6 +1,9 @@
 #!/usr/bin/python
 import sqlite3
 import hashlib
+
+from flask import jsonify
+
 from static.User import User
 from werkzeug.exceptions import BadRequest
 
@@ -37,7 +40,7 @@ class DB:
 
         if not self.isUserRegistered(user.email):
             self.insertUserData(user)
-            print("A new record was be added")
+            print("A new profile has been added")
         else:
             raise BadRequest("A record with that email has already been registered")
 
@@ -122,3 +125,21 @@ class DB:
         if hashed_pin == m:
             return True
         return False
+
+
+    #Change PlaceHolder to the name of the new table
+
+    def getAddresses(self, email):
+
+        sql = "SELECT * FROM PLACEHOLDER WHERE email = ?"
+        result = self.conn.execute(sql, [email]).fetchall()
+        _list = list(result)
+        return jsonify(_list)
+
+    #Make sure this command is valid
+    def setAddresses(self,content):
+        sql="INSERT INTO PLACEHOLDER (work, home) VALUES (?,?)"
+        home = content.home
+        work = content.work
+        self.conn.executemany(sql, [(work,home)])
+        self.conn.commit()
