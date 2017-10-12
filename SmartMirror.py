@@ -200,4 +200,4 @@ def changepreferences():
 def mirror():
     return render_template('mirror.html')
 if __name__ == '__main__':
-    app.run("172.20.10.3", port=5000)
+    app.run("localhost", port=5000)

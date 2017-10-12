@@ -14,12 +14,17 @@
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
     <title>Preferences</title>
 </head>
-<body style="background: black">
+<body style="background: black" onload="userInfo()">
 <!--Xanthan Mirror Setup Top Row-->
-    <div class="row">
+
+    <div class="row"onload="name();createUser()">
         <div class="col-md-2"></div>
         <div class="col-md-8" style="text-align: center">
                 <h1 style="color: white">Xanthan Mirror Setup</h1>
+                <h3 style="color: white" id="names">User:
+                    <script>name(); document.getElementById('names').innerHTML=("User: " + userChoices.name)</script></h3>
+                <h3 style="color: white" id="email2">Email:
+                    <script>document.getElementById('email2').innerHTML=("Email: "+userChoices.email)</script></h3>
                 <hr/>
         </div>
         <div class="col-md-2"></div>
@@ -76,11 +81,14 @@
                 <input style="padding-top: 10em" name="spotifytoken" id="spotify" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>-->
         </div>
-        <div class="col-md-2"></div>
+
+        <div class="col-md-2">
+            </div>
     </div>
-    <hr/>
+
 
 </form>
+<p onautocomplete="infoUser()"></p>
 <script>function on() {
                     if (true) {
                        elem = document.getElementById('time')
