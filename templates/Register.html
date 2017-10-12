@@ -3,7 +3,7 @@
 <!--ToggleData Documentation: http://www.bootstraptoggle.com/ -->
 <head>
 
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/Register.css') }}">
     <script src="{{ url_for('static', filename='JavaScript/jsfunctions/jsfunction.js') }}" type="text/javascript"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -12,7 +12,6 @@
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/Register.css') }}?version=45">
     <title>Setup Page</title>
 </head>
 <body style="background: black">
@@ -34,20 +33,12 @@
             <!-----------Time------->
             <div class="col-md-6" style="text-align: center">
 
-
-                <div class="iconContainer">
-                    <p class="iconContainerText">Time</p>
-                    <img src="{{ url_for('static', filename='ImageIcon/ClockIcon.png') }}"/>
-                </div>
-
+                <img src="{{ url_for('static', filename='ImageIcon/ClockIcon.jpg') }}">
                 <input name="time" id= "time" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" >
             </div>
             <!-----------Weather--------->
             <div class="col-md-6" style="text-align: center">
-                <div class="iconContainer">
-                    <p class="iconContainerText">Weather</p>
-                    <img src="{{ url_for('static', filename='ImageIcon/WeatherIcon.png') }}"/>
-                </div>
+               <img src="{{ url_for('static', filename='ImageIcon/WeatherIcon.jpg') }}">
                 <input name="weather" id="weather" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
         </div>
@@ -60,19 +51,12 @@
         <div class="col-md-8" style="text-align: center">
             <!-----------Google Maps------->
             <div class="col-md-6" style="text-align: center">
-
-                <div class="iconContainer">
-                    <p class="iconContainerText">Maps</p>
-                    <img src="{{ url_for('static', filename='ImageIcon/GoogleMapsIcon.png') }}"/>
-                </div>
+                <img src="{{ url_for('static', filename='ImageIcon/GoogleMapsIcon.jpg') }}">
                 <input name="maps" id="eta" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
             <!-----------Google Calendar--------->
             <div class="col-md-6" style="text-align: center">
-                <div class="iconContainer">
-                    <p class="iconContainerText">Calendar</p>
-                    <img src="{{ url_for('static', filename='ImageIcon/GoogleCalendarIcon.jpg') }}"/>
-                </div>
+                <img src="{{ url_for('static', filename='ImageIcon/GoogleCalendarIcon.jpg') }}">
                 <input name="calendar" id="calendar" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
         </div>
@@ -84,11 +68,8 @@
         <div class="col-md-2"></div>
         <div class="col-md-8" style="text-align: center">
                 <!-----------Twitter--------->
-            <div class="iconContainer">
-                <p class="iconContainerText">Calendar</p>
-                <img src="{{ url_for('static', filename='ImageIcon/TwitterIcon.png') }}"/>
-            </div>
-            <input name="twitter" id="twitter" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+                <img src="{{ url_for('static', filename='ImageIcon/TwitterIcon.jpg') }}" style="padding-right: 2.5%">
+                <input name="twitter" id="twitter" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             <!-----------Spotify (if we decide to include it) -------->
             <!--<div class="col-md-6" style="text-align: center">
                 <img src="{{ url_for('static', filename='ImageIcon/SpotifyIcon.jpg') }}">
