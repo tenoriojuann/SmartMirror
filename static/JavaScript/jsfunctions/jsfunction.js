@@ -1,7 +1,7 @@
 var userChoices={
-        name:"test",
-        email:"rando@gmail.com",
-        pin:"temp",
+        name:"",
+        email:"",
+        pin:"",
         //spotifytoken: false,
         twitterwidget: false,
         mapswidget: false,
@@ -67,6 +67,9 @@ function name() {
         success: function (data) {
             userChoices.name = data.name;
             userChoices.email = data.email;
+        },
+        error: function(error){
+            console.log(error);
         }
     });
 }
@@ -76,15 +79,16 @@ function name() {
     function postIt() {
         $.ajax({
             type: "POST",
+            async:false,
             url: "/register",
             // The key needs to match your method's input parameter (case-sensitive).
             data: JSON.stringify(userChoices),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            async:false,
             statusCode:{
                 202: function(response){
                     alert("Submission was successful");
+
                 }
             },
             success: function (data) {
