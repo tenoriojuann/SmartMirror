@@ -10,3 +10,4 @@ target
 pom.xml
 __pycache__
 db.pyc
+DATA.db

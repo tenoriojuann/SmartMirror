@@ -1,5 +1,5 @@
 var userChoices={
-        name:"name" ,
+        name:"test",
         email:"rando@gmail.com",
         pin:"temp",
         //spotifytoken: false,
@@ -115,4 +115,8 @@ function name() {
             userChoices.homeAddress = prompt("Enter starting address: ", "Street City State");
             userChoices.workAddress = prompt("Enter desired address: ", "Street City State");
         }
+    }
+    function userInfo(){
+        document.getElementById('names').innerHTML=("User: " + userChoices.name);
+        document.getElementById('email2').innerHTML=("Email: " + userChoices.email);
     }
