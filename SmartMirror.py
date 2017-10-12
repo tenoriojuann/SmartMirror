@@ -167,6 +167,15 @@ def weather():
     openWeatherRequest = requests.get(url)
     return jsonify(openWeatherRequest.json())
 
+@app.route('/captureFace')
+def captureFace():
+    #TODO should signal on mirror that image is being captured
+    email = request.args.get('email')
+    caputeImage(email)
+    return Response("Face Captured", status=202)
+
+@app.route('/authenticate')
+
 def isLoggedIn():
     if 'google_token' in session:
         return True

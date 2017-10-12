@@ -17,7 +17,7 @@ class DB:
     def __init__(self, root):
         self.root = root
         self.version = sqlite3.version
-        self.conn = sqlite3.connect(root + "\DATA.db", check_same_thread=False)
+        self.conn = sqlite3.connect(root + "/DATA.db", check_same_thread=False)
         print("DB has been opened")
         self.cursor = self.conn.cursor()
 
@@ -133,6 +133,12 @@ class DB:
         except Exception as e:
             raise BadRequest("")
         return pin
+
+    @staticmethod
+    def getEmail(self):
+        query = "SELECT email FROM Users"
+        emails = self.conn.execute(query)
+        return emails
 
     @staticmethod
     def encrypt(pin):
