@@ -1,12 +1,9 @@
 import json
 import os
-
 import requests
-
 from static.User import User
 import datetime
 import pytz
-import webbrowser
 from flask import Flask, request, render_template, url_for, jsonify
 from db import DB
 from flask_oauthlib.client import OAuth, session, redirect
@@ -71,7 +68,7 @@ def authorized():
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
     # Uncomment the line below for local testing
-    #return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
+    # return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
     return redirect(url_for('enterRegistration'))
 
 
@@ -98,7 +95,9 @@ def deleteUser():
         try:
             database.deleteUser(email, pin)
         except BadRequest:
-            return Response("Wrong pin", status=403)
+            return jsonify({"error":"Either the user"
+                                             " was not found or"
+                                             " the pin was incorrect"})
 
         return Response("User deleted", status=202)
     else:
@@ -144,11 +143,12 @@ def getPreferences():
 
 @app.route('/profile', methods=['GET'])
 def getProfile():
-    email = request.args.get('email')
-    if (database.isUserRegistered(email)):
+    email = request.args.get('email') or currentUser.email
+    if database.isUserRegistered(email):
         try:
             profileData = database.getUser(email)
-            # profileData = jsonify(profileData)
+            profileData = jsonify(profileData)
+            return profileData
         except BadRequest:
             return Response("Not an email", status=403)
         return (jsonify(profileData))
@@ -182,5 +182,26 @@ def isLoggedIn():
     return False
 
 
+@app.route('/maps', methods=['GET'])
+def maps():
+    if isLoggedIn():
+        email = request.args.get('email')
+        profile = database.getUser(email)
+        return mapsHelper(profile)
+    return Response("You are not logged in",status=403)
+
+
+def mapsHelper(profile):
+    maps_key = os.environ.get('MAPS_KEY')
+    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+profile['homeAddress']+'+ON&destinations='+profile['workAddress']+'+ON&key='+str(maps_key)
+    results = requests.get(url)
+    return jsonify(results.json())
+
+@app.route('/change',methods=['GET'])
+def changepreferences():
+    return render_template('change.html')
+@app.route('/mirror',methods=['GET'])
+def mirror():
+    return render_template('mirror.html')
 if __name__ == '__main__':
-    app.run()
+    app.run("127.0.0.1", port=5000)

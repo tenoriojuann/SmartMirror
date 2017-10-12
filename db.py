@@ -1,6 +1,10 @@
 #!/usr/bin/python
 import sqlite3
 import hashlib
+
+from flask import jsonify
+import json
+
 from static.User import User
 from werkzeug.exceptions import BadRequest
 
@@ -22,9 +26,9 @@ class DB:
 
     # Sets the information given by the user to the DB
     def insertUserData(self, user):
-        add = "INSERT INTO USERS (name, email, facePath,pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget) VALUES (?,?,?,?,?,?,?,?,?)"
+        add = "INSERT INTO USERS (name, email, facePath,pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget, homeAddess, workAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         self.conn.executemany(add, [(user.name, user.email,"-" ,user.pin,
-                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget)])
+                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget, user.home,user.work)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
@@ -34,10 +38,9 @@ class DB:
         except BadRequest as e:
             print(e.description)
             raise e
-
         if not self.isUserRegistered(user.email):
             self.insertUserData(user)
-            print("A new record was be added")
+            print("A new profile has been added")
         else:
             raise BadRequest("A record with that email has already been registered")
 
@@ -59,6 +62,14 @@ class DB:
             raise BadRequest("I/O error: {0} was not included".format(e))
         try:
             user.clockwidget = content["clockwidget"]
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.home = content["homeAddress"]
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.work = content["workAddress"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
@@ -84,7 +95,9 @@ class DB:
     # If it is the same go ahead and delete it
     # If it is not the same throw some error
     def deleteUser(self, email, pin):
-        if self.isHashSame(self.getHashedPin(email), pin):
+        hasheddpin = self.getHashedPin(email)
+        isSame = self.isHashSame(hasheddpin, pin)
+        if isSame:
             query = "DELETE FROM USERS WHERE email = ?"
             self.conn.execute(query, [email])
         else:
@@ -93,15 +106,32 @@ class DB:
     def getUser(self, email):
         if self.isUserRegistered(email):
             query = "SELECT * FROM USERS WHERE email = ?"
-            userData = list(self.conn.execute(query, [email]).fetchall())
-            return userData
+            userData = self.conn.execute(query, [email]).fetchall()[0]
+            userData = list(userData)
+            print(userData)
+            preferences = {"email":userData[0],
+                                   "name":userData[1],
+                                   "facepath":"-",
+                                   "pin":userData[3],
+                                   "calendarWidget":userData[4],
+                                   "mapWidget":userData[5],
+                                   "twitterWidget":userData[6],
+                                   "clockWidget":userData[7],
+                                   "weatherWidget":userData[8],
+                                   "homeAddress":userData[9],
+                                   "workAddress":userData[10]}
+            return preferences
         else:
             raise BadRequest
 
 
     def getHashedPin(self, email):
         query = "SELECT * FROM USERS WHERE email = ?"
-        pin = self.conn.execute(query, [email]).fetchone()[2]
+        pin = ''
+        try:
+            pin = self.conn.execute(query, [email]).fetchone()[3]
+        except Exception as e:
+            raise BadRequest("")
         return pin
 
     @staticmethod

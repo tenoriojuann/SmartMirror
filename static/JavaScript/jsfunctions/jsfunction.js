@@ -4,10 +4,12 @@ var userChoices={
         pin:"temp",
         //spotifytoken: false,
         twitterwidget: false,
-        mapwidget: false,
+        mapswidget: false,
         calendarwidget:false,
         weatherwidget:true,
-        clockwidget:true
+        clockwidget:true,
+        homeAddress:"",
+        workAddress:""
     };
 
 function time(){
@@ -33,10 +35,11 @@ function calendar(){
 //}
 function maps(){
     if(document.getElementById('eta').checked) {
-        userChoices.mapwidget=true;
+        userChoices.mapswidget=true;
+
     } else {
-        userChoices.mapwidget=false;
-}
+        userChoices.mapswidget=false;
+    }
 }
 function twitter(){
     if(document.getElementById('twitter').checked) {
@@ -56,38 +59,60 @@ function weather(){
 function pin(){
     userChoices.pin=document.getElementById('pin').value;
 }
-function name(){
-    userChoices.name="fromEndPoint"
-
-}
-function email(){
-    userChoices.email="fromEbdPoint"
+function name() {
+    $.ajax({
+        url: '/currentUser',
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            userChoices.name = data.name;
+            userChoices.email = data.email;
+        }
+    });
 }
 
 //from stack overflow need to modify and test.
 //From https://stackoverflow.com/questions/1255948/post-data-in-json-format
-function postIt() {
-$.ajax({
-   type: "POST",
-   url: "/register",
-   // The key needs to match your method's input parameter (case-sensitive).
-   data: JSON.stringify(userChoices),
-   contentType: "application/json; charset=utf-8",
-   dataType: "json",
-   success: function(data){alert(data);},
-   failure: function(errMsg) {
-       alert(errMsg);
-   }
-});
-}
-function createUser(){
-    email();
-    name();
-    time();
-    pin();
-    weather();
-    twitter();
-    maps();
-    calendar();
+    function postIt() {
+        $.ajax({
+            type: "POST",
+            url: "/register",
+            // The key needs to match your method's input parameter (case-sensitive).
+            data: JSON.stringify(userChoices),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async:false,
+            statusCode:{
+                202: function(response){
+                    alert("Submission was successful");
+                }
+            },
+            success: function (data) {
+                alert(data);
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
+        });
+    }
 
-}
+    function createUser() {
+        name();
+        time();
+        pin();
+        weather();
+        twitter();
+        maps();
+        calendar();
+        promptAddress();
+    }
+    function combo(){
+        createUser();
+        postIt();
+    }
+    function promptAddress() {
+        if (document.getElementById('eta').checked == true) {
+            userChoices.homeAddress = prompt("Enter starting address: ", "Street City State");
+            userChoices.workAddress = prompt("Enter desired address: ", "Street City State");
+        }
+    }
