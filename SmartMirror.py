@@ -159,9 +159,8 @@ def getEvents(email):
     return database.getEvents(email)
 
 
-@app.route('/profile', methods=['GET'])
-def getProfile():
-    email = request.args.get('email') or currentUser.email
+@app.route('/profile/<email>', methods=['GET'])
+def getProfile(email):
     if database.isUserRegistered(email):
         try:
             profileData = database.getUser(email)
@@ -169,7 +168,6 @@ def getProfile():
             return profileData
         except BadRequest:
             return Response("Not an email", status=403)
-        return (jsonify(profileData))
     else:
         return Response("Profile not found", status=404)
 
