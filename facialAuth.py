@@ -116,6 +116,7 @@ def captureImage(userName):
             print(count)
     video_capture.release()
     cv2.destroyAllWindows()
+    return True
 
 
 captureImage("josh.b.sexton@gmail.com")

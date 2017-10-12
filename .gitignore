@@ -3,6 +3,7 @@
 build
 .idea
 conf.json
+DATA.db
 lib
 out
 target
