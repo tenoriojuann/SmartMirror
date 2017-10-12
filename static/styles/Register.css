@@ -28,9 +28,15 @@ img {
     color: white;
     padding-bottom: 0px;
     margin-bottom: 0px;
+
 }
 
-html{
+html {
+    animation-name: fadein;
+    animation-duration: 2s;
+}
 
-
+@keyframes fadein {
+    0% {opacity: 0.0;}
+    100% {opacity: 1.0;}
 }
