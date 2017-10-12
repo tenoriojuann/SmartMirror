@@ -127,13 +127,14 @@ def getEvents():
         timeMax = timeMax.isoformat()
         events = google.get(
             'https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=' + timeMin + '&timeMax=' + timeMax).data
-        items = events["items"][0]
-        title = items["summary"]
-        status = items["status"]
-        startTIme = items["start"]["dateTime"]
-        endTime = items["end"]["dateTime"]
-        database.setEvents(title,status,startTIme,endTime, currentUser.email)
-        return jsonify({"list": events["items"]})
+        items = events["items"]
+        for item in items:
+            title = item["summary"]
+            status = item["status"]
+            startTIme = item["start"]["dateTime"]
+            endTime = item["end"]["dateTime"]
+            #database.setEvents(title,status,startTIme,endTime, currentUser.email)
+        return jsonify({"list": events})
     return Response(status=403)
 
 
