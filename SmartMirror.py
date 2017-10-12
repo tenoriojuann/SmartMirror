@@ -112,9 +112,7 @@ def enterRegistration():
     else:
         return render_template('index.html')
 
-
-@app.route('/events', methods=['GET'])
-def getEvents():
+def setEvents():
     if isLoggedIn():
         # get events from calendar for the next 3 days
         cest = pytz.timezone('America/New_York')
@@ -133,7 +131,7 @@ def getEvents():
             status = item["status"]
             startTIme = item["start"]["dateTime"]
             endTime = item["end"]["dateTime"]
-            #database.setEvents(title,status,startTIme,endTime, currentUser.email)
+            database.setEvents(title,status,startTIme,endTime, currentUser.email)
         return jsonify({"list": events})
     return Response(status=403)
 
@@ -143,12 +141,17 @@ def getPreferences():
     content = request.get_json(force=True)
     try:
         database.addProfile(content)
+        setEvents()
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
     # if facialAuth.captureImage(currentUser.email):
     #     redirect(url_for('mirror', currentUser.email))
     return Response("Added: " + content['name'] + " to the DB", status=202)
 
+
+@app.route('/events/<email>', methods=['GET'])
+def getEvents(email):
+    return database.getEvents(email)
 
 @app.route('/profile', methods=['GET'])
 def getProfile():

@@ -112,8 +112,8 @@ function name() {
     }
     function promptAddress() {
         if (document.getElementById('eta').checked == true) {
-            userChoices.homeAddress = prompt("Enter starting address: ", "Street City State");
-            userChoices.workAddress = prompt("Enter desired address: ", "Street City State");
+            userChoices.homeAddress = prompt("Enter home address: ");
+            userChoices.workAddress = prompt("Enter work address: ");
         }
     }
     function userInfo(){
