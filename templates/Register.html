@@ -14,7 +14,7 @@
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
     <title>Setup Page</title>
 </head>
-<body style="background: black">
+<body style="background: black" onload="name()">
 <!--Xanthan Mirror Setup Top Row-->
     <div class="row">
         <div class="col-md-2"></div>
@@ -32,7 +32,6 @@
         <div class="col-md-8"style="text-align: center">
             <!-----------Time------->
             <div class="col-md-6" style="text-align: center">
-
                 <img src="{{ url_for('static', filename='ImageIcon/ClockIcon.jpg') }}">
                 <input name="time" id= "time" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" >
             </div>
@@ -104,7 +103,7 @@
         <div class="col-md-2"></div>
         <div class="col-md-8" style="text-align: center">
             <input  class ="btn btn-lg btn-danger" type="button" value="Cancel" />
-            <input onclick="createUser(); postIt()" class="btn btn-lg btn-success" value="Submit Choices">
+            <input onclick="promptAddress(); combo()" class="btn btn-lg btn-success" value="Submit Choices">
         </div>
         <div class="col-md-2"></div>
     </div>
