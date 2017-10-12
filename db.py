@@ -124,6 +124,14 @@ class DB:
         else:
             raise BadRequest
 
+    def setEvents(self, title, status, startTime, endTime, email):
+        query = "INSERT INTO Events (title, status, startTime, endTime) VALUES (?,?,?,?) "
+        self.conn.executemany(query, [(title, status, startTime, endTime)])
+
+        eventID = self.conn.execute("SELECT last_insert_rowid()")
+
+        query = "INSERT INTO Participants (email, eventID) VALUES (?,?)"
+        self.conn.executemany(query, [(email, eventID)])
 
     def getHashedPin(self, email):
         query = "SELECT * FROM USERS WHERE email = ?"
