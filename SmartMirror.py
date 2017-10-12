@@ -1,6 +1,5 @@
 import json
 import os
-import facialAuth
 import requests
 from static.User import User
 import datetime
@@ -124,10 +123,16 @@ def getEvents():
             days=1)
         timeMin = timeMin.isoformat()
         timeMax = datetime.datetime(year=now.year, month=now.month, day=now.day, tzinfo=cest) + datetime.timedelta(
-            days=300)
+            days=3)
         timeMax = timeMax.isoformat()
         events = google.get(
             'https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=' + timeMin + '&timeMax=' + timeMax).data
+        items = events["items"][0]
+        title = items["summary"]
+        status = items["status"]
+        startTIme = items["start"]["dateTime"]
+        endTime = items["end"]["dateTime"]
+        database.setEvents(title,status,startTIme,endTime, currentUser.email)
         return jsonify({"list": events["items"]})
     return Response(status=403)
 
@@ -139,8 +144,8 @@ def getPreferences():
         database.addProfile(content)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
-    if facialAuth.captureImage(currentUser.email):
-        redirect(url_for('mirror', currentUser.email))
+    # if facialAuth.captureImage(currentUser.email):
+    #     redirect(url_for('mirror', currentUser.email))
     return Response("Added: " + content['name'] + " to the DB", status=202)
 
 
