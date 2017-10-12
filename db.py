@@ -3,6 +3,7 @@ import sqlite3
 import hashlib
 
 from flask import jsonify
+import json
 
 from static.User import User
 from werkzeug.exceptions import BadRequest
@@ -25,9 +26,9 @@ class DB:
 
     # Sets the information given by the user to the DB
     def insertUserData(self, user):
-        add = "INSERT INTO USERS (name, email, facePath,pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget) VALUES (?,?,?,?,?,?,?,?,?)"
+        add = "INSERT INTO USERS (name, email, facePath,pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget, homeAddess, workAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         self.conn.executemany(add, [(user.name, user.email,"-" ,user.pin,
-                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget)])
+                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget, user.home,user.work)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
@@ -37,7 +38,6 @@ class DB:
         except BadRequest as e:
             print(e.description)
             raise e
-
         if not self.isUserRegistered(user.email):
             self.insertUserData(user)
             print("A new profile has been added")
@@ -62,6 +62,14 @@ class DB:
             raise BadRequest("I/O error: {0} was not included".format(e))
         try:
             user.clockwidget = content["clockwidget"]
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.home = content["homeAddress"]
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.work = content["workAddress"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
@@ -98,8 +106,21 @@ class DB:
     def getUser(self, email):
         if self.isUserRegistered(email):
             query = "SELECT * FROM USERS WHERE email = ?"
-            userData = list(self.conn.execute(query, [email]).fetchall())
-            return userData
+            userData = self.conn.execute(query, [email]).fetchall()[0]
+            userData = list(userData)
+            print(userData)
+            preferences = {"email":userData[0],
+                                   "name":userData[1],
+                                   "facepath":"-",
+                                   "pin":userData[3],
+                                   "calendarWidget":userData[4],
+                                   "mapWidget":userData[5],
+                                   "twitterWidget":userData[6],
+                                   "clockWidget":userData[7],
+                                   "weatherWidget":userData[8],
+                                   "homeAddress":userData[9],
+                                   "workAddress":userData[10]}
+            return preferences
         else:
             raise BadRequest
 
@@ -125,21 +146,3 @@ class DB:
         if hashed_pin == m:
             return True
         return False
-
-
-    #Change PlaceHolder to the name of the new table
-
-    def getAddresses(self, email):
-
-        sql = "SELECT * FROM PLACEHOLDER WHERE email = ?"
-        result = self.conn.execute(sql, [email]).fetchall()
-        _list = list(result)
-        return jsonify(_list)
-
-    #Make sure this command is valid
-    def setAddresses(self,content):
-        sql="INSERT INTO PLACEHOLDER (work, home) VALUES (?,?)"
-        home = content.home
-        work = content.work
-        self.conn.executemany(sql, [(work,home)])
-        self.conn.commit()

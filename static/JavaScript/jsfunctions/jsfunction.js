@@ -7,7 +7,9 @@ var userChoices={
         mapswidget: false,
         calendarwidget:false,
         weatherwidget:true,
-        clockwidget:true
+        clockwidget:true,
+        homeAddress:"",
+        workAddress:""
     };
 
 function time(){
@@ -34,9 +36,10 @@ function calendar(){
 function maps(){
     if(document.getElementById('eta').checked) {
         userChoices.mapswidget=true;
+
     } else {
         userChoices.mapswidget=false;
-}
+    }
 }
 function twitter(){
     if(document.getElementById('twitter').checked) {
@@ -101,10 +104,7 @@ function name() {
         twitter();
         maps();
         calendar();
-
-    }
-    function getUserData(){
-        var userData
+        promptAddress();
     }
     function combo(){
         createUser();
@@ -112,8 +112,8 @@ function name() {
     }
     function promptAddress() {
         if (document.getElementById('eta').checked == true) {
-            var startAdd = prompt("Enter starting address: ", "Street City State");
-            var endAdd = prompt("Enter desired address: ", "Street City State");
+            userChoices.homeAddress = prompt("Enter starting address: ", "Street City State");
+            userChoices.workAddress = prompt("Enter desired address: ", "Street City State");
         }
     }
     function userInfo(){

@@ -173,23 +173,18 @@ def isLoggedIn():
     return False
 
 
-@app.route('/maps', methods=['GET','POST'])
+@app.route('/maps', methods=['GET'])
 def maps():
     if isLoggedIn():
-        if request.method == 'GET':
-            email = request.args.get('email')
-            addresses = database.getAddresses(email)
-            return mapsHelper(addresses)
-        elif request.method == 'POST':
-            content = request.get_json(force=True)
-            database.setAddresses(content)
-            return Response("",status=202)
-        return Response("Method not supported", status=400)
+        email = request.args.get('email')
+        profile = database.getUser(email)
+        return mapsHelper(profile)
     return Response("You are not logged in",status=403)
 
 
-def mapsHelper(addresses):
-    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+addresses['home']+'+ON&destinations='+addresses['work']+'+ON&key=AIzaSyAnTVK0Lh7fPUHI6tpFgmxebMHFQyFDvt8'
+def mapsHelper(profile):
+    maps_key = os.environ.get('MAPS_KEY')
+    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+profile['homeAddress']+'+ON&destinations='+profile['workAddress']+'+ON&key='+str(maps_key)
     results = requests.get(url)
     return jsonify(results.json())
 
@@ -200,4 +195,4 @@ def changepreferences():
 def mirror():
     return render_template('mirror.html')
 if __name__ == '__main__':
-    app.run("localhost", port=5000)
+    app.run("127.0.0.1", port=5000)
