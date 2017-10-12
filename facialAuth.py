@@ -118,5 +118,5 @@ def captureImage(userName):
     cv2.destroyAllWindows()
 
 
-#captureImage("Rosie.Sanchez@gmail.com")
+captureImage("josh.b.sexton@gmail.com")
 facial_authenticate()
