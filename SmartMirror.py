@@ -1,5 +1,6 @@
 import json
 import os
+import facialAuth
 import requests
 from static.User import User
 import datetime
@@ -138,6 +139,8 @@ def getPreferences():
         database.addProfile(content)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
+    if facialAuth.captureImage(currentUser.email):
+        redirect(url_for('mirror', currentUser.email))
     return Response("Added: " + content['name'] + " to the DB", status=202)
 
 
@@ -167,6 +170,15 @@ def weather():
     openWeatherRequest = requests.get(url)
     return jsonify(openWeatherRequest.json())
 
+@app.route('/captureFace')
+def captureFace():
+    #TODO should signal on mirror that image is being captured
+    email = request.args.get('email')
+    caputeImage(email)
+    return Response("Face Captured", status=202)
+
+@app.route('/authenticate')
+
 def isLoggedIn():
     if 'google_token' in session:
         return True
@@ -191,8 +203,8 @@ def mapsHelper(profile):
 @app.route('/change',methods=['GET'])
 def changepreferences():
     return render_template('change.html')
-@app.route('/mirror',methods=['GET'])
-def mirror():
+@app.route('/mirror/<email>',methods=['GET'])
+def mirror(email):
     return render_template('mirror.html')
 if __name__ == '__main__':
     app.run("127.0.0.1", port=5000)
