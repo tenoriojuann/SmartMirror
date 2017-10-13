@@ -15,8 +15,11 @@
 </head>
 <!--onload="weatherData()"-->
 <body onload="date_time('date_time')" style="background-color: black">
-console.log({{email}})
-
+<script>
+    // This is how you will obatin the email for all of your needs
+    var data = {{email|tojson}};
+    console.log(data);
+</script>
 <div class="row">
     <div class="col-md-5" id="topLeft">
         <div class="topLeft">

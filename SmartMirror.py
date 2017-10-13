@@ -1,7 +1,7 @@
 import json
 import os
-import facialAuth
 import requests
+import webbrowser
 from static.User import User
 import datetime
 import pytz
@@ -68,8 +68,6 @@ def authorized():
     _me = google.get("https://www.googleapis.com/plus/v1/people/me").data
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
-    # Uncomment the line below for local testing
-    # return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
     return redirect(url_for('enterRegistration'))
 
 
@@ -78,9 +76,11 @@ def transfersession(sess):
     session['google_token'] = sess
     return redirect(url_for('index'))
 
+
 @app.route('/currentUser', methods=['GET'])
 def getcurrentUser():
-    return jsonify({"name":currentUser.name, "email":currentUser.email})
+    return jsonify({"name": currentUser.name, "email": currentUser.email})
+
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -96,15 +96,16 @@ def deleteUser():
         try:
             database.deleteUser(email, pin)
         except BadRequest:
-            return jsonify({"error":"Either the user"
-                                             " was not found or"
-                                             " the pin was incorrect"})
+            return jsonify({"error": "Either the user"
+                                     " was not found or"
+                                     " the pin was incorrect"})
 
         return Response("User deleted", status=202)
     else:
         return Response("NOT LOGGED IN", status=403)
 
-#('/register/<user>',
+
+# ('/register/<user>',
 # def enterRegistration(user)
 @app.route('/register/', methods=['GET'])
 def enterRegistration():
@@ -114,39 +115,52 @@ def enterRegistration():
         return render_template('index.html')
 
 
-@app.route('/events', methods=['GET'])
-def getEvents():
+def setEvents():
     if isLoggedIn():
         # get events from calendar for the next 3 days
         cest = pytz.timezone('America/New_York')
         now = datetime.datetime.now(tz=cest)  # timezone?
         timeMin = datetime.datetime(year=now.year, month=now.month, day=now.day, tzinfo=cest) + datetime.timedelta(
-            days=1)
+            days=0)
         timeMin = timeMin.isoformat()
         timeMax = datetime.datetime(year=now.year, month=now.month, day=now.day, tzinfo=cest) + datetime.timedelta(
-            days=300)
+            days=3)
         timeMax = timeMax.isoformat()
         events = google.get(
             'https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=' + timeMin + '&timeMax=' + timeMax).data
-        return jsonify({"list": events["items"]})
+        items = events["items"]
+        for item in items:
+            title = item["summary"]
+            status = item["status"]
+            startTIme = item["start"]["dateTime"]
+            endTime = item["end"]["dateTime"]
+            database.setEvents(title, status, startTIme, endTime, currentUser.email)
+        return jsonify({"list": events})
     return Response(status=403)
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['POST', 'GET'])
 def getPreferences():
     content = request.get_json(force=True)
     try:
+        content["name"] = currentUser.name
+        content["email"] = currentUser.email
         database.addProfile(content)
+        setEvents()
+        webbrowser.open_new_tab("http://127.0.0.1:5000/mirror/" + currentUser.email)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
-    if facialAuth.captureImage(currentUser.email):
-        redirect(url_for('mirror', currentUser.email))
+    # if facialAuth.captureImage(currentUser.email):
     return Response("Added: " + content['name'] + " to the DB", status=202)
 
 
-@app.route('/profile', methods=['GET'])
-def getProfile():
-    email = request.args.get('email') or currentUser.email
+@app.route('/events/<email>', methods=['GET'])
+def getEvents(email):
+    return database.getEvents(email)
+
+
+@app.route('/profile/<email>', methods=['GET'])
+def getProfile(email):
     if database.isUserRegistered(email):
         try:
             profileData = database.getUser(email)
@@ -154,9 +168,9 @@ def getProfile():
             return profileData
         except BadRequest:
             return Response("Not an email", status=403)
-        return (jsonify(profileData))
     else:
         return Response("Profile not found", status=404)
+
 
 @app.route('/weather', methods=['GET'])
 def weather():
@@ -166,45 +180,50 @@ def weather():
     lat = LocationResponse['latitude']
     lon = LocationResponse['longitude']
     weather__key = os.environ.get('WEATHER_KEY')
-    url = 'http://api.openweathermap.org/data/2.5/weather?lat='+str(lat)+'&lon='+str(lon)+'&units=imperial'+'&APPID='+str(weather__key)
+    url = 'http://api.openweathermap.org/data/2.5/weather?lat=' + str(lat) + '&lon=' + str(
+        lon) + '&units=imperial' + '&APPID=' + str(weather__key)
     openWeatherRequest = requests.get(url)
     return jsonify(openWeatherRequest.json())
 
+
 @app.route('/captureFace')
 def captureFace():
-    #TODO should signal on mirror that image is being captured
+    # TODO should signal on mirror that image is being captured
     email = request.args.get('email')
     caputeImage(email)
     return Response("Face Captured", status=202)
 
-@app.route('/authenticate')
 
+@app.route('/authenticate')
 def isLoggedIn():
     if 'google_token' in session:
         return True
     return False
 
 
-@app.route('/maps', methods=['GET'])
-def maps():
-    if isLoggedIn():
-        email = request.args.get('email')
-        profile = database.getUser(email)
-        return mapsHelper(profile)
-    return Response("You are not logged in",status=403)
+@app.route('/maps/<email>', methods=['GET'])
+def maps(email):
+    profile = database.getUser(email)
+    return mapsHelper(profile)
 
 
 def mapsHelper(profile):
     maps_key = os.environ.get('MAPS_KEY')
-    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins='+profile['homeAddress']+'+ON&destinations='+profile['workAddress']+'+ON&key='+str(maps_key)
+    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=' + profile[
+        'homeAddress'] + '+ON&destinations=' + profile['workAddress'] + '+ON&key=' + str(maps_key)
     results = requests.get(url)
     return jsonify(results.json())
 
-@app.route('/change',methods=['GET'])
+
+@app.route('/change', methods=['GET'])
 def changepreferences():
     return render_template('change.html')
-@app.route('/mirror/<email>',methods=['GET'])
+
+
+@app.route('/mirror/<email>', methods=['GET'])
 def mirror(email):
-    return render_template('mirror.html')
+    return render_template('mirror.html', email=email)
+
+
 if __name__ == '__main__':
     app.run("127.0.0.1", port=5000)
