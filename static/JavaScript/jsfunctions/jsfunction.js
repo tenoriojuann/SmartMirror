@@ -114,6 +114,33 @@ function name() {
         createUser();
         postIt();
     }
+    function promtPin(){
+        var pinDel=prompt("Enter pin if you want to delete account")
+        //create string to pass
+        var urlString="delete/"+userChoices.email +"/"+pinDel
+        $.ajax({
+            type: "POST",
+            async:false,
+            url: "/register",
+            // The key needs to match your method's input parameter (case-sensitive).
+            data: JSON.stringify(userChoices),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            statusCode:{
+                202: function(response){
+                    window.location.href=urlString;
+                    alert("Account Deleted");
+                }
+            },
+            success: function (data) {
+                alert(data);
+            },
+            failure: function (errMsg) {
+                alert(errMsg);
+            }
+        });
+    }
+    }
     function promptAddress() {
         if (document.getElementById('eta').checked == true) {
             userChoices.homeAddress = prompt("Enter home address: ");
