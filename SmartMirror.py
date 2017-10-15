@@ -142,6 +142,7 @@ def getPreferences():
         content["email"] = currentUser.email
         database.addProfile(content)
         setEvents()
+
         webbrowser.open_new_tab("http://172.00.00.1:5000/mirror/" + currentUser.email)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
