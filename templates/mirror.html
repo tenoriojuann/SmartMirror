@@ -14,18 +14,15 @@
     <title>Mirror</title>
 </head>
 <!--onload="weatherData()"-->
-<body onload="date_time('date_time')" style="background-color: black">
-<script>
-    // This is how you will obatin the email for all of your needs
-    var data = {{email|tojson}};
-    console.log(data);
-</script>
+<!--<body onload="date_time('date_time')" style="background-color: black">-->
+<body style="background-color: black">
+
 <div class="row">
     <div class="col-md-5" id="topLeft">
         <div class="topLeft">
             <p id="date"></p>
             <p id="date_time"></p>
-            <!--<script type="text/javascript">window.onload = date_time('date_time');</script>-->
+            <script type="text/javascript">onload = date_time('date_time');</script>
         </div>
     </div>
     <div class="col-md-2" id="topMiddle">
@@ -37,6 +34,8 @@
                 <p id="tempDegrees"></p>
                 <img id="weatherIMG" style="width: 20%">
                 <p id="description"></p>
+                <script type="text/javascript">onload = weatherData();</script>
+
             </div>
         </div>
     </div>
@@ -71,7 +70,20 @@
     <div class="col-md-2" id="bottomMiddle"></div>
     <div class="col-md-5" id="bottomRight">
         <div class="bottomRight">
-            <p style="text-align: center"> Twitter Feed? </p>
+            <p style="text-align: center"></p>
+            <a class="twitter-timeline"  href="https://twitter.com/hashtag/seniorproject2017" data-widget-id="917558416226349057">#seniorproject2017 Tweets</a>
+            <script>
+                !function(d,s,id){
+                    var js,fjs=d.getElementsByTagName(s)[0],
+                        p=/^http:/.test(d.location)?'http':'https';
+                            if(!d.getElementById(id)) {
+                                js=d.createElement(s);
+                                js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+                                fjs.parentNode.insertBefore(js,fjs);
+                            }
+                }
+                (document,"script","twitter-wjs");
+            </script>
         </div>
     </div>
 </div>
