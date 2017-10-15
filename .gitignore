@@ -3,9 +3,11 @@
 build
 .idea
 conf.json
+DATA.db
 lib
 out
 target
 pom.xml
 __pycache__
 db.pyc
+DATA.db

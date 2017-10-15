@@ -1,7 +1,7 @@
 var userChoices={
-        name:"name" ,
-        email:"rando@gmail.com",
-        pin:"temp",
+        name:"",
+        email:"",
+        pin:"",
         //spotifytoken: false,
         twitterwidget: false,
         mapswidget: false,
@@ -67,6 +67,9 @@ function name() {
         success: function (data) {
             userChoices.name = data.name;
             userChoices.email = data.email;
+        },
+        error: function(error){
+            console.log(error);
         }
     });
 }
@@ -76,15 +79,16 @@ function name() {
     function postIt() {
         $.ajax({
             type: "POST",
+            async:false,
             url: "/register",
             // The key needs to match your method's input parameter (case-sensitive).
             data: JSON.stringify(userChoices),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            async:false,
             statusCode:{
                 202: function(response){
                     alert("Submission was successful");
+
                 }
             },
             success: function (data) {
@@ -112,7 +116,11 @@ function name() {
     }
     function promptAddress() {
         if (document.getElementById('eta').checked == true) {
-            userChoices.homeAddress = prompt("Enter starting address: ", "Street City State");
-            userChoices.workAddress = prompt("Enter desired address: ", "Street City State");
+            userChoices.homeAddress = prompt("Enter home address: ");
+            userChoices.workAddress = prompt("Enter work address: ");
         }
+    }
+    function userInfo(){
+        document.getElementById('names').innerHTML=("User: " + userChoices.name);
+        document.getElementById('email2').innerHTML=("Email: " + userChoices.email);
     }

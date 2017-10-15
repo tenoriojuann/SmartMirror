@@ -17,7 +17,7 @@ class DB:
     def __init__(self, root):
         self.root = root
         self.version = sqlite3.version
-        self.conn = sqlite3.connect(root + "/DATA.db", check_same_thread=False)
+        self.conn = sqlite3.connect(root + "\DATA.db", check_same_thread=False)
         print("DB has been opened")
         self.cursor = self.conn.cursor()
 
@@ -124,6 +124,15 @@ class DB:
         else:
             raise BadRequest
 
+    def setEvents(self, title, status, startTime, endTime, email):
+        query = "INSERT INTO Events (title, status, startTime, endTime) VALUES (?,?,?,?) "
+        self.conn.executemany(query, [(title, status, startTime, endTime)])
+        self.conn.commit()
+        eventID = self.conn.execute("SELECT MAX(eventID) from Events").fetchall()
+        eventID = int(eventID[0][0])
+        query = "INSERT INTO Participants (email, eventID) VALUES (?,?)"
+        self.conn.executemany(query, [(email, eventID)])
+        self.conn.commit()
 
     def getHashedPin(self, email):
         query = "SELECT * FROM USERS WHERE email = ?"
@@ -133,6 +142,23 @@ class DB:
         except Exception as e:
             raise BadRequest("")
         return pin
+
+    def getEvents(self,email):
+
+        query = "SELECT eventID from Participants where email = ?"
+        eventIDs = self.conn.execute(query,[email]).fetchall()
+        events = []
+        sql = "select * from Events WHERE eventID = ?"
+        for id in eventIDs:
+            _list = self.conn.execute(sql, [id[0]]).fetchone()
+            event = {"Title":_list[1],
+                     "startTime":_list[3],
+                     "endTime":_list[4],
+                     "status":_list[2]}
+            events.append(event)
+        if len(events) < 1:
+            return jsonify({"Error":"This user does not have any events saved in Google"})
+        return jsonify(events)
 
     @staticmethod
     def getEmail(self):
