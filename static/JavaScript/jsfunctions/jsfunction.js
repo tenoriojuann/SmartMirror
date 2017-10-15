@@ -26,13 +26,6 @@ function calendar(){
         userChoices.calendarwidget=false;
 }
 }
-//function spotifytoken(){
-   // if(document.getElementById('spotifytoken').checked) {
-     //   userChoices.spotifytoken=true;
-    //} else {
-    //    userChoices.spotifytoken=false;
-//}
-//}
 function maps(){
     if(document.getElementById('eta').checked) {
         userChoices.mapswidget=true;
@@ -55,7 +48,6 @@ function weather(){
         userChoices.weatherwidget=false;
 }
 }
-
 function pin(){
     userChoices.pin=document.getElementById('pin').value;
 }
@@ -88,7 +80,6 @@ function name() {
             statusCode:{
                 202: function(response){
                     alert("Submission was successful");
-
                 }
             },
             success: function (data) {
@@ -114,9 +105,10 @@ function name() {
         createUser();
         postIt();
     }
-    function promtPin(){
+    function promptPin(){
         var pinDel=prompt("Enter pin if you want to delete account")
         //create string to pass
+        //|tojson
         var urlString="delete/"+userChoices.email +"/"+pinDel
         $.ajax({
             type: "POST",
@@ -164,4 +156,19 @@ function name() {
         if (userChoices.twitterwidget == true) {
             $('#twitter').bootstrapToggle('on')
         }
+    }
+    function parseTime(startTime){
+        var time=startTime;
+        test="2017-10-15T18:00:00-04:00";
+        var retro="";
+        for (i=14;i>9;i--){
+            retro=retro+(time.charAt(time.length-i));
+        }
+        if(retro.charAt(0)==0){
+            retro=retro+"AM";
+        }
+        else{
+            retro=retro+"PM"
+        }
+        console.log(retro)
     }

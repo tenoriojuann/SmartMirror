@@ -25,7 +25,7 @@ class DB:
         print("DB version: ", self.version)
 
     # Sets the information given by the user to the DB
-    def InsertUserData(self, user):
+    def insertUserData(self, user):
         add = "INSERT INTO USERS (name, email, facePath,pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget, homeAddess, workAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         self.conn.executemany(add, [(user.name, user.email,"-" ,user.pin,
                                      user.calendarwidget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget, user.home,user.work)])
@@ -136,7 +136,7 @@ class DB:
         self.conn.commit()
 
     def getHashedPin(self, email):
-        query = "SELECT * FROM Users WHERE email = ?"
+        query = "SELECT * FROM USERS WHERE email = ?"
         pin = ''
         try:
             pin = self.conn.execute(query, [email]).fetchone()[3]

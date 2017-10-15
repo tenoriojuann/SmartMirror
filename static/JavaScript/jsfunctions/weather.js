@@ -87,10 +87,131 @@ function weatherData() {
         }
     });
 }
-function mapsData(){
+var currentMaps={
+    destination_addresses:"",
+    origin_addresses:"",
+    distance:"",
+    duration:""
+}
+function mapsData(email){
+$.ajax({
+        url: '/maps/' + email,
+        type: "GET",
+        dataType: "json",
+    success: function(data1){
+        console.log(data1);
+        currentMaps.destination_addresses= data1.destination_addresses;
+        currentMaps.origin_addresses = data1.origin_addresses;
+        currentMaps.distance = data1.rows[0].elements[0].distance.text;
+        currentMaps.duration = data1.rows[0].elements[0].duration.text;
+
+        document.getElementById("destination").innerHTML = "To: " + currentMaps.destination_addresses;
+        document.getElementById("origin").innerHTML = "From: " + currentMaps.origin_addresses;
+        document.getElementById("distance").innerHTML = "Distance: " + currentMaps.distance;
+        document.getElementById("duration").innerHTML = "ETA: " + currentMaps.duration;
+        }
+});
+}
+var currentEvents = {
+
+    Title:"",
+    endTime:"",
+    startTime:""
 
 }
 
+function eventData(email){
+    $.ajax({
+        url: '/events/' + email,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
 
+            for (i=0; i < 4; i++) {
+                currentEvents.Title = data[i].Title;
+                currentEvents.endTime = data[i].endTime;
+                currentEvents.startTime = data[i].startTime;
 
+                document.getElementById("eventTitle" + i).innerHTML = currentEvents.Title;
+                document.getElementById("eventStart" + i).innerHTML = currentEvents.startTime;
+                document.getElementById("eventEnd" + i).innerHTML = currentEvents.endTime;
+                console.log(data[i])
+            }
+        }
+    })
+}
+var choices={
+        //spotifytoken: false,
+        twitterWidget:"",
+        mapWidget: "",
+        calendarWidget:"",
+        weatherWidget:"",
+        clockWidget:""
+    };
 
+function choiceDisplay(email) {
+    $.ajax({
+        url: '/profile/' + email,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+
+            choices.twitterWidget = data.twitterWidget;
+            choices.mapWidget = data.mapWidget;
+            choices.calendarWidget = data.calendarWidget;
+            choices.weatherWidget = data.weatherWidget;
+            choices.clockWidget = data.clockWidget;
+        }
+    });
+}
+function hideshow() {
+     if (choices.clockWidget == 0) {
+                document.getElementById("TL").style.visibility = "hidden";
+            }
+            if (choices.weatherWidget == 0){
+                document.getElementById("TR").style.visibility = "hidden";
+            }
+            if(choices.mapWidget == 0){
+                document.getElementById("ML").style.visibility = "hidden";
+            }
+            if (choices.twitterWidget == 0){
+                document.getElementById("MR").style.visibility = "hidden";
+            }
+            if (choices.calendarWidget ==0){
+                document.getElementById("BL").style.visibility = "hidden";
+                document.getElementById("BM").style.visibility = "hidden";
+                document.getElementById("BR").style.visibility = "hidden";
+            }
+
+}
+/*
+"calendarWidget": 1,
+  "clockWidget": 1,
+  "email": "dsundby1000@gmail.com",
+  "facepath": "-",
+  "homeAddress": "3415 nirmal ct",
+  "mapWidget": 1,
+  "name": "dedric sundby",
+  "pin": "d404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db",
+  "twitterWidget": 1,
+  "weatherWidget": 1,
+  "workAddress": "atlanta ga"
+ */
+/*function parseTime(startTime) {
+    var time = startTime;
+    var retro = "";
+
+        for (i = 14; i > 9; i--) {
+            retro = retro + (time.charAt(time.length - i));
+        }
+        /* if(retro.charAt(0)==0){
+         retro=retro+"AM";
+         } else{
+         retro=retro+"PM"
+         }
+
+        return retro;
+    }
+*/

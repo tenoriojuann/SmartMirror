@@ -13,64 +13,48 @@
     <meta charset="UTF-8">
     <title>Mirror</title>
 </head>
-<!--onload="weatherData()"-->
-<!--<body onload="date_time('date_time')" style="background-color: black">-->
-<body style="background-color: black">
-<script>console.log({{" " + email }})</script>
+<body onload = choiceDisplay({{ email|tojson }}) style="background-color: black">
+<script>console.log({{email|tojson}})</script>
 <div class="row">
     <div class="col-md-5" id="topLeft">
-        <div class="topLeft">
-            <p id="date"></p>
-            <p id="date_time"></p>
+        <div class="topLeft" id="TL">
+            <p class="dateZ" id="date"></p>
+            <p class="timeZ" id="date_time"></p>
             <script type="text/javascript">onload = date_time('date_time');</script>
         </div>
     </div>
     <div class="col-md-2" id="topMiddle">
     </div>
     <div class="col-md-5" id="topRight">
-        <div class="topRight" style="text-align: center">
+        <div class="topRight" id ="TR" style="text-align: center">
             <p id="location"></p>
             <div class="tempAndImage">
                 <p id="tempDegrees"></p>
-                <img id="weatherIMG" style="width: 20%">
+                <img id="weatherIMG" style="width: 30%">
                 <p id="description"></p>
-                <script type="text/javascript">onload = weatherData();</script>
+            <script type="text/javascript">onload = weatherData();</script>
 
             </div>
         </div>
     </div>
 </div>
 <div class="row">
+    <div class="col-md-12" id="middleRowDivider" style="padding-top: 10%"></div>
+
     <div class="col-md-5" id="midLeft">
-        <div class="midLeft" id="currentDayEvent" style="visibility:visible">
-            <p>Google Calendar Events ?</p>
-            <p>Friday</p>
-            <p>Meeting Ex1 - 8:30-9:15 AM</p>
-            <p>Meeting Ex2 - 1:30-2:15 PM</p>
+        <div class="midLeft" id="ML" style="visibility:visible">
+          <p>Saved Locations</p>
+            <p id="origin"></p>
+            <p id="destination"></p>
+            <p id="distance"></p>
+            <p id="duration"></p>
+            <script type="text/javascript">onload = mapsData({{ email|tojson }});</script>
         </div>
-        <!--<div class="midLeft" id="nextDayEvent">
-            <p>Saturday</p>
-            <p>Meeting Ex3 - 8:30-9:15 AM</p>
-            <p>Meeting Ex4 - 1:30-2:15 PM</p>
-        </div>-->
     </div>
     <div class="col-md-2" id="midMiddle"></div>
     <div class="col-md-5" id="midRight">
-        <div class="midRight">
-            <p style="text-align: center">Empty?</p>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-5" id="bottomLeft">
-        <div class="bottomLeft">
-            <p>Google Map Saved Locations?</p>
-        </div>
-    </div>
-    <div class="col-md-2" id="bottomMiddle"></div>
-    <div class="col-md-5" id="bottomRight">
-        <div class="bottomRight">
-            <p style="text-align: center"></p>
+        <div class="midRight" id="MR">
+             <p style="text-align: center"></p>
             <a class="twitter-timeline"  href="https://twitter.com/hashtag/seniorproject2017" data-widget-id="917558416226349057">#seniorproject2017 Tweets</a>
             <script>
                 !function(d,s,id){
@@ -85,6 +69,43 @@
                 (document,"script","twitter-wjs");
             </script>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" id="titleEvent" style="padding-top: 10%">
+        <p style="text-align: center">Events</p>
+    </div>
+
+    <div class="col-md-4" id="bottomLeft">
+        <div class="bottomLeft" id="BL">
+            <p id="eventTitle0" ></p>
+            <p id="eventStart0"></p>
+            <p id="eventEnd0"></p>
+
+            <p id="eventTitle3" ></p>
+            <p id="eventStart3"></p>
+            <p id="eventEnd3"></p>
+            </div>
+        </div>
+    <div class="col-md-4" id="bottomMiddle" >
+        <div class="bottomMiddle" id="BM">
+            <p id="eventTitle1" ></p>
+            <p id="eventStart1"></p>
+            <p id="eventEnd1"></p>
+        </div>
+    </div>
+    <div class="col-md-4" id="bottomRight">
+        <div class="bottomRight" id="BR">
+            <p id="eventTitle2" ></p>
+            <p id="eventStart2"></p>
+            <p id="eventEnd2"></p>
+
+            <p id="eventTitle4"></p>
+            <p id="eventStart4"></p>
+            <p id="eventEnd4"></p>
+    </div>
+    <script type="text/javascript">onload = eventData({{ email|tojson }});</script>
+        <script type="text/javascript">onload = hideshow();</script>
     </div>
 </div>
 </body>
