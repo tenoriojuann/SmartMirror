@@ -1,6 +1,7 @@
 import face_recognition
 import cv2
 import os
+import webbrowser
 from db import DB
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
@@ -17,7 +18,7 @@ from db import DB
 #provide name of image
 
 database = DB("/Users/jsexton/Senior")
-
+process_this_frame= True
 
 def get_all_email_images():
     emails = database.getEmail(database)
@@ -35,8 +36,8 @@ def facial_authenticate():
     # for email in emails:
     #     user_image = face_recognition.load_image_file(email[0] + "/"+ email[0] + ".jpg")
     #     user_face_encoding = face_recognition.face_encodings(user_image)[0]
-    process_this_frame = True
-    while True:
+    global process_this_frame
+    while process_this_frame:
         # Grab a single frame of video
         ret, frame = video_capture.read()
 
@@ -61,6 +62,8 @@ def facial_authenticate():
                     if match[0]:
                         status = "Success"
                         print(status + " : "+ key)
+                        webbrowser.open_new_tab("http://172.00.00.1:5000/mirror/"+key)
+                        return  key
                     else:
                         print(status)
                         break;
@@ -97,9 +100,11 @@ def facial_authenticate():
     cv2.destroyAllWindows()
 
 def captureImage(userName):
+    process_this_frame = False
     if os.path.isdir(userName):
         os.remove(userName + "/" + userName +".jpg")
         os.rmdir(userName)
+        return "User Already Exists"
     video_capture = cv2.VideoCapture(0)
     name = userName
     captureImg = True
@@ -116,4 +121,5 @@ def captureImage(userName):
             print(count)
     video_capture.release()
     cv2.destroyAllWindows()
+    process_this_frame = True
     return True

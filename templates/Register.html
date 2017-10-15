@@ -125,12 +125,12 @@
     <div class="row" style="padding-top: 0%">
         <div class="col-md-2"></div>
         <div class="col-md-8" style="text-align: center">
-            <input class="btn btn-lg btn-danger" type="button" value="Cancel"/>
+            <input onclick="window.location.href='{{url_for('logout')}}'"  class="btn btn-lg btn-danger" type="button" value="Cancel"/>
             <input onclick="combo()" class="btn btn-lg btn-success" value="Submit Choices">
         </div>
         <div class="col-md-2"></div>
     </div>
 </form>
-<form action="{{url_for('logout')}}"></form>
+
 </body>
 </html>
