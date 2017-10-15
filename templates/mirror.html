@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/mirror.css') }}">
     <script src="{{ url_for('static', filename='JavaScript/jsfunctions/weather.js') }}" type="text/javascript"></script>
@@ -16,7 +16,7 @@
 <!--onload="weatherData()"-->
 <!--<body onload="date_time('date_time')" style="background-color: black">-->
 <body style="background-color: black">
-
+<script>console.log({{" " + email }})</script>
 <div class="row">
     <div class="col-md-5" id="topLeft">
         <div class="topLeft">
