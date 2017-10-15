@@ -143,7 +143,7 @@ def getPreferences():
         database.addProfile(content)
         setEvents()
 
-        webbrowser.open_new_tab("http://127.0.0.1:5000/mirror/" + currentUser.email)
+        webbrowser.open_new_tab("http://172.00.00.1:5000/mirror/" + currentUser.email)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
     # if facialAuth.captureImage(currentUser.email):
@@ -222,4 +222,4 @@ def mirror(email):
 
 
 if __name__ == '__main__':
-    app.run("127.0.0.1", port=5000)
+    app.run("127.00.00.1", port=5000)
