@@ -120,7 +120,22 @@ function name() {
             userChoices.workAddress = prompt("Enter work address: ");
         }
     }
-    function userInfo(){
-        document.getElementById('names').innerHTML=("User: " + userChoices.name);
-        document.getElementById('email2').innerHTML=("Email: " + userChoices.email);
+    function userInfo() {
+        document.getElementById('names').innerHTML = ("User: " + userChoices.name);
+        document.getElementById('email2').innerHTML = ("Email: " + userChoices.email);
+        if (userChoices.clockwidget == true) {
+            $('#time').bootstrapToggle('on')
+        }
+        if (userChoices.mapswidget == true) {
+            $('#eta').bootstrapToggle('on')
+        }
+        if (userChoices.weatherwidget == true) {
+            $('#weather').bootstrapToggle('on')
+        }
+        if (userChoices.calendarwidget == true) {
+            $('#calendar').bootstrapToggle('on')
+        }
+        if (userChoices.twitterwidget == true) {
+            $('#twitter').bootstrapToggle('on')
+        }
     }
