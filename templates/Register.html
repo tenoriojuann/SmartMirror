@@ -13,21 +13,22 @@
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
-    <link rel="stylesheet" version="102" href="{{ url_for('static', filename='styles/Register.css') }}">
-    <title>Setup Page</title>
+    <link rel="stylesheet" version="220" href="{{ url_for('static', filename='styles/standard.css') }}">
+    <title>Magic Mirror | Setup</title>
+    <link rel="icon" type="img/ico" href="{{ url_for('static', filename='logo/LogoIcon.png') }}">
 </head>
 <body style="background: black">
 <!--Xanthan Mirror Setup Top Row-->
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8" style="text-align: center">
-        <h1 style="color: white">Xanthan Mirror Setup</h1>
+        <h1 class="pageHeading">Magic Mirror Setup</h1>
         <hr/>
     </div>
     <div class="col-md-2"></div>
 </div>
 
-<form>
+<form class="registerForm">
     <!-----------Time & Weather Widget Row------->
     <div class="row">
         <div class="col-md-2"></div>
@@ -36,17 +37,17 @@
             <div class="col-md-6" style="text-align: center">
                 <div class="iconContainer">
                     <p class="iconContainerText">Time</p>
-                    <img src="{{ url_for('static', filename='ImageIcon/ClockIcon.png') }}">
+                    <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/ClockIcon.png') }}">
                 </div>
-                <input name="time" id="time" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+                <input class="widgetToggle" name="time" id="time" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
             <!-----------Weather--------->
             <div class="col-md-6" style="text-align: center">
                 <div class="iconContainer">
                     <p class="iconContainerText">Weather</p>
-                    <img src="{{ url_for('static', filename='ImageIcon/WeatherIcon.png') }}">
+                    <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/WeatherIcon.png') }}">
                 </div>
-                <input name="weather" id="weather" type="checkbox" data-toggle="toggle" data-on="Enabled"
+                <input class="widgetToggle" name="weather" id="weather" type="checkbox" data-toggle="toggle" data-on="Enabled"
                        data-off="Disabled">
             </div>
         </div>
@@ -62,17 +63,17 @@
 
                 <div class="iconContainer">
                     <p class="iconContainerText">Maps</p>
-                    <img src="{{ url_for('static', filename='ImageIcon/GoogleMapsIcon.png') }}">
+                    <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/GoogleMapsIcon.png') }}">
                 </div>
-                <input name="maps" id="eta" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+                <input class="widgetToggle" name="maps" id="eta" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
             <!-----------Google Calendar--------->
             <div class="col-md-6" style="text-align: center">
                 <div class="iconContainer">
                     <p class="iconContainerText">Calendar</p>
-                    <img src="{{ url_for('static', filename='ImageIcon/GoogleCalendarIcon.jpg') }}">
+                    <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/GoogleCalendarIcon.jpg') }}">
                 </div>
-                <input name="calendar" id="calendar" type="checkbox" data-toggle="toggle" data-on="Enabled"
+                <input class="widgetToggle" name="calendar" id="calendar" type="checkbox" data-toggle="toggle" data-on="Enabled"
                        data-off="Disabled">
             </div>
         </div>
@@ -86,10 +87,10 @@
             <!-----------Twitter--------->
             <div class="iconContainer">
                 <p class="iconContainerText">Twitter</p>
-                <img src="{{ url_for('static', filename='ImageIcon/TwitterIcon.png') }}">
+                <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/TwitterIcon.png') }}">
             </div>
             <input name="twitter" id="twitter" type="checkbox" data-toggle="toggle" data-on="Enabled"
-                   data-off="Disabled">
+                   data-off="Disabled" class="widgetToggle">
             <!-----------Spotify (if we decide to include it) -------->
             <!--<div class="col-md-6" style="text-align: center">
                 <img src="{{ url_for('static', filename='ImageIcon/SpotifyIcon.jpg') }}">
@@ -103,7 +104,7 @@
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-8" style="text-align: center">
-            <Label for="pin" style="color: white"><h3>Create 4 Character Pin</h3></Label>
+            <Label for="pin" style="color: white"><h3>Enter PIN (4 Characters)</h3></Label>
 
         </div>
         <div class="col-md-2"></div>
@@ -113,7 +114,7 @@
     <div class="row" style="padding-top: 0%">
         <div class="col-md-2"></div>
         <div class="col-md-8" style="text-align: center">
-            <input name="pin" id="pin" type="text" Placeholder="****" required pattern=".{4,4}" maxlength="4"
+            <input class="pinInput" name="pin" id="pin" type="text" Placeholder="****" required pattern=".{4,4}" maxlength="4"
                    minlength="4" style="width: 10%">
             <hr/>
         </div>

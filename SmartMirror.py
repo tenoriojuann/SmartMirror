@@ -3,7 +3,7 @@ import os
 import requests
 import webbrowser
 from static.User import User
-import facialAuth
+#import facialAuth
 import datetime
 import pytz
 from flask import Flask, request, render_template, url_for, jsonify
@@ -19,7 +19,7 @@ database = DB(app.root_path)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
-facialAuth.facial_authenticate()
+#facialAuth.facial_authenticate()
 google = oauth.remote_app(
     'google',
     consumer_key=os.environ.get('GOOGLE_ID'),

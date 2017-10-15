@@ -17,7 +17,7 @@ class DB:
     def __init__(self, root):
         self.root = root
         self.version = sqlite3.version
-        self.conn = sqlite3.connect(root + "/DATA.db", check_same_thread=False)
+        self.conn = sqlite3.connect(root + "\DATA.db", check_same_thread=False)
         print("DB has been opened")
         self.cursor = self.conn.cursor()
 
@@ -25,7 +25,7 @@ class DB:
         print("DB version: ", self.version)
 
     # Sets the information given by the user to the DB
-    def insertUserData(self, user):
+    def InsertUserData(self, user):
         add = "INSERT INTO USERS (name, email, facePath,pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget, homeAddess, workAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         self.conn.executemany(add, [(user.name, user.email,"-" ,user.pin,
                                      user.calendarwidget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget, user.home,user.work)])
@@ -136,7 +136,7 @@ class DB:
         self.conn.commit()
 
     def getHashedPin(self, email):
-        query = "SELECT * FROM USERS WHERE email = ?"
+        query = "SELECT * FROM Users WHERE email = ?"
         pin = ''
         try:
             pin = self.conn.execute(query, [email]).fetchone()[3]
