@@ -39,7 +39,7 @@
                     <p class="iconContainerText">Time</p>
                     <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/ClockIcon.png') }}">
                 </div>
-                <input name="time" id="time" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+                <input class="widgetToggle" name="time" id="time" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
             <!-----------Weather--------->
             <div class="col-md-6" style="text-align: center">
@@ -47,7 +47,7 @@
                     <p class="iconContainerText">Weather</p>
                     <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/WeatherIcon.png') }}">
                 </div>
-                <input name="weather" id="weather" type="checkbox" data-toggle="toggle" data-on="Enabled"
+                <input class="widgetToggle" name="weather" id="weather" type="checkbox" data-toggle="toggle" data-on="Enabled"
                        data-off="Disabled">
             </div>
         </div>
@@ -65,7 +65,7 @@
                     <p class="iconContainerText">Maps</p>
                     <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/GoogleMapsIcon.png') }}">
                 </div>
-                <input name="maps" id="eta" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+                <input class="widgetToggle" name="maps" id="eta" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>
             <!-----------Google Calendar--------->
             <div class="col-md-6" style="text-align: center">
@@ -73,7 +73,7 @@
                     <p class="iconContainerText">Calendar</p>
                     <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/GoogleCalendarIcon.jpg') }}">
                 </div>
-                <input name="calendar" id="calendar" type="checkbox" data-toggle="toggle" data-on="Enabled"
+                <input class="widgetToggle" name="calendar" id="calendar" type="checkbox" data-toggle="toggle" data-on="Enabled"
                        data-off="Disabled">
             </div>
         </div>
@@ -90,7 +90,7 @@
                 <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/TwitterIcon.png') }}">
             </div>
             <input name="twitter" id="twitter" type="checkbox" data-toggle="toggle" data-on="Enabled"
-                   data-off="Disabled">
+                   data-off="Disabled" class="widgetToggle">
             <!-----------Spotify (if we decide to include it) -------->
             <!--<div class="col-md-6" style="text-align: center">
                 <img src="{{ url_for('static', filename='ImageIcon/SpotifyIcon.jpg') }}">
