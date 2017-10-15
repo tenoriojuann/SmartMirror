@@ -51,7 +51,7 @@ def login():
 def logout():
     if isLoggedIn():
         session.pop('google_token', None)
-        return Response("User logged out", status=200)
+        return redirect(url_for('index'))
     else:
         return Response("User is not logged in", status=403)
 
