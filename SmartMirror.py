@@ -88,21 +88,16 @@ def get_google_oauth_token():
         return session.get('google_token')
 
 
-@app.route('/delete', methods=['GET'])
-def deleteUser():
-    if isLoggedIn():
-        email = currentUser.email
-        pin = request.args.get('pin')
-        try:
-            database.deleteUser(email, pin)
-        except BadRequest:
-            return jsonify({"error": "Either the user"
+@app.route('/delete/<email>/<pin>', methods=['GET'])
+def deleteUser(email,pin):
+    try:
+        database.deleteUser(email, pin)
+    except BadRequest:
+        return jsonify({"error": "Either the user"
                                      " was not found or"
                                      " the pin was incorrect"})
 
-        return Response("User deleted", status=202)
-    else:
-        return Response("NOT LOGGED IN", status=403)
+    return Response("User deleted", status=202)
 
 
 # ('/register/<user>',
@@ -147,7 +142,7 @@ def getPreferences():
         content["email"] = currentUser.email
         database.addProfile(content)
         setEvents()
-        webbrowser.open_new_tab("http://127.0.0.1:5000/mirror/" + currentUser.email)
+        webbrowser.open_new_tab("http://172.20.10.3:5000/mirror/" + currentUser.email)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
     # if facialAuth.captureImage(currentUser.email):
@@ -226,4 +221,4 @@ def mirror(email):
 
 
 if __name__ == '__main__':
-    app.run("127.0.0.1", port=5000)
+    app.run("172.20.10.3", port=5000)
