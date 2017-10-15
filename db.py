@@ -100,6 +100,7 @@ class DB:
         if isSame:
             query = "DELETE FROM USERS WHERE email = ?"
             self.conn.execute(query, [email])
+            self.conn.commit()
         else:
             raise BadRequest
 
@@ -127,11 +128,12 @@ class DB:
     def setEvents(self, title, status, startTime, endTime, email):
         query = "INSERT INTO Events (title, status, startTime, endTime) VALUES (?,?,?,?) "
         self.conn.executemany(query, [(title, status, startTime, endTime)])
-
-        eventID = self.conn.execute("SELECT last_insert_rowid()")
-
+        self.conn.commit()
+        eventID = self.conn.execute("SELECT MAX(eventID) from Events").fetchall()
+        eventID = int(eventID[0][0])
         query = "INSERT INTO Participants (email, eventID) VALUES (?,?)"
         self.conn.executemany(query, [(email, eventID)])
+        self.conn.commit()
 
     def getHashedPin(self, email):
         query = "SELECT * FROM USERS WHERE email = ?"
@@ -141,6 +143,23 @@ class DB:
         except Exception as e:
             raise BadRequest("")
         return pin
+
+    def getEvents(self,email):
+
+        query = "SELECT eventID from Participants where email = ?"
+        eventIDs = self.conn.execute(query,[email]).fetchall()
+        events = []
+        sql = "select * from Events WHERE eventID = ?"
+        for id in eventIDs:
+            _list = self.conn.execute(sql, [id[0]]).fetchone()
+            event = {"Title":_list[1],
+                     "startTime":_list[3],
+                     "endTime":_list[4],
+                     "status":_list[2]}
+            events.append(event)
+        if len(events) < 1:
+            return jsonify({"Error":"This user does not have any events saved in Google"})
+        return jsonify(events)
 
     @staticmethod
     def getEmail(self):
