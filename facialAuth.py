@@ -117,7 +117,3 @@ def captureImage(userName):
     video_capture.release()
     cv2.destroyAllWindows()
     return True
-
-
-captureImage("josh.b.sexton@gmail.com")
-facial_authenticate()
