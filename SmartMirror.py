@@ -3,7 +3,6 @@ import os
 import requests
 import webbrowser
 from static.User import User
-import facialAuth
 import datetime
 import pytz
 from flask import Flask, request, render_template, url_for, jsonify
@@ -19,7 +18,7 @@ database = DB(app.root_path)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
-facialAuth.facial_authenticate()
+
 google = oauth.remote_app(
     'google',
     consumer_key=os.environ.get('GOOGLE_ID'),
@@ -126,13 +125,10 @@ def setEvents():
             'https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=' + timeMin + '&timeMax=' + timeMax).data
         items = events["items"]
         for item in items:
-            try:
-                title = item["summary"]
-                status = item["status"]
-                startTIme = item["start"]["dateTime"]
-                endTime = item["end"]["dateTime"]
-            except KeyError as e:
-                print(e)
+            title = item["summary"]
+            status = item["status"]
+            startTIme = item["start"]["dateTime"]
+            endTime = item["end"]["dateTime"]
             database.setEvents(title, status, startTIme, endTime, currentUser.email)
         return jsonify({"list": events})
     return Response(status=403)
@@ -146,9 +142,8 @@ def getPreferences():
         content["email"] = currentUser.email
         database.addProfile(content)
         setEvents()
-        facialAuth.captureImage(currentUser.email)
-        facialAuth.facial_authenticate()
-        webbrowser.open_new_tab("http://172.20.10.6:5000/mirror/" + currentUser.email)
+
+        webbrowser.open_new_tab("http://172.00.00.1:5000/mirror/" + currentUser.email)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
     # if facialAuth.captureImage(currentUser.email):
