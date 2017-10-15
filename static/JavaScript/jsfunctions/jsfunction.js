@@ -140,7 +140,6 @@ function name() {
             }
         });
     }
-    }
     function promptAddress() {
         if (document.getElementById('eta').checked == true) {
             userChoices.homeAddress = prompt("Enter home address: ");
