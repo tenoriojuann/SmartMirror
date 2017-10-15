@@ -74,18 +74,28 @@
         <div  class="col-md-8" style="text-align: center">
                 <!-----------Twitter--------->
                 <img src="{{ url_for('static', filename='ImageIcon/TwitterIcon.jpg') }}" style="padding-right: 2.5%">
-                <input name="twitter" id="twitter" type="checkbox" checked=" ">
+                <input name="twitter" id="twitter" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             <!-----------Spotify (if we decide to include it) -------->
             <!--<div class="col-md-6" style="text-align: center">
                 <img src="{{ url_for('static', filename='ImageIcon/SpotifyIcon.jpg') }}">
                 <input style="padding-top: 10em" name="spotifytoken" id="spotify" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
             </div>-->
+            <hr/>
         </div>
 
         <div class="col-md-2">
             </div>
     </div>
+<div class="row" style="padding-top: 0%">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+            <input onclick="promtPin"class="btn btn-lg btn-danger" type="button" value="Delete Account"/>
+            <input onclick="combo()" class="btn btn-lg btn-success" value="Submit Changes">
 
+        </div>
+
+        <div class="col-md-2"></div>
+    </div>
 
 </form>
 <p onautocomplete="infoUser()"></p>
@@ -100,6 +110,6 @@
 
                 }</script>
 <!--Will make js that promts pin and if matches will call delete account-->
-<button onclick="promtPin">Delete</button>
+
 </body>
 </html>

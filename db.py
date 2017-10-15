@@ -100,6 +100,7 @@ class DB:
         if isSame:
             query = "DELETE FROM USERS WHERE email = ?"
             self.conn.execute(query, [email])
+            self.conn.commit()
         else:
             raise BadRequest
 
