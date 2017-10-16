@@ -13,7 +13,8 @@
     <meta charset="UTF-8">
     <title>Mirror</title>
 </head>
-<body onload = choiceDisplay({{ email|tojson }}) style="background-color: black">
+<body  style="background-color: black">
+<script>choiceDisplay({{ email|tojson }})</script>
 <div class="row">
     <div class="col-md-5" id="topLeft">
         <div class="topLeft" id="TL">

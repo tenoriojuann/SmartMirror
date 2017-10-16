@@ -170,21 +170,22 @@ function choiceDisplay(email) {
 function hideshow(choices) {
     console.log(choices);
     if (choices.clockWidget == 0) {
-        document.getElementById("TL").style.visibility = "hidden";
+        document.getElementById("TL").style.display = "none";
     }
     if (choices.weatherWidget == 0) {
-        document.getElementById("TR").style.visibility = "hidden";
+        document.getElementById("TR").style.display = "none";
     }
     if (choices.mapWidget == 0) {
-        document.getElementById("ML").style.visibility = "hidden";
+        document.getElementById("ML").style.display = "none";
     }
     if (choices.twitterWidget == 0) {
-        document.getElementById("MR").style.visibility = "hidden";
+        document.getElementById("MR").style.display = "none";
     }
     if (choices.calendarWidget == 0) {
-        document.getElementById("BL").style.visibility = "hidden";
-        document.getElementById("BM").style.visibility = "hidden";
-        document.getElementById("BR").style.visibility = "hidden";
+        document.getElementById("BL").style.display = "none";
+        document.getElementById("BM").style.display = "none";
+        document.getElementById("BR").style.display = "none";
+        document.getElementById("titleEvent").style.display = "none";
     }
 
 }
