@@ -1,6 +1,10 @@
 #!/usr/bin/python
 import sqlite3
 import hashlib
+
+from flask import jsonify
+import json
+
 from static.User import User
 from werkzeug.exceptions import BadRequest
 
@@ -22,9 +26,9 @@ class DB:
 
     # Sets the information given by the user to the DB
     def insertUserData(self, user):
-        add = "INSERT INTO USERS (name, email, facePath,pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget) VALUES (?,?,?,?,?,?,?,?,?)"
+        add = "INSERT INTO USERS (name, email, facePath, pin, calendarWidget, twitterWidget, mapWidget, clockWidget, weatherWidget, homeAddess, workAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         self.conn.executemany(add, [(user.name, user.email,"-" ,user.pin,
-                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget)])
+                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.clockwidget, user.weatherwidget, user.home,user.work)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
@@ -34,16 +38,15 @@ class DB:
         except BadRequest as e:
             print(e.description)
             raise e
-
         if not self.isUserRegistered(user.email):
             self.insertUserData(user)
-            print("A new record was be added")
+            print("A new profile has been added")
         else:
             raise BadRequest("A record with that email has already been registered")
 
     def isUserRegistered(self, email):
 
-        userByEmail = 'SELECT COUNT(*) FROM Users WHERE email= ?'
+        userByEmail = 'SELECT COUNT(*) FROM USERS WHERE EMAIL= ?'
         count = self.conn.execute(userByEmail, [email]).fetchone()[0]
         if count > 0:
             return True
@@ -59,6 +62,14 @@ class DB:
             raise BadRequest("I/O error: {0} was not included".format(e))
         try:
             user.clockwidget = content["clockwidget"]
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.home = content["homeAddress"]
+        except KeyError as e:
+            print("I/O error: {0} was not included".format(e))
+        try:
+            user.work = content["workAddress"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
@@ -84,25 +95,77 @@ class DB:
     # If it is the same go ahead and delete it
     # If it is not the same throw some error
     def deleteUser(self, email, pin):
-        if self.isHashSame(self.getHashedPin(email), pin):
-            query = "DELETE FROM Users WHERE email = ?"
+        hasheddpin = self.getHashedPin(email)
+        isSame = self.isHashSame(hasheddpin, pin)
+        if isSame:
+            query = "DELETE FROM USERS WHERE email = ?"
             self.conn.execute(query, [email])
+            self.conn.commit()
         else:
             raise BadRequest
 
     def getUser(self, email):
         if self.isUserRegistered(email):
-            query = "SELECT * FROM Users WHERE email = ?"
-            userData = list(self.conn.execute(query, [email]).fetchall())
-            return userData
+            query = "SELECT * FROM USERS WHERE email = ?"
+            userData = self.conn.execute(query, [email]).fetchall()[0]
+            userData = list(userData)
+            print(userData)
+            preferences = {"email":userData[0],
+                                   "name":userData[1],
+                                   "facepath":"-",
+                                   "pin":userData[3],
+                                   "calendarWidget":userData[4],
+                                   "mapWidget":userData[5],
+                                   "twitterWidget":userData[6],
+                                   "clockWidget":userData[7],
+                                   "weatherWidget":userData[8],
+                                   "homeAddress":userData[9],
+                                   "workAddress":userData[10]}
+            return preferences
         else:
             raise BadRequest
 
+    def setEvents(self, title, status, startTime, endTime, email):
+        query = "INSERT INTO Events (title, status, startTime, endTime) VALUES (?,?,?,?) "
+        self.conn.executemany(query, [(title, status, startTime, endTime)])
+        self.conn.commit()
+        eventID = self.conn.execute("SELECT MAX(eventID) from Events").fetchall()
+        eventID = int(eventID[0][0])
+        query = "INSERT INTO Participants (email, eventID) VALUES (?,?)"
+        self.conn.executemany(query, [(email, eventID)])
+        self.conn.commit()
 
     def getHashedPin(self, email):
-        query = "SELECT * FROM Users WHERE email = ?"
-        pin = self.conn.execute(query, [email]).fetchone()[2]
+        query = "SELECT * FROM USERS WHERE email = ?"
+        pin = ''
+        try:
+            pin = self.conn.execute(query, [email]).fetchone()[3]
+        except Exception as e:
+            raise BadRequest("")
         return pin
+
+    def getEvents(self,email):
+
+        query = "SELECT eventID from Participants where email = ?"
+        eventIDs = self.conn.execute(query,[email]).fetchall()
+        events = []
+        sql = "select * from Events WHERE eventID = ?"
+        for id in eventIDs:
+            _list = self.conn.execute(sql, [id[0]]).fetchone()
+            event = {"Title":_list[1],
+                     "startTime":_list[3],
+                     "endTime":_list[4],
+                     "status":_list[2]}
+            events.append(event)
+        if len(events) < 1:
+            return jsonify({"Error":"This user does not have any events saved in Google"})
+        return jsonify(events)
+
+    @staticmethod
+    def getEmail(self):
+        query = "SELECT email FROM Users"
+        emails = self.conn.execute(query)
+        return emails
 
     @staticmethod
     def encrypt(pin):

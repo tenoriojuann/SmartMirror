@@ -1,0 +1,135 @@
+div.form {
+    display: block;
+    text-align: center;
+}
+form {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+h1, h2, h3, h4, p {
+    color: white;
+    text-align: center;
+    animation-name: fadein;
+    animation-duration: 2s;
+}
+
+.xanthan {
+    color: white;
+    text-align: center;
+    font-size: 150%;
+    animation-name: fadein;
+    animation-duration: 2s;
+}
+
+.members {
+    color: white;
+    text-align: center;
+    animation-name: fadein;
+    animation-duration: 2s;
+}
+
+.registerForm {
+    background: black;
+    margin-left: 15%;
+    margin-right:15%;
+    width: 70%;
+    animation-name: fadein;
+    animation-duration: 2s;
+}
+
+.pinInput {
+    background: white;
+    text-align: center;
+}
+
+.widgetIcon {
+    width: 100px;
+    height: auto;
+    padding: 0px;
+    margin: 5px;
+    margin-top: 0px;
+    animation-name: fadein;
+    animation-duration: 2s;
+}
+
+.iconContainer {
+    display: inline-block;
+    align-content: center;
+    border: 5px solid white;
+    border-radius: 20px;
+    margin: 3%;
+    animation-name: fadein;
+    animation-duration: 2s;
+
+}
+
+.iconContainerText {
+    font-size: 125%;
+    font-weight: bold;
+    color: white;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    animation-name: fadein;
+    animation-duration: 2s;
+}
+
+.pageHeading {
+    color: white;
+    text-align: center;
+    font-size: 300%;
+    font-weight: bold;
+    animation-name: fadein;
+    animation-duration: 1.5s;
+}
+
+html {
+    padding-bottom: 25px;
+    width: 99%;
+}
+
+.googleSignin {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 42px;
+    padding-right: 42px;
+    font-size: 14px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    height: 40px;
+    width: 191px;
+    color: white;
+    border: none;
+    background-color: black;
+    animation-name: fadein;
+    animation-duration: 2s;
+}
+
+hr {
+    animation-name: elongate;
+    animation-duration: 2s;
+}
+
+.logo {
+    animation-duration: 1s;
+    animation-name: quickfade;
+}
+
+@keyframes fadein {
+    0% {opacity: 0.0;}
+    50% {opacity: 0.0;}
+    100% {opacity: 1.0;}
+}
+
+@keyframes quickfade {
+    0% {opacity: 0.0;}
+    100% {opacity: 1.0;}
+}
+
+@keyframes elongate {
+    0% {width: 0%;}
+    50% {width: 0.0%;}
+    100% {width: 100%;}
+}

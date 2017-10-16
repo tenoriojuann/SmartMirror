@@ -1,10 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/mirror.css') }}">
+    <script src="{{ url_for('static', filename='JavaScript/jsfunctions/weather.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='JavaScript/jsfunctions/jsfunction.js') }}" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Mirror</title>
 </head>
-<body>
+<body  style="background-color: black">
+<script>choiceDisplay({{ email|tojson }})</script>
+<div class="row">
+    <div class="col-md-5" id="topLeft">
+        <div class="topLeft" id="TL">
+            <p class="dateZ" id="date"></p>
+            <p class="timeZ" id="date_time"></p>
+            <script type="text/javascript">onload = date_time('date_time');</script>
+        </div>
+    </div>
+    <div class="col-md-2" id="topMiddle">
+    </div>
+    <div class="col-md-5" id="topRight">
+        <div class="topRight" id ="TR" style="text-align: center">
+            <p id="location"></p>
+            <div class="tempAndImage">
+                <p id="tempDegrees"></p>
+                <img id="weatherIMG" style="width: 30%">
+                <p id="description"></p>
+            <script type="text/javascript">onload = weatherData();</script>
 
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" id="middleRowDivider" style="padding-top: 10%"></div>
+
+    <div class="col-md-5" id="midLeft">
+        <div class="midLeft" id="ML" style="visibility:visible">
+          <p>Saved Locations</p>
+            <p id="origin"></p>
+            <p id="destination"></p>
+            <p id="distance"></p>
+            <p id="duration"></p>
+            <script type="text/javascript">onload = mapsData({{ email|tojson }});</script>
+        </div>
+    </div>
+    <div class="col-md-2" id="midMiddle"></div>
+    <div class="col-md-5" id="midRight">
+        <div class="midRight" id="MR">
+             <p style="text-align: center"></p>
+            <a class="twitter-timeline"  href="https://twitter.com/hashtag/seniorproject2017" data-widget-id="917558416226349057">#seniorproject2017 Tweets</a>
+            <script>
+                !function(d,s,id){
+                    var js,fjs=d.getElementsByTagName(s)[0],
+                        p=/^http:/.test(d.location)?'http':'https';
+                            if(!d.getElementById(id)) {
+                                js=d.createElement(s);
+                                js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+                                fjs.parentNode.insertBefore(js,fjs);
+                            }
+                }
+                (document,"script","twitter-wjs");
+            </script>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12" id="titleEvent" style="padding-top: 10%">
+        <p style="text-align: center">Events</p>
+    </div>
+
+    <div class="col-md-4" id="bottomLeft">
+        <div class="bottomLeft" id="BL">
+            <p id="eventTitle0" ></p>
+            <p id="eventStart0"></p>
+            <p id="eventEnd0"></p>
+
+            <p id="eventTitle3" ></p>
+            <p id="eventStart3"></p>
+            <p id="eventEnd3"></p>
+            </div>
+        </div>
+    <div class="col-md-4" id="bottomMiddle" >
+        <div class="bottomMiddle" id="BM">
+            <p id="eventTitle1" ></p>
+            <p id="eventStart1"></p>
+            <p id="eventEnd1"></p>
+        </div>
+    </div>
+    <div class="col-md-4" id="bottomRight">
+        <div class="bottomRight" id="BR">
+            <p id="eventTitle2" ></p>
+            <p id="eventStart2"></p>
+            <p id="eventEnd2"></p>
+
+            <p id="eventTitle4"></p>
+            <p id="eventStart4"></p>
+            <p id="eventEnd4"></p>
+    </div>
+    <script type="text/javascript">onload = eventData({{ email|tojson }});</script>
+    </div>
+</div>
 </body>
 </html>

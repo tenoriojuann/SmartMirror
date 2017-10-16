@@ -1,0 +1,37 @@
+p{
+    color: white;
+    font-size: x-large;
+}
+.topLeft{
+    padding-top: 10%;
+    padding-left: 10%;
+}
+.topRight{
+    padding-top: 10%;
+    padding-left: 25%;
+}
+.midLeft{
+    padding-top: 10%;
+    padding-left: 10%
+}
+.bottomMiddle{
+    padding-top:10%;
+}
+.bottomLeft{
+    padding-left: 10%;
+    padding-top:10%;
+}
+.bottomRight{
+    padding-top:10%;
+    padding-left: 15%;
+}
+.midRight{
+    padding-top: 10%;
+    padding-left: 15%;
+}
+
+#tempDegrees{
+    font-size: large;
+    display: inline-block;
+
+}
