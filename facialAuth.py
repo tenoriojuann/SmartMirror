@@ -1,11 +1,8 @@
 import face_recognition
 import cv2
-<<<<<<< HEAD
-=======
 import os
 import webbrowser
 from db import DB
->>>>>>> 0d19123461295f5b84c7a617e66bae28f35183dc
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -19,20 +16,7 @@ from db import DB
 # Get a reference to webcam #0 (the default one)
 
 #provide name of image
-<<<<<<< HEAD
-def facialAuthenticate(image_name):
-    video_capture = cv2.VideoCapture(0)
-    # Load a sample picture and learn how to recognize it.
-    user_image = face_recognition.load_image_file("faces/"+image_name)
-    user_face_encoding = face_recognition.face_encodings(user_image)[0]
-    face_locations = []
-    face_encodings = []
-    face_names = []
-    process_this_frame = True
-    while True:
-=======
-
-database = DB("/Users/jsexton/Senior")
+database = DB("/home/pi/Senior")
 process_this_frame= True
 
 def get_all_email_images():
@@ -53,56 +37,12 @@ def facial_authenticate():
     #     user_face_encoding = face_recognition.face_encodings(user_image)[0]
     global process_this_frame
     while process_this_frame:
->>>>>>> 0d19123461295f5b84c7a617e66bae28f35183dc
         # Grab a single frame of video
         ret, frame = video_capture.read()
 
         # Resize frame of video to 1/4 size for faster face recognition processing
-        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-<<<<<<< HEAD
 
-        # Only process every other frame of video to save time
-        if process_this_frame:
-            # Find all the faces and face encodings in the current frame of video
-            face_locations = face_recognition.face_locations(small_frame)
-            face_encodings = face_recognition.face_encodings(small_frame, face_locations)
-
-            face_names = []
-            for face_encoding in face_encodings:
-                # See if the face is a match for the known face(s)
-                match = face_recognition.compare_faces([user_face_encoding], face_encoding)
-                name = "Unknown"
-
-                if match[0]:
-                    name = "Success"
-
-                face_names.append(name)
-
-        process_this_frame = not process_this_frame
-
-        # Display the results
-        for (top, right, bottom, left), name in zip(face_locations, face_names):
-            # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-            top *= 4
-            right *= 4
-            bottom *= 4
-            left *= 4
-
-            # Draw a box around the face
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-
-            # Draw a label with a name below the face
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-            font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-
-        # Display the resulting image
-        cv2.imshow('Video', frame)
-
-        # Hit 'q' on the keyboard to quit!
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-=======
+        #small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
         # Only process every other frame of video to save time
         if process_this_frame:
             user_face_dict = get_all_email_images()
@@ -110,8 +50,8 @@ def facial_authenticate():
                 user_image = face_recognition.load_image_file(key + "/" + key + ".jpg")
                 user_face_encoding = face_recognition.face_encodings(user_image)[0]
 
-                face_locations = face_recognition.face_locations(small_frame)
-                face_encodings = face_recognition.face_encodings(small_frame, face_locations)
+                face_locations = face_recognition.face_locations(frame)
+                face_encodings = face_recognition.face_encodings(frame, face_locations)
                 face_locations = []
                 face_names = []
                 for face_encoding in face_encodings:
@@ -122,11 +62,11 @@ def facial_authenticate():
                     if match[0]:
                         status = "Success"
                         print(status + " : "+ key)
-                        webbrowser.open_new_tab("http://172.00.00.1:5000/mirror/"+key)
-                        return  key
+                        webbrowser.open_new_tab("http://172.20.10.8:5000/mirror/"+key)
+		        #break
                     else:
                         print(status)
-                        break;
+                        break
 
                     face_names.append(status)
 
@@ -154,33 +94,13 @@ def facial_authenticate():
         # Hit 'q' on the keyboard to quit!
         #if cv2.waitKey(1) & 0xFF == ord('q'):
         #   break
->>>>>>> 0d19123461295f5b84c7a617e66bae28f35183dc
 
     # Release handle to the webcam
     video_capture.release()
     cv2.destroyAllWindows()
 
-<<<<<<< HEAD
-
-def caputeImage(userName):
-    video_capture = cv2.VideoCapture(0)
-    name = userName
-    captureImg = True
-    while captureImg:
-        count = 0;
-        ret, img = video_capture.read()
-        if count is 3:
-            print("Image Captured")
-            cv2.imwrite("faces/"+name+".jpg", img)
-            captureImg= False
-        if count is not 3:
-            count+=1
-            print(count)
-            break
-    video_capture.release()
-cv2.destroyAllWindows()
-=======
 def captureImage(userName):
+    global process_this_frame
     process_this_frame = False
     if os.path.isdir(userName):
         os.remove(userName + "/" + userName +".jpg")
@@ -204,4 +124,3 @@ def captureImage(userName):
     cv2.destroyAllWindows()
     process_this_frame = True
     return True
->>>>>>> 0d19123461295f5b84c7a617e66bae28f35183dc
