@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/mirror.css') }}">
     <script src="{{ url_for('static', filename='JavaScript/jsfunctions/weather.js') }}" type="text/javascript"></script>
-   
+    <script src="{{ url_for('static', filename='JavaScript/jsfunctions/jsfunction.js') }}" type="text/javascript"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -14,7 +14,6 @@
     <title>Mirror</title>
 </head>
 <body onload = choiceDisplay({{ email|tojson }}) style="background-color: black">
-<script>console.log({{email|tojson}})</script>
 <div class="row">
     <div class="col-md-5" id="topLeft">
         <div class="topLeft" id="TL">
@@ -105,7 +104,6 @@
             <p id="eventEnd4"></p>
     </div>
     <script type="text/javascript">onload = eventData({{ email|tojson }});</script>
-        <script type="text/javascript">onload = hideshow();</script>
     </div>
 </div>
 </body>
