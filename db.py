@@ -28,7 +28,7 @@ class DB:
     def insertUserData(self, user):
         add = "INSERT INTO USERS (name, email, facePath,pin, twitterWidget, mapWidget, calendarWidget, clockWidget, weatherWidget, homeAddess, workAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         self.conn.executemany(add, [(user.name, user.email,"-" ,user.pin,
-                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.calendarwidget,user.clockwidget, user.home,user.work)])
+                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.clockwidget, user.weatherwidget, user.home,user.work)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
