@@ -16,7 +16,6 @@ from db import DB
 # Get a reference to webcam #0 (the default one)
 
 #provide name of image
-
 database = DB("/home/pi/Senior")
 process_this_frame= True
 
@@ -42,7 +41,8 @@ def facial_authenticate():
         ret, frame = video_capture.read()
 
         # Resize frame of video to 1/4 size for faster face recognition processing
-       # small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+
+        #small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
         # Only process every other frame of video to save time
         if process_this_frame:
             user_face_dict = get_all_email_images()
@@ -124,6 +124,3 @@ def captureImage(userName):
     cv2.destroyAllWindows()
     process_this_frame = True
     return True
-
-facial_authenticate()
-
