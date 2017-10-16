@@ -185,6 +185,7 @@ function hideshow(choices) {
         document.getElementById("BL").style.display = "none";
         document.getElementById("BM").style.display = "none";
         document.getElementById("BR").style.display = "none";
+        document.getElementById("titleEvent").style.display = "none";
     }
 
 }
