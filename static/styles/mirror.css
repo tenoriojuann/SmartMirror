@@ -14,7 +14,9 @@ p{
     padding-top: 10%;
     padding-left: 10%
 }
-
+.bottomMiddle{
+    padding-top:10%;
+}
 .bottomLeft{
     padding-left: 10%;
     padding-top:10%;
@@ -27,8 +29,9 @@ p{
     padding-top: 10%;
     padding-left: 15%;
 }
+
 #tempDegrees{
-    font-size: small;
+    font-size: large;
     display: inline-block;
 
 }
