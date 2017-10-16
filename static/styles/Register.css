@@ -1,1 +1,42 @@
-input[type="checkbox"] {float:right}
+img {
+    width: 150px;
+    height: auto;
+    padding: 0px;
+    margin: 5px;
+    margin-top: 0px;
+}
+
+.form{
+    background: black;
+    margin-left: 15%;
+    margin-right:15%;
+    width: 70%;
+}
+
+.iconContainer {
+    display: inline-block;
+    align-content: center;
+    border: 5px solid white;
+    border-radius: 20px;
+    margin: 3%;
+
+}
+
+.iconContainerText {
+    font-size: 125%;
+    font-weight: bold;
+    color: white;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+
+}
+
+html {
+    animation-name: fadein;
+    animation-duration: 2s;
+}
+
+@keyframes fadein {
+    0% {opacity: 0.0;}
+    100% {opacity: 1.0;}
+}

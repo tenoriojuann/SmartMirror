@@ -1,12 +1,11 @@
 import json
 import os
-
 import requests
-
+import webbrowser
 from static.User import User
+#import facialAuth
 import datetime
 import pytz
-import webbrowser
 from flask import Flask, request, render_template, url_for, jsonify
 from db import DB
 from flask_oauthlib.client import OAuth, session, redirect
@@ -20,7 +19,7 @@ database = DB(app.root_path)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
-
+#facialAuth.facial_authenticate()
 google = oauth.remote_app(
     'google',
     consumer_key=os.environ.get('GOOGLE_ID'),
@@ -70,9 +69,7 @@ def authorized():
     _me = google.get("https://www.googleapis.com/plus/v1/people/me").data
     currentUser.name = _me["displayName"]
     currentUser.email = _me["emails"][0]["value"]
-    # Uncomment the line below for local testing
-    return webbrowser.open_new_tab(url_for('getProfile',currentUser.email))
-    # return redirect(url_for('enterRegistration'))
+    return redirect(url_for('enterRegistration'))
 
 
 @app.route('/session/<sess>', methods=['POST', 'GET'])
@@ -81,28 +78,32 @@ def transfersession(sess):
     return redirect(url_for('index'))
 
 
+@app.route('/currentUser', methods=['GET'])
+def getcurrentUser():
+    return jsonify({"name": currentUser.name, "email": currentUser.email})
+
+
 @google.tokengetter
 def get_google_oauth_token():
     if isLoggedIn():
         return session.get('google_token')
 
 
-@app.route('/delete', methods=['GET'])
-def deleteUser():
-    if isLoggedIn():
-        email = currentUser.email
-        pin = request.args.get('pin')
-        try:
-            database.deleteUser(email, pin)
-        except BadRequest:
-            return Response("Wrong pin", status=403)
+@app.route('/delete/<email>/<pin>', methods=['GET'])
+def deleteUser(email,pin):
+    try:
+        database.deleteUser(email, pin)
+    except BadRequest:
+        return jsonify({"error": "Either the user"
+                                     " was not found or"
+                                     " the pin was incorrect"})
 
-        return Response("User deleted", status=202)
-    else:
-        return Response("NOT LOGGED IN", status=403)
+    return Response("User deleted", status=202)
 
 
-@app.route('/register', methods=['GET'])
+# ('/register/<user>',
+# def enterRegistration(user)
+@app.route('/register/', methods=['GET'])
 def enterRegistration():
     if isLoggedIn():
         return render_template('Register.html')
@@ -110,51 +111,67 @@ def enterRegistration():
         return render_template('index.html')
 
 
-@app.route('/events', methods=['GET'])
-def getEvents():
+def setEvents():
     if isLoggedIn():
         # get events from calendar for the next 3 days
         cest = pytz.timezone('America/New_York')
         now = datetime.datetime.now(tz=cest)  # timezone?
         timeMin = datetime.datetime(year=now.year, month=now.month, day=now.day, tzinfo=cest) + datetime.timedelta(
-            days=1)
+            days=0)
         timeMin = timeMin.isoformat()
         timeMax = datetime.datetime(year=now.year, month=now.month, day=now.day, tzinfo=cest) + datetime.timedelta(
-            days=300)
+            days=3)
         timeMax = timeMax.isoformat()
         events = google.get(
             'https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=' + timeMin + '&timeMax=' + timeMax).data
-        return jsonify({"list": events["items"]})
+        items = events["items"]
+        for item in items:
+            try:
+                title = item["summary"]
+                status = item["status"]
+                startTIme = item["start"]["dateTime"]
+                endTime = item["end"]["dateTime"]
+            except KeyError as e:
+                print(e)
+            database.setEvents(title, status, startTIme, endTime, currentUser.email)
+        return jsonify({"list": events})
     return Response(status=403)
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['POST', 'GET'])
 def getPreferences():
     content = request.get_json(force=True)
     try:
+        content["name"] = currentUser.name
+        content["email"] = currentUser.email
         database.addProfile(content)
+        setEvents()
+       # facialAuth.captureImage(currentUser.email)
+        #facialAuth.facial_authenticate()
+        webbrowser.open_new_tab("http://127.00.00.1:5000/mirror/" + currentUser.email)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
+    # if facialAuth.captureImage(currentUser.email):
     return Response("Added: " + content['name'] + " to the DB", status=202)
 
 
-@app.route('/profile', methods=['GET'])
-def getProfile():
-    email = request.args.get('email')
-    if (database.isUserRegistered(email)):
+@app.route('/events/<email>', methods=['GET'])
+def getEvents(email):
+    return database.getEvents(email)
+
+
+@app.route('/profile/<email>', methods=['GET'])
+def getProfile(email):
+    if database.isUserRegistered(email):
         try:
             profileData = database.getUser(email)
-            # profileData = jsonify(profileData)
+            profileData = jsonify(profileData)
+            return profileData
         except BadRequest:
             return Response("Not an email", status=403)
-        return (jsonify(profileData))
     else:
         return Response("Profile not found", status=404)
 
-#TODO this is skeletal, will be filled out later
-@app.route('/authenticate', methods=['POST'])
-def authenticateFace():
-    return Response("Authenticated", status=202)
 
 @app.route('/weather', methods=['GET'])
 def weather():
@@ -164,15 +181,50 @@ def weather():
     lat = LocationResponse['latitude']
     lon = LocationResponse['longitude']
     weather__key = os.environ.get('WEATHER_KEY')
-    url = 'http://api.openweathermap.org/data/2.5/weather?lat='+str(lat)+'&lon='+str(lon)+'&units=imperial'+'&APPID='+str(weather__key)
+    url = 'http://api.openweathermap.org/data/2.5/weather?lat=' + str(lat) + '&lon=' + str(
+        lon) + '&units=imperial' + '&APPID=' + str(weather__key)
     openWeatherRequest = requests.get(url)
     return jsonify(openWeatherRequest.json())
 
+
+@app.route('/captureFace')
+def captureFace():
+    # TODO should signal on mirror that image is being captured
+    email = request.args.get('email')
+    caputeImage(email)
+    return Response("Face Captured", status=202)
+
+
+@app.route('/authenticate')
 def isLoggedIn():
     if 'google_token' in session:
         return True
     return False
 
 
+@app.route('/maps/<email>', methods=['GET'])
+def maps(email):
+    profile = database.getUser(email)
+    return mapsHelper(profile)
+
+
+def mapsHelper(profile):
+    maps_key = os.environ.get('MAPS_KEY')
+    url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=' + profile[
+        'homeAddress'] + '+ON&destinations=' + profile['workAddress'] + '+ON&key=' + str(maps_key)
+    results = requests.get(url)
+    return jsonify(results.json())
+
+
+@app.route('/change', methods=['GET'])
+def changepreferences():
+    return render_template('change.html')
+
+
+@app.route('/mirror/<email>', methods=['GET'])
+def mirror(email):
+    return render_template('mirror.html', email=email)
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run("127.00.00.1", port=5000)

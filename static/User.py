@@ -7,7 +7,8 @@ class User:
         self.name = name
         self.email = email
         self.pin = pin
-        self.facepath = ""
+        self.home = ""
+        self.work = ""
         self.weatherwidget = False
         self.twitterwidget = False
         self.mapswidget = False

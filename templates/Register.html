@@ -1,139 +1,136 @@
 <!Doctype html>
 <html>
+<!--ToggleData Documentation: http://www.bootstraptoggle.com/ -->
 <head>
-    <title>Home Page</title>
+
+
+    <script src="{{ url_for('static', filename='JavaScript/jsfunctions/jsfunction.js') }}"
+            type="text/javascript"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
+    <link rel="stylesheet" version="220" href="{{ url_for('static', filename='styles/standard.css') }}">
+    <title>Magic Mirror | Setup</title>
+    <link rel="icon" type="img/ico" href="{{ url_for('static', filename='logo/LogoIcon.png') }}">
 </head>
-<body>
-<!--I can change true false based on the check marks, not sure about token and image being directed to var in object-->
-<form>
-	<p>Time
-        <!--Check boxes can be made into sliders and did checked because I wanted time set to default-->
-        <input name="time" id= "time" type="checkbox" checked>
-    </p>
-    <p>Weather
-        <input name="weather" id="weather" type="checkbox">
-    </p>
-    <p>Twitter
-        <input name="twittertoken" id="twitter" type="checkbox">
-    </p>
-     <p>Calendar
-     <input name="calendar" id="calendar" type="checkbox">
-    </p>
-    <p>Map
-        <input name="maps" id="eta" type="checkbox">
-    </p>
-    <p>Spotify
-        <input name="spotifytoken" id="spotify" type="checkbox">
-    </p>
+<body style="background: black">
+<!--Xanthan Mirror Setup Top Row-->
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8" style="text-align: center">
+        <h1 class="pageHeading">Magic Mirror Setup</h1>
+        <hr/>
+    </div>
+    <div class="col-md-2"></div>
+</div>
 
+<form class="registerForm">
+    <!-----------Time & Weather Widget Row------->
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+            <!-----------Time------->
+            <div class="col-md-6" style="text-align: center">
+                <div class="iconContainer">
+                    <p class="iconContainerText">Time</p>
+                    <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/ClockIcon.png') }}">
+                </div>
+                <input class="widgetToggle" name="time" id="time" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+            </div>
+            <!-----------Weather--------->
+            <div class="col-md-6" style="text-align: center">
+                <div class="iconContainer">
+                    <p class="iconContainerText">Weather</p>
+                    <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/WeatherIcon.png') }}">
+                </div>
+                <input class="widgetToggle" name="weather" id="weather" type="checkbox" data-toggle="toggle" data-on="Enabled"
+                       data-off="Disabled">
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
 
-    <Label for="pin">4 character pin: </Label>
-    <input name="pin" type="text" Placeholder="****" required pattern=".{4,4}" maxlength="4" minlength="4">
-    <br>
-    <p>Picture of face:</p>
-    <input name="facepath" id="facepath"  type="file" accept="image/*" capture="camera" required>
+    <!-----------Google Maps & Calendar Widget Row-------->
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+            <!-----------Google Maps------->
+            <div class="col-md-6" style="text-align: center">
 
-    <hr/>
-    <!--can't get to post the way I want currently
-    "time();calendar(); spotifytoken(); googletoken(); maps(); pin(); weather();twittertoken(); name();email(); facepath(); postIt(); printC()"-->
-    <input onclick= "test()" class="btn btn-lg btn-success" type="submit">
-    <input class ="btn btn-lg btn-danger" type="button" onclick="window.location.href='{{url_for('index')}}'" value="Cancel" />
+                <div class="iconContainer">
+                    <p class="iconContainerText">Maps</p>
+                    <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/GoogleMapsIcon.png') }}">
+                </div>
+                <input class="widgetToggle" name="maps" id="eta" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+            </div>
+            <!-----------Google Calendar--------->
+            <div class="col-md-6" style="text-align: center">
+                <div class="iconContainer">
+                    <p class="iconContainerText">Calendar</p>
+                    <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/GoogleCalendarIcon.jpg') }}">
+                </div>
+                <input class="widgetToggle" name="calendar" id="calendar" type="checkbox" data-toggle="toggle" data-on="Enabled"
+                       data-off="Disabled">
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <!------------Twitter & Spotify Widget Row ------->
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+            <!-----------Twitter--------->
+            <div class="iconContainer">
+                <p class="iconContainerText">Twitter</p>
+                <img class="widgetIcon" src="{{ url_for('static', filename='ImageIcon/TwitterIcon.png') }}">
+            </div>
+            <input name="twitter" id="twitter" type="checkbox" data-toggle="toggle" data-on="Enabled"
+                   data-off="Disabled" class="widgetToggle">
+            <!-----------Spotify (if we decide to include it) -------->
+            <!--<div class="col-md-6" style="text-align: center">
+                <img src="{{ url_for('static', filename='ImageIcon/SpotifyIcon.jpg') }}">
+                <input style="padding-top: 10em" name="spotifytoken" id="spotify" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+            </div>-->
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <!------- 4 Char Pin Row ----------->
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+            <Label for="pin" style="color: white"><h3>Enter PIN (4 Characters)</h3></Label>
+
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <!-- 4 Char Pin Input Field Row ---->
+    <div class="row" style="padding-top: 0%">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+            <input class="pinInput" name="pin" id="pin" type="password" Placeholder="****" required pattern=".{4,4}" maxlength="4"
+                   minlength="4" style="width: 10%">
+            <hr/>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <!---- Cancel & Submit Button ----->
+    <div class="row" style="padding-top: 0%">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+            <input onclick="window.location.href='{{url_for('logout')}}'"  class="btn btn-lg btn-danger" type="button" value="Cancel"/>
+            <input onclick="combo()" class="btn btn-lg btn-success" value="Submit Choices">
+        </div>
+        <div class="col-md-2"></div>
+    </div>
 </form>
 
-<form action="{{url_for('logout')}}">
-
-</form>
 </body>
-<!--not sure how to call token-->
-<script>
-    var userChoices={
-        name:"name" ,
-        email:"rando@gmail.com",
-        googletoken:"temp",
-        pin:"temp",
-        spotifytoken: false,
-        twittertoken: false,
-        maps: false,
-        calendar:false,
-        weather:true,
-        time:true
-    }
-    //tested time() and printed userchoices.time
-function test(){
-        if (document.getElementById('time').checked)
-            alert("shit hit the fan");
-        else {
-            facePath();
-            alert(userChoices.facepath);
-        }
-}
-function time(){
-    if(document.getElementById('time').checked) {
-        userChoices.time=true;
-    } else {
-        userChoices.time=false;
-}
-}
-function calendar(){
-    if(document.getElementById('calendar').checked) {
-        userChoices.calendar=true;
-    } else {
-        userChoices.calendar=false;
-}
-}
-function spotifytoken(){
-    if(document.getElementById('spotifytoken').checked) {
-        userChoices.spotifytoken=true;
-    } else {
-        userChoices.spotifytoken=false;
-}
-}
-function maps(){
-    if(document.getElementById('maps').checked) {
-        userChoices.weather=true;
-    } else {
-        userChoices.weather=false;
-}
-}
-function twittertoken(){
-    if(document.getElementById('twittertoken').checked) {
-        userChoices.twittertoken=true;
-    } else {
-        userChoices.twittertoken=false;
-}
-}
-function weather() {
-    if (document.getElementById('weather').checked) {
-        userChoices.time = true;
-    } else {
-        userChoices.time = false;
-    }
-}
-function googletoken() {
-    userchoices.googletoken="someString";
-}
-function pin(){
-    userChoices.pin=document.getElementById('pin').value;
-}
-function name(){
-    userChoices.name="fromGoogleToken"
-
-}
-function email(){
-    userChoices.email="fromGoogleToken"
-}
-function facePath(){
-    document.getElementById('facepath').files;
-}
-function postIt(){
-    $('#userChoices').val(JSON.stringify(userChoices));
-    $('form').submit();
-}
-function printC(){
-    console.log(userChoices);
-}
-</script>
-<link rel="stylesheet" href="{{ url_for('static', filename ="styles/bootstrap/bootstrap.css") }}">
-<script href="{{ url_for('static', filename ="JavaScript/jquery/jquery.js") }}"></script>
-
 </html>

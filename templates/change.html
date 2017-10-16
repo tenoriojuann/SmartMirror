@@ -1,31 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
+<!Doctype html>
+<html>
+<!--ToggleData Documentation: http://www.bootstraptoggle.com/ -->
 <head>
-    <meta charset="UTF-8">
-    <title>Changes to profile</title>
-</head>
-<body>
-<!---->
-<form>
-<p>Time
-        <input name="time" id= "time" type="checkbox" checked>
-    </p>
-    <p>Twitter
-        <input name="twittertoken" id="twitter" type="checkbox">
-    </p>
-     <p>Calendar
-     <input name="calendar" id="calendar" type="checkbox">
-    </p>
-    <p>Map
-        <input name="maps" id="eta" type="checkbox">
-    </p>
-    <p>Spotify
-        <input name="spotifytoken" id="spotify" type="checkbox">
-    </p>
-    <input type="Submit" value="Submit Change" />
-</form>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/Register.css') }}">
+    <script src="{{ url_for('static', filename='JavaScript/jsfunctions/jsfunction.js') }}" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
+    <title>Preferences</title>
+</head>
+<body style="background: black" onload="userInfo()">
+<!--Xanthan Mirror Setup Top Row-->
+
+    <div class="row"onload="name();createUser()">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+                <h1 style="color: white">Xanthan Mirror Setup</h1>
+                <h3 style="color: white" id="names">User:
+                    <script>name(); document.getElementById('names').innerHTML=("User: " + userChoices.name)</script></h3>
+                <h3 style="color: white" id="email2">Email:
+                    <script>document.getElementById('email2').innerHTML=("Email: "+userChoices.email)</script></h3>
+                <hr/>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+<form>
+    <!-----------Time & Weather Widget Row------->
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8"style="text-align: center">
+            <!-----------Time------->
+            <div class="col-md-6" style="text-align: center">
+
+                <img src="{{ url_for('static', filename='ImageIcon/ClockIcon.jpg') }}">
+                <input  name="time2" id= "time" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+            </div>
+            <!-----------Weather--------->
+            <div class="col-md-6" style="text-align: center">
+               <img src="{{ url_for('static', filename='ImageIcon/WeatherIcon.jpg') }}">
+                <input name="weather" id="weather" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <!-----------Google Maps & Calendar Widget Row-------->
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+            <!-----------Google Maps------->
+            <div class="col-md-6" style="text-align: center">
+                <img src="{{ url_for('static', filename='ImageIcon/GoogleMapsIcon.jpg') }}">
+                <input name="maps" id="eta" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+            </div>
+            <!-----------Google Calendar--------->
+            <div class="col-md-6" style="text-align: center">
+                <img src="{{ url_for('static', filename='ImageIcon/GoogleCalendarIcon.jpg') }}">
+                <input name="calendar" id="calendar" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <!------------Twitter & Spotify Widget Row ------->
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div  class="col-md-8" style="text-align: center">
+                <!-----------Twitter--------->
+                <img src="{{ url_for('static', filename='ImageIcon/TwitterIcon.jpg') }}" style="padding-right: 2.5%">
+                <input name="twitter" id="twitter" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+            <!-----------Spotify (if we decide to include it) -------->
+            <!--<div class="col-md-6" style="text-align: center">
+                <img src="{{ url_for('static', filename='ImageIcon/SpotifyIcon.jpg') }}">
+                <input style="padding-top: 10em" name="spotifytoken" id="spotify" type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+            </div>-->
+            <hr/>
+        </div>
+
+        <div class="col-md-2">
+            </div>
+    </div>
+<div class="row" style="padding-top: 0%">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" style="text-align: center">
+            <input onclick="promptPin()"class="btn btn-lg btn-danger" type="button" value="Delete Account"/>
+            <input onclick="combo()" class="btn btn-lg btn-success" value="Submit Changes">
+
+        </div>
+
+        <div class="col-md-2"></div>
+    </div>
+
+</form>
+<p onautocomplete="infoUser()"></p>
+<script>function on() {
+                    if (true) {
+                       elem = document.getElementById('time')
+                    }
+                    else{
+                        document.getElementById('time').checkbox=false;
+                    }
+                    return document.getElementById('time').checkbox;
+
+                }</script>
 <!--Will make js that promts pin and if matches will call delete account-->
-<button onclick="promtPin">Delete</button>
+
 </body>
 </html>
