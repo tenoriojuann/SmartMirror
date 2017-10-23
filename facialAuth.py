@@ -16,8 +16,7 @@ from db import DB
 # Get a reference to webcam #0 (the default one)
 
 #provide name of image
-
-database = DB("/Users/jsexton/Senior")
+database = DB("/home/pi/Senior")
 process_this_frame= True
 
 def get_all_email_images():
@@ -42,7 +41,8 @@ def facial_authenticate():
         ret, frame = video_capture.read()
 
         # Resize frame of video to 1/4 size for faster face recognition processing
-        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+
+        #small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
         # Only process every other frame of video to save time
         if process_this_frame:
             user_face_dict = get_all_email_images()
@@ -50,8 +50,8 @@ def facial_authenticate():
                 user_image = face_recognition.load_image_file(key + "/" + key + ".jpg")
                 user_face_encoding = face_recognition.face_encodings(user_image)[0]
 
-                face_locations = face_recognition.face_locations(small_frame)
-                face_encodings = face_recognition.face_encodings(small_frame, face_locations)
+                face_locations = face_recognition.face_locations(frame)
+                face_encodings = face_recognition.face_encodings(frame, face_locations)
                 face_locations = []
                 face_names = []
                 for face_encoding in face_encodings:
@@ -62,11 +62,11 @@ def facial_authenticate():
                     if match[0]:
                         status = "Success"
                         print(status + " : "+ key)
-                        webbrowser.open_new_tab("http://172.00.00.1:5000/mirror/"+key)
-                        return  key
+                        webbrowser.open_new_tab("http://172.20.10.8:5000/mirror/"+key)
+		        #break
                     else:
                         print(status)
-                        break;
+                        break
 
                     face_names.append(status)
 
@@ -100,6 +100,7 @@ def facial_authenticate():
     cv2.destroyAllWindows()
 
 def captureImage(userName):
+    global process_this_frame
     process_this_frame = False
     if os.path.isdir(userName):
         os.remove(userName + "/" + userName +".jpg")

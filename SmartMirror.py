@@ -3,7 +3,7 @@ import os
 import requests
 import webbrowser
 from static.User import User
-#import facialAuth
+import facialAuth
 import datetime
 import pytz
 from flask import Flask, request, render_template, url_for, jsonify
@@ -19,7 +19,6 @@ database = DB(app.root_path)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
-#facialAuth.facial_authenticate()
 google = oauth.remote_app(
     'google',
     consumer_key=os.environ.get('GOOGLE_ID'),
@@ -146,9 +145,11 @@ def getPreferences():
         content["email"] = currentUser.email
         database.addProfile(content)
         setEvents()
-       # facialAuth.captureImage(currentUser.email)
-        #facialAuth.facial_authenticate()
-        webbrowser.open_new_tab("http://127.00.00.1:5000/mirror/" + currentUser.email)
+        facialAuth.captureImage(currentUser.email)
+        print("About to authenticate")
+        facialAuth.facial_authenticate()
+        print("Authenticated")
+        #webbrowser.open_new_tab("http://172.20.10.8:5000/mirror/" + currentUser.email)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
     # if facialAuth.captureImage(currentUser.email):
@@ -227,4 +228,4 @@ def mirror(email):
 
 
 if __name__ == '__main__':
-    app.run("127.00.00.1", port=5000)
+    app.run("172.20.10.8", port=5000)
