@@ -178,6 +178,7 @@ class DB:
         return emails
 
     def deleteAll(self):
+        # TODO: Remove all the pictures as well
         Users = "DELETE FROM Users"
         Events = "DELETE FROM Events"
         EventIDs = "Delete FROM Participants"
