@@ -2,6 +2,7 @@
 import sqlite3
 import hashlib
 
+import shutil
 from flask import jsonify
 import json
 
@@ -27,8 +28,9 @@ class DB:
     # Sets the information given by the user to the DB
     def insertUserData(self, user):
         add = "INSERT INTO USERS (name, email, facePath, pin, calendarWidget, twitterWidget, mapWidget, clockWidget, weatherWidget, homeAddess, workAddress) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-        self.conn.executemany(add, [(user.name, user.email,"-" ,user.pin,
-                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.clockwidget, user.weatherwidget, user.home,user.work)])
+        self.conn.executemany(add, [(user.name, user.email, "-", user.pin,
+                                     user.calendarwidget, user.twitterwidget, user.mapswidget, user.clockwidget,
+                                     user.weatherwidget, user.home, user.work)])
         self.conn.commit()
 
     # Adds a profile to the DB if it does not exists
@@ -53,7 +55,6 @@ class DB:
         else:
             return False
 
-
     def createUser(self, content):
         print(content)
         try:
@@ -73,19 +74,19 @@ class DB:
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.twitterwidget= content["twitterwidget"]
+            user.twitterwidget = content["twitterwidget"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.calendarwidget=content["calendarwidget"]
+            user.calendarwidget = content["calendarwidget"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.mapswidget=content["mapswidget"]
+            user.mapswidget = content["mapswidget"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
         try:
-            user.weatherwidget=content["weatherwidget"]
+            user.weatherwidget = content["weatherwidget"]
         except KeyError as e:
             print("I/O error: {0} was not included".format(e))
 
@@ -101,8 +102,18 @@ class DB:
             query = "DELETE FROM USERS WHERE email = ?"
             self.conn.execute(query, [email])
             self.conn.commit()
+            print("User "+email+" has been deleted from the database")
+            events = "DELETE FROM Events WHERE eventID in (SELECT eventID from Participants WHERE email = ?)"
+            self.conn.execute(events, [email])
+            eventIDs = "DELETE FROM Participants where email = ?"
+            self.conn.execute(eventIDs, [email])
+            print("Deleted the eventIDs belonging to " + email)
+            print("Events for user " + email + " haven been deleted from the database")
+            self.conn.commit()
+            shutil.rmtree(self.root + "/" + email)
+            print("Images belonging to user " + email + " were deleted")
         else:
-            raise BadRequest
+            raise BadRequest("The pin does no match")
 
     def getUser(self, email):
         if self.isUserRegistered(email):
@@ -110,26 +121,26 @@ class DB:
             userData = self.conn.execute(query, [email]).fetchall()[0]
             userData = list(userData)
             print(userData)
-            preferences = {"email":userData[0],
-                                   "name":userData[1],
-                                   "facepath":"-",
-                                   "pin":userData[3],
-                                   "calendarWidget":userData[4],
-                                   "mapWidget":userData[5],
-                                   "twitterWidget":userData[6],
-                                   "clockWidget":userData[7],
-                                   "weatherWidget":userData[8],
-                                   "homeAddress":userData[9],
-                                   "workAddress":userData[10]}
+            preferences = {"email": userData[0],
+                           "name": userData[1],
+                           "facepath": "-",
+                           "pin": userData[3],
+                           "calendarWidget": userData[4],
+                           "mapWidget": userData[5],
+                           "twitterWidget": userData[6],
+                           "clockWidget": userData[7],
+                           "weatherWidget": userData[8],
+                           "homeAddress": userData[9],
+                           "workAddress": userData[10]}
             return preferences
         else:
-            raise BadRequest
+            raise BadRequest("That email is not registered")
 
     def setEvents(self, title, status, startTime, endTime, email):
         query = "INSERT INTO Events (title, status, startTime, endTime) VALUES (?,?,?,?) "
         self.conn.executemany(query, [(title, status, startTime, endTime)])
         self.conn.commit()
-        eventID = self.conn.execute("SELECT MAX(eventID) from Events").fetchall()
+        eventID = self.conn.execute("SELECT MAX(eventID) FROM Events").fetchall()
         eventID = int(eventID[0][0])
         query = "INSERT INTO Participants (email, eventID) VALUES (?,?)"
         self.conn.executemany(query, [(email, eventID)])
@@ -141,31 +152,40 @@ class DB:
         try:
             pin = self.conn.execute(query, [email]).fetchone()[3]
         except Exception as e:
-            raise BadRequest("")
+            raise BadRequest("Could not get user " + email)
         return pin
 
-    def getEvents(self,email):
+    def getEvents(self, email):
 
         query = "SELECT eventID from Participants where email = ?"
-        eventIDs = self.conn.execute(query,[email]).fetchall()
+        eventIDs = self.conn.execute(query, [email]).fetchall()
         events = []
         sql = "select * from Events WHERE eventID = ?"
         for id in eventIDs:
             _list = self.conn.execute(sql, [id[0]]).fetchone()
-            event = {"Title":_list[1],
-                     "startTime":_list[3],
-                     "endTime":_list[4],
-                     "status":_list[2]}
+            event = {"Title": _list[1],
+                     "startTime": _list[3],
+                     "endTime": _list[4],
+                     "status": _list[2]}
             events.append(event)
         if len(events) < 1:
-            return jsonify({"Error":"This user does not have any events saved in Google"})
+            return jsonify({"Error": "This user does not have any events saved in Google"})
         return jsonify(events)
 
-    @staticmethod
     def getEmail(self):
         query = "SELECT email FROM Users"
         emails = self.conn.execute(query)
         return emails
+
+    def deleteAll(self):
+        # TODO: Remove all the pictures as well
+        Users = "DELETE FROM Users"
+        Events = "DELETE FROM Events"
+        EventIDs = "Delete FROM Participants"
+        self.conn.execute(Users)
+        self.conn.execute(Events)
+        self.conn.execute(EventIDs)
+        self.conn.commit()
 
     @staticmethod
     def encrypt(pin):
