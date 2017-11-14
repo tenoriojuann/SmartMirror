@@ -161,11 +161,15 @@ class DB:
             return jsonify({"Error":"This user does not have any events saved in Google"})
         return jsonify(events)
 
-    @staticmethod
     def getEmail(self):
-        query = "SELECT email FROM Users"
-        emails = self.conn.execute(query)
-        return emails
+        try:
+            query = "SELECT email FROM Users"
+            print(self.root)
+            emails = self.conn.execute(query)
+            return emails
+        except KeyError as e:
+            print("Null Error: "+e)
+
 
     @staticmethod
     def encrypt(pin):
