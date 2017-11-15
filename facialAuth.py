@@ -4,6 +4,8 @@ import os
 import webbrowser
 import sys
 import imutils
+import tkinter as tk
+import time
 
 import numpy as np
 
@@ -47,30 +49,18 @@ def diffImg(i1, i2, i3):
 def monitor():
     movement_counter = 0
     cam = cv2.VideoCapture(0)
+    test = cam.read()[1]
     firstFrame = None
     while True:
-
-        winName = "Movement Indicator"
-        ##window = cv2.namedWindow(winName, cv2.WINDOW_FULLSCREEN)
         frame = cam.read()[1]
         frame = imutils.resize(frame, width=500)
-        cv2.imwrite("frame.jpg",frame)
         gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
         gray = cv2.GaussianBlur(gray, (15,15), 0)
         cv2.imwrite("grey_blur.jpg", gray)
-        ##ret, threshold_minus = cv2.threshold(image_minus, 10, 255, cv2.THRESH_BINARY)
-        #image_base = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
-        #grey_base = cv2.GaussianBlur(image_base, (15, 15), 0)
-        #ret, threshold_base = cv2.threshold(image_base, 10, 255, cv2.THRESH_BINARY)
-        #image_plus = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
-        #grey_plus = cv2.GaussianBlur(image_plus, (15, 15), 0)
-        #ret, threshold_plus = cv2.threshold(image_plus, 10, 255, cv2.THRESH_BINARY)
-        ##cnts = cv2.findContours((thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE))
-        #cv2.imshow(cv2.namedWindow("thresh",cv2.WINDOW_FULLSCREEN), threshold_minus)
-        #cv2.imshow(cv2.namedWindow("thresh2", cv2.WINDOW_FULLSCREEN), threshold_base)
-        #cv2.imshow(cv2.namedWindow("thresh3", cv2.WINDOW_FULLSCREEN), threshold_plus)
         if firstFrame is None:
+            print("Got first frame")
             firstFrame = gray
+            cv2.imwrite("first.jpg", firstFrame)
             continue
         frameDelta = cv2.absdiff(firstFrame, gray)
         thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
