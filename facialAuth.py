@@ -2,6 +2,13 @@ import face_recognition
 import cv2
 import os
 import webbrowser
+import sys
+import imutils
+import tkinter as tk
+import time
+
+import numpy as np
+
 from db import DB
 
 
@@ -16,115 +23,143 @@ from db import DB
 
 # Get a reference to webcam #0 (the default one)
 
-# provide name of image
-class Facial:
+#provide name of image
+database = DB("/Users/jsexton/Senior")
+process_this_frame= True
+
+def get_all_email_images():
+    emails = database.getEmail()
+    user_image_dict = {}
+    for email in emails:
+        a_user_image = face_recognition.load_image_file(email[0] + "/" + email[0] + ".jpg")
+        user_image_dict[email[0]] = a_user_image
+    return user_image_dict
+
+def diffImg(i1, i2, i3):
+    d1 = cv2.absdiff(i1,i2)
+    d2 = cv2.absdiff(i1,i3)
+    ret, thres = cv2.threshold(i1, 10, 0xff, cv2.THRESH_BINARY)
+    #print (d1)
+    #print (d2)
+    if ((d1 != d2).all()):
+        print("Movement!")
+    else:
+        print("No Movement!")
+    return cv2.bitwise_and(d1,d2)
+
+def monitor():
+    movement_counter = 0
+    cam = cv2.VideoCapture(0)
+    test = cam.read()[1]
+    firstFrame = None
+    while True:
+        frame = cam.read()[1]
+        frame = imutils.resize(frame, width=500)
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        gray = cv2.GaussianBlur(gray, (15,15), 0)
+        cv2.imwrite("grey_blur.jpg", gray)
+        if firstFrame is None:
+            print("Got first frame")
+            firstFrame = gray
+            cv2.imwrite("first.jpg", firstFrame)
+            continue
+        frameDelta = cv2.absdiff(firstFrame, gray)
+        thresh = cv2.threshold(frameDelta, 25, 255, cv2.THRESH_BINARY)[1]
+        thresh = cv2.dilate(thresh, None, iterations=2)
+        cv2.imwrite("thresh.jpg", thresh)
+        (cnts, contours, _) = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        for c in contours:
+            area = cv2.contourArea(c)
+            #print(area)
+            if cv2.contourArea(c) < 1000:
+                continue
+            else:
+                movement_counter+=1
+                print("Movement")
+                if movement_counter % 3 == 0:
+                    ret, image = cam.read()
+                    if ret:
+                        cv2.imwrite("test1.jpg", image)
+                        fac = facial_authenticate(image)
+                        print (fac)
+                        if fac is True:
+                            print("Success!")
+                        else:
+                            continue
+
+   ## while True:
+   ##     cv2.imshow(window, diffImg(image_minus, image_base, image_plus))
+   ##     image_minus = image_base
+   ##     image_base = image_plus
+   ##     image_plus = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
+
+   ##     key = cv2.waitKey(10)
+   ##     if key == 27:
+   ##         print("Goodbye")
+   ##         break
+
+def facial_authenticate(image):
     process_this_frame = True
-
-    def __init__(self, path):
-        self.database = DB(path)
-
-    def get_all_email_images(self):
-
-        emails = self.database.getEmail()
-        user_image_dict = {}
-        for email in emails:
-            a_user_image = face_recognition.load_image_file(email[0] + "/" + email[0] + ".jpg")
-            user_image_dict[email[0]] = a_user_image
-        return user_image_dict
-
-    def facial_authenticate(self):
-        video_capture = cv2.VideoCapture(0)
-        # Load a sample picture and learn how to recognize it.
-        # emails = database.getEmail(database)
-        # for email in emails:
-        #     user_image = face_recognition.load_image_file(email[0] + "/"+ email[0] + ".jpg")
-        #     user_face_encoding = face_recognition.face_encodings(user_image)[0]
-        global process_this_frame
-        while process_this_frame:
-            # Grab a single frame of video
-            ret, frame = video_capture.read()
-
-            # Resize frame of video to 1/4 size for faster face recognition processing
-
-            # small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-            # Only process every other frame of video to save time
+    while process_this_frame:
+        # Grab a single frame of video
+        cv2.imwrite("test2.jpg", image)
+        # Resize frame of video to 1/4 size for faster face recognition processing
+        small_frame = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
+        try:
             if process_this_frame:
-                user_face_dict = self.get_all_email_images()
+                user_face_dict = get_all_email_images()
                 for key in user_face_dict.keys():
                     user_image = face_recognition.load_image_file(key + "/" + key + ".jpg")
                     user_face_encoding = face_recognition.face_encodings(user_image)[0]
 
-                    face_locations = face_recognition.face_locations(frame)
-                    face_encodings = face_recognition.face_encodings(frame, face_locations)
-                    face_locations = []
-                    face_names = []
+                    face_locations = face_recognition.face_locations(small_frame)
+                    face_encodings = face_recognition.face_encodings(small_frame, face_locations)
                     for face_encoding in face_encodings:
-                        # See if the face is a match for the known face(s)
                         match = face_recognition.compare_faces([user_face_encoding], face_encoding)
                         status = "Unknown"
 
                         if match[0]:
                             status = "Success"
-                            print(status + " : " + key)
-                            webbrowser.open_new_tab("http://172.20.10.8:5000/mirror/" + key)
-                            # break
+                            print(status + " : "+ key)
+                            webbrowser.open_new_tab("http://172.20.10.8:5000/mirror/"+key)
+                            return True
                         else:
                             print(status)
-                            break
+                            break;
 
                         face_names.append(status)
 
             process_this_frame = not process_this_frame
+        except:
+            e = sys.exc_info()[0]
+            print("<p>Error: %s</p>" % e)
+    return False
 
-            # # Display the results
-            # for (top, right, bottom, left), name in zip(face_locations, face_names):
-            #     # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-            #     top *= 4
-            #     right *= 4
-            #     bottom *= 4
-            #     left *= 4
-            #
-            #     # Draw a box around the face
-            #     cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-            #
-            #     # Draw a label with a name below the face
-            #     cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-            #     font = cv2.FONT_HERSHEY_DUPLEX
-            #     cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-            #
-            # # Display the resulting image
-            # cv2.imshow('Video', frame)
+def captureImage(userName):
+    global process_this_frame
+    process_this_frame = False
+    if os.path.isdir(userName):
+        os.remove(userName + "/" + userName +".jpg")
+        os.rmdir(userName)
+        return "User Already Exists"
+    video_capture = cv2.VideoCapture(0)
+    name = userName
+    captureImg = True
+    count = 0;
+    while captureImg:
+        ret, img = video_capture.read()
+        if count is 3:
+            print("Image Captured")
+            os.mkdir(name)
+            cv2.imwrite(name + "/" + name + ".jpg", img)
+            captureImg= False
+        if count is not 3:
+            count += 1
+            print(count)
+    video_capture.release()
+    cv2.destroyAllWindows()
+    process_this_frame = True
+    return True
 
-            # Hit 'q' on the keyboard to quit!
-            # if cv2.waitKey(1) & 0xFF == ord('q'):
-            #   break
-
-        # Release handle to the webcam
-        video_capture.release()
-        cv2.destroyAllWindows()
-
-    def captureImage(self, userName):
-        global process_this_frame
-        process_this_frame = False
-        if os.path.isdir(userName):
-            os.remove(userName + "/" + userName + ".jpg")
-            os.rmdir(userName)
-            return "User Already Exists"
-        video_capture = cv2.VideoCapture(0)
-        name = userName
-        captureImg = True
-        count = 0;
-        while captureImg:
-            ret, img = video_capture.read()
-            if count is 3:
-                print("Image Captured")
-                os.mkdir(name)
-                cv2.imwrite(name + "/" + name + ".jpg", img)
-                captureImg = False
-            if count is not 3:
-                count += 1
-                print(count)
-        video_capture.release()
-        cv2.destroyAllWindows()
-        process_this_frame = True
-        return True
+monitor()
