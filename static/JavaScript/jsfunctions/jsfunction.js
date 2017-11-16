@@ -1,3 +1,4 @@
+
 var userChoices = {
     name: "",
     email: "",
@@ -101,6 +102,15 @@ function createUser() {
     calendar();
     promptAddress();
 }
+
+function countDown(){
+var time = 10;
+time--;
+gett("container").innerHTML = time;
+if(time == 0){
+combo();
+}
+}
 function combo() {
     createUser();
     postIt();
@@ -172,3 +182,20 @@ function parseTime(startTime) {
     }
     console.log(retro)
 }
+function c(){
+	var n=$('.c').attr('id');
+    var c=n;
+	$('.c').text(c);
+	setInterval(function(){
+		c--;
+		if(c>=0){
+			$('.c').text(c);
+		}
+        if(c==0){
+            $('.c').text(n);
+        }
+	},1000);
+}
+
+
+
