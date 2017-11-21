@@ -1,8 +1,11 @@
 import face_recognition
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 import cv2
 import os
 import webbrowser
 import sys
+import picamera
 import imutils
 import tkinter as tk
 import time
@@ -24,7 +27,7 @@ from db import DB
 # Get a reference to webcam #0 (the default one)
 
 #provide name of image
-database = DB("/Users/jsexton/Senior")
+database = DB("/home/pi/Senior")
 process_this_frame= True
 detect_motion = True
 is_user_viewing = False
@@ -40,57 +43,69 @@ def get_all_email_images():
 
 def monitor():
     movement_counter = 0
-    cam = cv2.VideoCapture(0)
-    test = cam.read()[1]
-    firstFrame = None
-    while detect_motion:
-        frame = cam.read()[1]
-        frame = imutils.resize(frame, width=500)
-        #coversts to grey
-        currentFrame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
-        #Performs Gaussian Blure on image
-        currentFrame = cv2.GaussianBlur(currentFrame, (25,25), 25)
-        cv2.imwrite("grey_blur.jpg", currentFrame)
-        #If we have not established a first frame( the basis of all of our motion tracking) then we establish it here
-        if firstFrame is None:
-            print("Got first frame")
-            #Save first frame
-            firstFrame = currentFrame
-            cv2.imwrite("first.jpg", firstFrame)
-            #Starts over
-            continue
-        #Calculates Agsolute Difference between the first frame and the current frame
-        frameDelta = cv2.absdiff(firstFrame, currentFrame)
-        #Writes out frameDelta as jpg
-        cv2.imwrite("frameDelta.jpg", frameDelta)
-        #Does the threshold of the image(may need tweeking depending on environment)
-        thresh = cv2.threshold(frameDelta, 100, 255, cv2.THRESH_BINARY)[1]
-        thresh = cv2.dilate(thresh, None, iterations=2)
-        #Writes out thresh image as thresh.jog
-        cv2.imwrite("thresh.jpg", thresh)
-        #Finds contours within the thresh image
-        (cnts, contours, _) = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-        for c in contours:
-
-            area = cv2.contourArea(c)
-            #If size of contour is not big enough, ignore it(aka, if the movement is not big enough ignore it)
-            if cv2.contourArea(c) < 1000:
+    camera = picamera.PiCamera()
+    rawCapture = PiRGBArray(camera)
+    camera.resolution = (500, 240)
+    camera.framerate = 30
+    time.sleep(0.11)
+    #cam = cv2.VideoCapture(0)
+    for test in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        testImage = rawCapture.array
+        #test_image = rawCapture.array
+        cv2.imwrite("test.jpg",testImage)
+        firstFrame = None
+        while detect_motion:
+            #frame = cam.read()[1]
+            #frame = imutils.resize(frame, width=500)
+            #coversts to grey
+            frame = testImage
+            
+            currentFrame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+            #Performs Gaussian Blure on image
+            currentFrame = cv2.GaussianBlur(currentFrame, (25,25), 25)
+            cv2.imwrite("grey_blur.jpg", currentFrame)
+            #If we have not established a first frame( the basis of all of our motion tracking) then we establish it here
+            if firstFrame is None:
+                print("Got first frame")
+                #Save first frame
+                firstFrame = currentFrame
+                cv2.imwrite("first.jpg", firstFrame)
+                #Starts over
                 continue
-            #We look for three points of movement within any check
-            else:
-                movement_counter+=1
-                print("Movement")
-                #If mwe detect 3 points of movement we begin facial authentication
-                if movement_counter % 3 == 0:
-                    #Frame represnets the current frame of the system.
-                    cv2.imwrite("test1.jpg", frame)
-                    facial_authentication_results = facial_authenticate(frame)
-                    print (facial_authentication_results)
-                    if facial_authentication_results is True:
-                        print("Success!")
-                    else:
-                        continue
+            #Calculates Agsolute Difference between the first frame and the current frame
+            frameDelta = cv2.absdiff(firstFrame, currentFrame)
+            #Writes out frameDelta as jpg
+            print("trying to write frameDelta")
+            cv2.imwrite("frameDelta.jpg", frameDelta)
+            print("wrote frameDelta")
+            #Does the threshold of the image(may need tweeking depending on environment)
+            thresh = cv2.threshold(frameDelta, 2, 255, cv2.THRESH_BINARY)[1]
+            thresh = cv2.dilate(thresh, None, iterations=2)
+            #Writes out thresh image as thresh.jog
+            cv2.imwrite("thresh.jpg", thresh)
+            #Finds contours within the thresh image
+            (cnts, contours, _) = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            print(contours)
+            for c in contours:
+
+                area = cv2.contourArea(c)
+                #If size of contour is not big enough, ignore it(aka, if the movement is not big enough ignore it)
+                if cv2.contourArea(c) < 1000:
+                    continue
+                #We look for three points of movement within any check
+                else:
+                    movement_counter+=1
+                    print("Movement")
+                    #If mwe detect 3 points of movement we begin facial authentication
+                    if movement_counter % 3 == 0:
+                        #Frame represnets the current frame of the system.
+                        cv2.imwrite("test1.jpg", frame)
+                        facial_authentication_results = facial_authenticate(frame)
+                        print (facial_authentication_results)
+                        if facial_authentication_results is True:
+                            print("Success!")
+                        else:
+                            copyright
 
    ## while True:
    ##     cv2.imshow(window, diffImg(image_minus, image_base, image_plus))
