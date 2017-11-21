@@ -167,35 +167,8 @@ function userInfo() {
         $('#twitter').bootstrapToggle('on')
     }
 }
-function parseTime(startTime) {
-    var time = startTime;
-    test = "2017-10-15T18:00:00-04:00";
-    var retro = "";
-    for (i = 14; i > 9; i--) {
-        retro = retro + (time.charAt(time.length - i));
-    }
-    if (retro.charAt(0) == 0) {
-        retro = retro + "AM";
-    }
-    else {
-        retro = retro + "PM"
-    }
-    console.log(retro)
-}
-function c(){
-	var n=$('.c').attr('id');
-    var c=n;
-	$('.c').text(c);
-	setInterval(function(){
-		c--;
-		if(c>=0){
-			$('.c').text(c);
-		}
-        if(c==0){
-            $('.c').text(n);
-        }
-	},1000);
-}
+
+
 
 
 
