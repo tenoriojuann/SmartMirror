@@ -40,16 +40,3 @@ html {
     0% {opacity: 0.0;}
     100% {opacity: 1.0;}
 }
-
-a {
-    color: #4e00cf;
-    font-size: 175%;
-    text-decoration: none;
-    position: absolute;
-    top: 340px;
-    display: block;
-    width: 350px;
-    text-align: center;
-    color: #000;
-}
-
