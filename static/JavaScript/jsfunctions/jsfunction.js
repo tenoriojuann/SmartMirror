@@ -1,4 +1,3 @@
-
 var userChoices = {
     name: "",
     email: "",
@@ -102,15 +101,6 @@ function createUser() {
     calendar();
     promptAddress();
 }
-
-function countDown(){
-var time = 10;
-time--;
-gett("container").innerHTML = time;
-if(time == 0){
-combo();
-}
-}
 function combo() {
     createUser();
     postIt();
@@ -167,8 +157,18 @@ function userInfo() {
         $('#twitter').bootstrapToggle('on')
     }
 }
-
-
-
-
-
+function parseTime(startTime) {
+    var time = startTime;
+    test = "2017-10-15T18:00:00-04:00";
+    var retro = "";
+    for (i = 14; i > 9; i--) {
+        retro = retro + (time.charAt(time.length - i));
+    }
+    if (retro.charAt(0) == 0) {
+        retro = retro + "AM";
+    }
+    else {
+        retro = retro + "PM"
+    }
+    console.log(retro)
+}
