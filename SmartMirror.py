@@ -5,6 +5,7 @@ import webbrowser
 from static.User import User
 from facialAuth import Facial
 import datetime
+import cv2
 import pytz
 from flask import Flask, request, render_template, url_for, jsonify
 from db import DB
@@ -146,7 +147,7 @@ def getPreferences():
         face_recognition = Facial(app.root_path)
         face_recognition.captureImage(currentUser.email)
         print("About to authenticate")
-        face_recognition.facial_authenticate()
+        face_recognition.facial_authenticate(cv2.imread(currentUser.email+"/"+currentUser.email+".jpeg"))
         print("Authenticated")
         webbrowser.open_new_tab(getIP() + ":5000/mirror/" + currentUser.email)
     except BadRequest as e:
@@ -230,7 +231,7 @@ def getIP():
     if region == "JOSH":
         ip = "172.20.10.8"
     elif region == "ANDREW":
-        ip = "172.20.10.3"
+        ip = "172.20.10.13"
     else:
         ip = "127.0.0.1"
     print("The IP address is: " + ip)

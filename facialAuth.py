@@ -14,7 +14,6 @@ import numpy as np
 
 from db import DB
 
-
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
 #   1. Process each video frame at 1/4 resolution (though still display it at full resolution)
@@ -26,19 +25,10 @@ from db import DB
 
 # Get a reference to webcam #0 (the default one)
 
-#provide name of image
-database = DB("/home/pi/Senior")
-process_this_frame= True
+# provide name of image
+process_this_frame = True
 detect_motion = True
 is_user_viewing = False
-
-def get_all_email_images():
-    emails = database.getEmail()
-    user_image_dict = {}
-    for email in emails:
-        a_user_image = face_recognition.load_image_file(email[0] + "/" + email[0] + ".jpg")
-        user_image_dict[email[0]] = a_user_image
-    return user_image_dict
 
 
 def monitor():
@@ -59,42 +49,43 @@ def monitor():
             cv2.imwrite("test.jpg", testImage)
             #coversts to grey
             frame = testImage
-            
+
             currentFrame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
             #Performs Gaussian Blure on image
             currentFrame = cv2.GaussianBlur(currentFrame, (25,25), 15)
             cv2.imwrite("grey_blur.jpg", currentFrame)
-            #If we have not established a first frame( the basis of all of our motion tracking) then we establish it here
+            # If we have not established a first frame( the basis of all of our motion tracking) then we establish it here
             if firstFrame is None:
                 print("Got first frame")
-                #Save first frame
+                # Save first frame
                 firstFrame = currentFrame
                 cv2.imwrite("first.jpg", firstFrame)
                 #Starts over
                 rawCapture.truncate(0)
+                # Starts over
                 continue
-            #Calculates Agsolute Difference between the first frame and the current frame
+            # Calculates Agsolute Difference between the first frame and the current frame
             frameDelta = cv2.absdiff(firstFrame, currentFrame)
             #Writes out frameDelta as jpg
             cv2.imwrite("frameDelta.jpg", frameDelta)
             #Does the threshold of the image(may need tweeking depending on environment)
             thresh = cv2.threshold(frameDelta, 50, 255, cv2.THRESH_BINARY)[1]
             thresh = cv2.dilate(thresh, None, iterations=2)
-            #Writes out thresh image as thresh.jog
+            # Writes out thresh image as thresh.jog
             cv2.imwrite("thresh.jpg", thresh)
-            #Finds contours within the thresh image
+            # Finds contours within the thresh image
             (cnts, contours, _) = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             for c in contours:
 
                 area = cv2.contourArea(c)
-                #If size of contour is not big enough, ignore it(aka, if the movement is not big enough ignore it)
+                # If size of contour is not big enough, ignore it(aka, if the movement is not big enough ignore it)
                 if cv2.contourArea(c) < 1000:
                     continue
-                #We look for three points of movement within any check
+                # We look for three points of movement within any check
                 else:
-                    movement_counter+=1
+                    movement_counter += 1
                     print("Movement")
-                    #If mwe detect 3 points of movement we begin facial authentication
+                    # If mwe detect 3 points of movement we begin facial authentication
                     if movement_counter % 3 == 0:
                         #Frame represnets the current frame of the system.
                         #TODO redo facial_authentication_results = facial_authenticate(frame)
@@ -170,4 +161,10 @@ def captureImage(userName):
         rawCapture.truncate(0)
     return True
 
-captureImage("Jeff")
+def get_all_email_images(self):
+    emails = self.database.getEmail()
+    user_image_dict = {}
+    for email in emails:
+        a_user_image = face_recognition.load_image_file(email[0] + "/" + email[0] + ".jpg")
+        user_image_dict[email[0]] = a_user_image
+    return user_image_dict
