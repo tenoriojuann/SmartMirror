@@ -30,7 +30,6 @@ process_this_frame = True
 detect_motion = True
 is_user_viewing = False
 
-
 def monitor():
     movement_counter = 0
     camera = picamera.PiCamera()
@@ -107,64 +106,70 @@ def monitor():
    ##     if key == 27:
    ##         print("Goodbye")
    ##         break
+class Facial:
 
-def facial_authenticate(image):
-    global detect_motion
-    cv2.imwrite("test2.jpg", image)
-    # Resize frame of video to 1/4 size for faster face recognition processing
-    small_frame = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
-    try:
-        user_face_dict = get_all_email_images()
-        for key in user_face_dict.keys():
-            user_image = face_recognition.load_image_file(key + "/" + key + ".jpg")
-            user_face_encoding = face_recognition.face_encodings(user_image)[0]
+    def __init__(self, root):
+        self.database = DB(root)
 
-            face_locations = face_recognition.face_locations(small_frame)
-            face_encodings = face_recognition.face_encodings(small_frame, face_locations)
-            for face_encoding in face_encodings:
-                match = face_recognition.compare_faces([user_face_encoding], face_encoding)
-                status = "Unknown"
 
-                if match[0]:
-                    status = "Success"
-                    print(status + " : "+ key)
-                    webbrowser.open_new_tab("http://172.20.10.8:5000/mirror/"+key)
-                    detect_motion = False
-                    is_user_viewing = True
-                    return True
-                else:
-                    print(status)
-                    break;
 
-                face_names.append(status)
-    except:
-        e = sys.exc_info()[0]
-        print("<p>Error: %s</p>" % e)
+    def facial_authenticate(self,image):
+        global detect_motion
+        cv2.imwrite("test2.jpg", image)
+        # Resize frame of video to 1/4 size for faster face recognition processing
+        small_frame = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
+        try:
+            user_face_dict = self.get_all_email_images()
+            for key in user_face_dict.keys():
+                user_image = face_recognition.load_image_file(key + "/" + key + ".jpg")
+                user_face_encoding = face_recognition.face_encodings(user_image)[0]
 
-def captureImage(userName):
-    global process_this_frame
-    camera = picamera.PiCamera()
-    rawCapture = PiRGBArray(camera)
-    camera.resolution = (320, 240)
-    camera.framerate = 30
-    time.sleep(1)
-    process_this_frame = False
-    if os.path.isdir(userName):
-        os.remove(userName + "/" + userName +".jpg")
-        os.rmdir(userName)
-        print("User Already Exists")
-    for image in camera.capture_continuous(rawCapture, format="bgr"):
-        print("Image Captured")
-        os.mkdir(userName)
-        img = rawCapture.array
-        cv2.imwrite(userName + "/" + userName +".jpg", img)
-        rawCapture.truncate(0)
-    return True
+                face_locations = face_recognition.face_locations(small_frame)
+                face_encodings = face_recognition.face_encodings(small_frame, face_locations)
+                for face_encoding in face_encodings:
+                    match = face_recognition.compare_faces([user_face_encoding], face_encoding)
+                    status = "Unknown"
 
-def get_all_email_images(self):
-    emails = self.database.getEmail()
-    user_image_dict = {}
-    for email in emails:
-        a_user_image = face_recognition.load_image_file(email[0] + "/" + email[0] + ".jpg")
-        user_image_dict[email[0]] = a_user_image
-    return user_image_dict
+                    if match[0]:
+                        status = "Success"
+                        print(status + " : "+ key)
+                        webbrowser.open_new_tab("http://172.20.10.8:5000/mirror/"+key)
+                        detect_motion = False
+                        is_user_viewing = True
+                        return True
+                    else:
+                        print(status)
+                        break;
+
+                    face_names.append(status)
+        except:
+            e = sys.exc_info()[0]
+            print("<p>Error: %s</p>" % e)
+
+    def captureImage(self,userName):
+        global process_this_frame
+        camera = picamera.PiCamera()
+        rawCapture = PiRGBArray(camera)
+        camera.resolution = (320, 240)
+        camera.framerate = 30
+        time.sleep(1)
+        process_this_frame = False
+        if os.path.isdir(userName):
+            os.remove(userName + "/" + userName +".jpg")
+            os.rmdir(userName)
+            print("User Already Exists")
+        for image in camera.capture_continuous(rawCapture, format="bgr"):
+            print("Image Captured")
+            os.mkdir(userName)
+            img = rawCapture.array
+            cv2.imwrite(userName + "/" + userName +".jpg", img)
+            rawCapture.truncate(0)
+        return True
+
+    def get_all_email_images(self):
+        emails = self.database.getEmail()
+        user_image_dict = {}
+        for email in emails:
+            a_user_image = face_recognition.load_image_file(email[0] + "/" + email[0] + ".jpg")
+            user_image_dict[email[0]] = a_user_image
+        return user_image_dict
