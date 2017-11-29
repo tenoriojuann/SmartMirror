@@ -111,16 +111,7 @@ def monitor():
 
 
 
-   ## while True:
-   ##     cv2.imshow(window, diffImg(image_minus, image_base, image_plus))
-   ##     image_minus = image_base
-   ##     image_base = image_plus
-   ##     image_plus = cv2.cvtColor(cam.read()[1], cv2.COLOR_RGB2GRAY)
 
-   ##     key = cv2.waitKey(10)
-   ##     if key == 27:
-   ##         print("Goodbye")
-   ##         break
 class Facial:
 
     def __init__(self, root):
