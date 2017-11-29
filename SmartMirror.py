@@ -149,7 +149,7 @@ def getPreferences():
         print("About to authenticate")
         face_recognition.facial_authenticate(cv2.imread(currentUser.email+"/"+currentUser.email+".jpeg"))
         print("Authenticated")
-        webbrowser.open_new_tab(getIP() + ":5000/mirror/" + currentUser.email)
+        webbrowser.open_new_tab("http://"+getIP() + ":5000/mirror/" + currentUser.email)
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
     # if facialAuth.captureImage(currentUser.email):
@@ -226,16 +226,7 @@ def nuke():
 
 
 def getIP():
-    region = os.environ.get('REGION')
-    ip = None
-    if region == "JOSH":
-        ip = "172.20.10.8"
-    elif region == "ANDREW":
-        ip = "172.20.10.13"
-    else:
-        ip = "127.0.0.1"
-    print("The IP address is: " + ip)
-    return ip
+    return "localhost"
 
 
 if __name__ == '__main__':
