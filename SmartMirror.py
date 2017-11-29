@@ -226,7 +226,7 @@ def nuke():
 
 
 def getIP():
-    return "localhost"
+    return "0.0.0.0"
 
 
 if __name__ == '__main__':
