@@ -34,6 +34,7 @@ def monitor():
     movement_counter = 0
     should_break = False
     camera = picamera.PiCamera()
+    camera.vflip = True
     rawCapture = PiRGBArray(camera)
     camera.resolution = (320, 240)
     camera.framerate = 30
@@ -163,7 +164,6 @@ class Facial:
                         print("sleeping for 30 seconds")
                         time.sleep(30)
                         print("Monitoring")
-                        monitor()
                         return True
                     else:
                         print(status)
