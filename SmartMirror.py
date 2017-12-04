@@ -3,9 +3,11 @@ import os
 import requests
 import webbrowser
 from static.User import User
-import facialAuth
+from facialAuth import Facial
 import datetime
+import cv2
 import pytz
+import shutil
 from flask import Flask, request, render_template, url_for, jsonify
 from db import DB
 from flask_oauthlib.client import OAuth, session, redirect
@@ -89,19 +91,17 @@ def get_google_oauth_token():
 
 
 @app.route('/delete/<email>/<pin>', methods=['GET'])
-def deleteUser(email,pin):
+def deleteUser(email, pin):
     try:
         database.deleteUser(email, pin)
     except BadRequest:
         return jsonify({"error": "Either the user"
-                                     " was not found or"
-                                     " the pin was incorrect"})
+                                 " was not found or"
+                                 " the pin was incorrect"})
 
     return Response("User deleted", status=202)
 
 
-# ('/register/<user>',
-# def enterRegistration(user)
 @app.route('/register/', methods=['GET'])
 def enterRegistration():
     if isLoggedIn():
@@ -145,11 +145,10 @@ def getPreferences():
         content["email"] = currentUser.email
         database.addProfile(content)
         setEvents()
-        facialAuth.captureImage(currentUser.email)
+        face_recognition = Facial(app.root_path)
+        face_recognition.captureImage(currentUser.email)
         print("About to authenticate")
-        facialAuth.facial_authenticate()
-        print("Authenticated")
-        #webbrowser.open_new_tab("http://172.20.10.8:5000/mirror/" + currentUser.email)
+        face_recognition.facial_authenticate(cv2.imread("Images/"+currentUser.email+".jpg"))
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
     # if facialAuth.captureImage(currentUser.email):
@@ -188,14 +187,6 @@ def weather():
     return jsonify(openWeatherRequest.json())
 
 
-@app.route('/captureFace')
-def captureFace():
-    # TODO should signal on mirror that image is being captured
-    email = request.args.get('email')
-    caputeImage(email)
-    return Response("Face Captured", status=202)
-
-
 @app.route('/authenticate')
 def isLoggedIn():
     if 'google_token' in session:
@@ -227,5 +218,17 @@ def mirror(email):
     return render_template('mirror.html', email=email)
 
 
+@app.route('/nuke', methods=['GET'])
+def nuke():
+    shutil.rmtree("Images")
+    os.makedirs("Images")
+    database.deleteAll()
+    return Response("BOOM, DB is gone", status=200)
+
+
+def getIP():
+    return "0.0.0.0"
+
+
 if __name__ == '__main__':
-    app.run("172.20.10.8", port=5000)
+    app.run(getIP(), port=5000)

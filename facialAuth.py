@@ -1,7 +1,17 @@
 import face_recognition
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 import cv2
 import os
 import webbrowser
+import sys
+import picamera
+import imutils
+import tkinter as tk
+import time
+
+import numpy as np
+
 from db import DB
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
@@ -15,112 +25,186 @@ from db import DB
 
 # Get a reference to webcam #0 (the default one)
 
-#provide name of image
-database = DB("/home/pi/Senior")
-process_this_frame= True
+# provide name of image
+process_this_frame = True
+detect_motion = True
+is_user_viewing = False
 
-def get_all_email_images():
-    emails = database.getEmail(database)
-    user_image_dict = {}
-    for email in emails:
-        a_user_image = face_recognition.load_image_file(email[0] + "/" + email[0] + ".jpg")
-        user_image_dict[email[0]] = a_user_image
-    return user_image_dict
+def monitor():
+    movement_counter = 0
+    should_break = False
+    camera = picamera.PiCamera()
+    camera.vflip = True
+    rawCapture = PiRGBArray(camera)
+    camera.resolution = (320, 240)
+    camera.framerate = 30
+    time.sleep(2)
+    firstFrame = None
+    detect_motion = True;
+    #cam = cv2.VideoCapture(0)
+    while detect_motion:
+        for test in camera.capture_continuous(rawCapture, format="bgr"):
+            #frame = cam.read()[1]
+            #if should_break:
+            #    break
+            #frame = imutils.resize(frame, width=500)
+            testImage = rawCapture.array
+            # test_image = rawCapture.array
+            cv2.imwrite("test.jpg", testImage)
+            #coversts to grey
+            frame = testImage
+
+            currentFrame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+            #Performs Gaussian Blure on image
+            currentFrame = cv2.GaussianBlur(currentFrame, (15,15), 10)
+            cv2.imwrite("grey_blur.jpg", currentFrame)
+            # If we have not established a first frame( the basis of all of our motion tracking) then we establish it here
+            if firstFrame is None:
+                print("Got first frame")
+                # Save first frame
+                firstFrame = currentFrame
+                cv2.imwrite("first.jpg", firstFrame)
+                #Starts over
+                rawCapture.truncate(0)
+                # Starts over
+                continue
+            # Calculates Agsolute Difference between the first frame and the current frame
+            frameDelta = cv2.absdiff(firstFrame, currentFrame)
+            #Writes out frameDelta as jpg
+            cv2.imwrite("frameDelta.jpg", frameDelta)
+            #Does the threshold of the image(may need tweeking depending on environment)
+            thresh = cv2.threshold(frameDelta, 30, 255, cv2.THRESH_BINARY)[1]
+            thresh = cv2.dilate(thresh, None, iterations=2)
+            # Writes out thresh image as thresh.jog
+            cv2.imwrite("thresh.jpg", thresh)
+            # Finds contours within the thresh image
+            (cnts, contours, _) = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            print("got contours")
+            for count in contours:
+                print("Getting areas")
+                area = cv2.contourArea(count)
+                print(area)
+                # If size of contour is not big enough, ignore it(aka, if the movement is not big enough ignore it)
+                if cv2.contourArea(count) < 500:
+                    continue
+                # We look for three points of movement within any check
+                else:
+                    movement_counter += 1
+                    print("Movement, Movement#: " + str(movement_counter)+ "Area: " + str(area))
+                    # If mwe detect 3 points of movement we begin facial authentication
+                    if movement_counter == 1:
+                        #Frame represnets the current frame of the system.
+                        #TODO redo facial_
+                        face_recognition = Facial(os.path.dirname(__file__))
+                        try:
+                            authentication_results = face_recognition.facial_authenticate(frame)
+                        except:
+                            authentication_results = "Exception"
+                        print ("Try To Authenticate")
+                        print(authentication_results)
+                        rawCapture.truncate(0)
+                        should_break = True
+                        break;
+            rawCapture.truncate(0)
+            break;
+        rawCapture.truncate(0)
+        continue
 
 
-def facial_authenticate():
-    video_capture = cv2.VideoCapture(0)
-    # Load a sample picture and learn how to recognize it.
-    # emails = database.getEmail(database)
-    # for email in emails:
-    #     user_image = face_recognition.load_image_file(email[0] + "/"+ email[0] + ".jpg")
-    #     user_face_encoding = face_recognition.face_encodings(user_image)[0]
-    global process_this_frame
-    while process_this_frame:
-        # Grab a single frame of video
-        ret, frame = video_capture.read()
 
+
+class Facial:
+
+    def __init__(self, root):
+        self.database = DB(root)
+
+
+
+    def facial_authenticate(self,image):
+        global detect_motion
+        cv2.imwrite("test2.jpg", image)
         # Resize frame of video to 1/4 size for faster face recognition processing
-
-        #small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-        # Only process every other frame of video to save time
-        if process_this_frame:
-            user_face_dict = get_all_email_images()
+        #small_frame = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
+        try:
+            print("about to get DB")
+            user_face_dict = self.get_all_email_images()
+            print("about to proces emails")
             for key in user_face_dict.keys():
-                user_image = face_recognition.load_image_file(key + "/" + key + ".jpg")
+                print(key)
+                script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
+                rel_path = "Images/" + key + ".jpg"
+                print("fA:"+rel_path)
+                abs_file_path = os.path.join(script_dir, rel_path)
+                print("fA:"+abs_file_path)
+                user_image = face_recognition.load_image_file(abs_file_path)
+                print("doing face encoding for db image")
                 user_face_encoding = face_recognition.face_encodings(user_image)[0]
-
-                face_locations = face_recognition.face_locations(frame)
-                face_encodings = face_recognition.face_encodings(frame, face_locations)
-                face_locations = []
-                face_names = []
+                #print("looking for face locations in image passed in")
+                #face_locations = face_recognition.face_locations(image)
+                #print("doing face encoding for image passed in")
+                print("loading test file")
+                test_image = face_recognition.load_image_file("test2.jpg")
+                print("getting test image encoding")
+                face_encodings = face_recognition.face_encodings(test_image)[0]
+                print("about to do face comparissons")
+                tot = 0
                 for face_encoding in face_encodings:
-                    # See if the face is a match for the known face(s)
+                    print("in loop")
                     match = face_recognition.compare_faces([user_face_encoding], face_encoding)
+                    tot += 1
+                    print(tot)
                     status = "Unknown"
 
-                    if match[0]:
+                    if match:
                         status = "Success"
                         print(status + " : "+ key)
                         webbrowser.open_new_tab("http://172.20.10.8:5000/mirror/"+key)
-		        #break
+                        detect_motion = False
+                        is_user_viewing = True
+                        print("sleeping for 30 seconds")
+                        time.sleep(30)
+                        print("Monitoring")
+                        return True
                     else:
                         print(status)
-                        break
+                        break;
 
                     face_names.append(status)
+        except:
+            e = sys.exc_info()[0]
+            print("<p>Error: %s</p>" % e)
 
-        process_this_frame = not process_this_frame
-
-        # # Display the results
-        # for (top, right, bottom, left), name in zip(face_locations, face_names):
-        #     # Scale back up face locations since the frame we detected in was scaled to 1/4 size
-        #     top *= 4
-        #     right *= 4
-        #     bottom *= 4
-        #     left *= 4
-        #
-        #     # Draw a box around the face
-        #     cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-        #
-        #     # Draw a label with a name below the face
-        #     cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
-        #     font = cv2.FONT_HERSHEY_DUPLEX
-        #     cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-        #
-        # # Display the resulting image
-        # cv2.imshow('Video', frame)
-
-        # Hit 'q' on the keyboard to quit!
-        #if cv2.waitKey(1) & 0xFF == ord('q'):
-        #   break
-
-    # Release handle to the webcam
-    video_capture.release()
-    cv2.destroyAllWindows()
-
-def captureImage(userName):
-    global process_this_frame
-    process_this_frame = False
-    if os.path.isdir(userName):
-        os.remove(userName + "/" + userName +".jpg")
-        os.rmdir(userName)
-        return "User Already Exists"
-    video_capture = cv2.VideoCapture(0)
-    name = userName
-    captureImg = True
-    count = 0;
-    while captureImg:
-        ret, img = video_capture.read()
-        if count is 3:
+    def captureImage(self,userName):
+        global process_this_frame
+        camera = picamera.PiCamera()
+        rawCapture = PiRGBArray(camera)
+        camera.resolution = (500, 420)
+        camera.framerate = 30
+        camera.vflip = True
+        time.sleep(2)
+        ret_img = None;
+        process_this_frame = False
+        for image in camera.capture_continuous(rawCapture, format="bgr"):
             print("Image Captured")
-            os.mkdir(name)
-            cv2.imwrite(name + "/" + name + ".jpg", img)
-            captureImg= False
-        if count is not 3:
-            count += 1
-            print(count)
-    video_capture.release()
-    cv2.destroyAllWindows()
-    process_this_frame = True
-    return True
+            img = rawCapture.array
+            script_dir = os.path.dirname(__file__)  # <-- absolute dir the script is in
+            rel_path = "Images/"+userName+".jpg"
+            abs_file_path = os.path.join(script_dir, rel_path)
+            print(abs_file_path)
+            cv2.imwrite(abs_file_path, img)
+            ret_img = img
+            rawCapture.truncate(0)
+            camera.close()
+            return ret_img
+
+    def get_all_email_images(self):
+        try:
+            emails = self.database.getEmail()
+            user_image_dict = {}
+            for email in emails:
+                a_user_image = face_recognition.load_image_file("Images/" + email[0] + ".jpg")
+                user_image_dict[email[0]] = a_user_image
+            return user_image_dict
+        except:
+            e = sys.exc_info()[0]
+            print("<p>Error: %s</p>" % e)
