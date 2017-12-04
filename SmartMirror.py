@@ -7,6 +7,7 @@ from facialAuth import Facial
 import datetime
 import cv2
 import pytz
+import shutil
 from flask import Flask, request, render_template, url_for, jsonify
 from db import DB
 from flask_oauthlib.client import OAuth, session, redirect
@@ -147,9 +148,7 @@ def getPreferences():
         face_recognition = Facial(app.root_path)
         face_recognition.captureImage(currentUser.email)
         print("About to authenticate")
-        face_recognition.facial_authenticate(cv2.imread(currentUser.email+"/"+currentUser.email+".jpeg"))
-        print("Authenticated")
-        webbrowser.open_new_tab("http://"+getIP() + ":5000/mirror/" + currentUser.email)
+        face_recognition.facial_authenticate(cv2.imread("Images/"+currentUser.email+".jpg"))
     except BadRequest as e:
         return Response("Error: " + e.description, status=400)
     # if facialAuth.captureImage(currentUser.email):
@@ -221,6 +220,8 @@ def mirror(email):
 
 @app.route('/nuke', methods=['GET'])
 def nuke():
+    shutil.rmtree("Images")
+    os.makedirs("Images")
     database.deleteAll()
     return Response("BOOM, DB is gone", status=200)
 
